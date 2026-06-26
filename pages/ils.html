@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ILS Approach — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Precision Approach · KwikFlight B-1B</div>
+  <h1 class="hero-title">ILS <span>Approach</span> Configuration Guide</h1>
+  <p class="hero-sub">Step-by-step FMS, NAV page, and autopilot setup for a full ILS approach from vectors to touchdown or go-around. Primary example: KDYS ILS RWY 34L (110.3 / I-DYS / CRS 359°).</p>
+</section>
+
+<div class="container page-body">
+
+  <div class="phase-nav" style="margin-bottom:0">
+    <button class="phase-btn active" onclick="switchPhase('ils','setup')">1 — Pre-approach</button>
+    <button class="phase-btn" onclick="switchPhase('ils','fms')">2 — FMS / FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('ils','ap')">3 — A/P Modes</button>
+    <button class="phase-btn" onclick="switchPhase('ils','intercept')">4 — LOC Intercept</button>
+    <button class="phase-btn" onclick="switchPhase('ils','final')">5 — Final & DH</button>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div id="ils-setup" class="phase-panel active" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 1 — Pre-approach setup</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">FMS APPR PAGE — flaps, VREF, DH, QNH</div></div>
+          <div class="card-body">
+            <div class="plabel">FMS — PERF → CRZ PG → APPR PG</div>
+            <div class="fms">APPR PAGE
+<span class="hi">FLAPS --&gt; 17°</span>
+<span class="hi">VREF --&gt; □□□ Kt</span>   ← click to auto-compute
+DH <span class="hi">□□□□</span> RADIO           ← type DH (e.g. 200)
+LAND QNH --&gt; <span class="hi">29.92</span>      ← from ATIS
+&lt;--CRZ PG</div>
+            <ul class="cl">
+              <li>Press <strong>PERF</strong> key on FMS CDU</li>
+              <li>Navigate right → <strong>CRZ PG</strong> → <strong>APPR PG</strong></li>
+              <li>Left key to toggle flaps → <strong>17°</strong></li>
+              <li>Click VREF — auto-computes for weight + flap config</li>
+              <li>Type DH from approach plate (e.g. <strong>200</strong>)</li>
+              <li>Update QNH from current ATIS</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">FMS NAV PAGE — tune ILS frequency and course</div></div>
+          <div class="card-body">
+            <div class="plabel">FMS — press NAV key</div>
+            <div class="fms">RADIO NAV
+<span class="hi">VOR1/FREQ          CRS</span>
+[<span class="hi">I-DYS</span>]/<span class="hi">110.3</span>        <span class="hi">359</span>
+<span class="dim">VOR2/FREQ          CRS</span>
+<span class="dim">[  ]/[  ]          ---</span>
+<span class="dim">ADF1/FREQ          BRG</span>
+<span class="dim">[  ]/890           ---</span></div>
+            <ul class="cl">
+              <li>Press <strong>NAV</strong> key on FMS CDU</li>
+              <li>Type ILS freq: <strong>110.3</strong> → left key → VOR1</li>
+              <li>Confirm identifier shows <strong>I-DYS</strong></li>
+              <li>Type inbound course <strong>359</strong> → right key → CRS</li>
+              <li>Verify CRS needle on PFD compass rose</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">3</div><div class="card-title">PFD — switch nav mode to ILS (lower softkey)</div></div>
+          <div class="card-body">
+            <div class="plabel">PFD lower softkeys</div>
+            <div class="fms" style="font-size:10px">VSD | <span class="dim">ADF</span> | <span class="hi">[ILS]</span> | <span class="dim">NAV1</span> | <span class="dim">GPS</span>
+                  ↑ press this softkey</div>
+            <div class="note">APR box on PFD: white = unarmed, orange = LOC armed, green = LOC captured.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">4</div><div class="card-title">KDYS ILS 34L — quick reference</div></div>
+          <div class="card-body">
+            <div class="freq-row"><span class="freq-name">Frequency</span><span class="freq-val">110.3</span></div>
+            <div class="freq-row"><span class="freq-name">Identifier</span><span class="freq-val">I-DYS</span></div>
+            <div class="freq-row"><span class="freq-name">Inbound Course</span><span class="freq-val">359°</span></div>
+            <div class="freq-row"><span class="freq-name">Decision Height</span><span class="freq-val">200 ft HAT</span></div>
+            <div class="freq-row"><span class="freq-name">Glideslope</span><span class="freq-val">3.0°</span></div>
+            <div class="freq-row"><span class="freq-name">FAF</span><span class="freq-val">MUCHO</span></div>
+            <div class="freq-row"><span class="freq-name">Runway Length</span><span class="freq-val">10,000 ft</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div id="ils-fms" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 2 — FMS approach loading</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">FPLN → destination → STAR screen</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">KDYS STARS
+RWY   SID     TRANS
+---   ------  ------
+AVAILABLE RUNWAYS
+<span class="hi">←34L  3048M</span>
+←16R  3048M
+&lt;RETURN</div>
+            <ul class="cl">
+              <li>Press <strong>FPLN</strong> → scroll to destination KDYS → left key</li>
+              <li>Select <strong>RWY 34L</strong></li>
+              <li>Select STAR (or NONE for vectors)</li>
+              <li>Select approach: <strong>ILS 34L</strong></li>
+              <li>Press <strong>INSERT</strong> right key to activate</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Verify FPLN shows approach fixes</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">FROM KDYS RWY 34L
+  ...en route...
+  MUCHO (FAF)  DIST 5NM
+<span class="hi">  RWY34L</span>      DIST 5NM
+----END OF ROUTE----</div>
+            <ul class="cl">
+              <li>Confirm <strong>MUCHO</strong> (FAF) in flight plan</li>
+              <li>Confirm <strong>RWY34L</strong> as final fix</li>
+              <li>PFD nav mode must be set to <strong>ILS</strong> not GPS</li>
+            </ul>
+            <div class="crit">If PFD shows GPS instead of ILS — APR mode will not capture the localizer. Switch to ILS softkey.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div id="ils-ap" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 3 — Autopilot mode sequence</div>
+      <div class="grid-2">
+        <div class="card span-2">
+          <div class="card-header"><div class="card-icon blue">▶</div><div class="card-title">Complete A/P sequence — vectors to DH</div></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table class="dt">
+              <thead><tr><th>Phase</th><th>AP</th><th>HDG</th><th>NAV</th><th>ALT</th><th>APR</th><th>A/T</th><th>PFD Note</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Vectors</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td>AP ALT HDG ATH</td></tr>
+                <tr><td><strong>Arm APR</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-arm">ARMED</span></td><td><span class="badge b-on">ON</span></td><td>APR box orange</td></tr>
+                <tr><td><strong>LOC captured</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">drops</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td>APR box green</td></tr>
+                <tr><td><strong>G/S captured</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-gs">G/S</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td>ALT → G/S on PFD</td></tr>
+                <tr><td><strong>At DH</strong></td><td colspan="7"><span class="badge b-danger">DISENGAGE AP — land manually or execute go-around</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Arm APR before intercept</div></div>
+          <div class="card-body">
+            <div class="ap-panel">
+              <div class="ap-row">
+                <div class="ap-btn on">AP<div class="dot"></div></div>
+                <div class="ap-btn on">ALT<div class="dot"></div></div>
+                <div class="ap-btn on">HDG<div class="dot"></div></div>
+                <div class="ap-btn off">NAV</div>
+                <div class="ap-btn on">ATH<div class="dot"></div></div>
+                <div class="ap-btn armed">APR<div class="dot"></div></div>
+              </div>
+              <div class="ap-lbl">← press APR to arm</div>
+            </div>
+            <div class="note">APR box on PFD turns orange. HDG HOLD remains until LOC capture.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">G/S captured — ALT becomes G/S</div></div>
+          <div class="card-body">
+            <div class="ap-panel">
+              <div class="ap-row">
+                <div class="ap-btn on">AP<div class="dot"></div></div>
+                <div class="ap-btn cap">G/S<div class="dot"></div></div>
+                <div class="ap-btn off">HDG</div>
+                <div class="ap-btn off">NAV</div>
+                <div class="ap-btn on">ATH<div class="dot"></div></div>
+                <div class="ap-btn on">APR<div class="dot"></div></div>
+              </div>
+              <div class="ap-lbl">ALT changes to G/S when slope captured</div>
+            </div>
+            <div class="warn">A/T disengages below 2,500 ft AGL. Manually manage throttle on short final.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div id="ils-intercept" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 4 — Localizer intercept</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Set HDG bug to ATC intercept heading</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Rotate <strong>HDG</strong> selector knob (lower center panel) to ATC heading</li>
+              <li>Confirm HDG bug on PFD compass rose</li>
+              <li>HDG HOLD must be active (green)</li>
+              <li>Intercept angle: <strong>≤ 30°</strong> to inbound CRS 359°</li>
+              <li>Speed: set A/T to <strong>VREF + 20 KIAS</strong></li>
+            </ul>
+            <div class="note">Ideal intercept: 15–30° to localizer from base leg.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Monitor LOC needle — capture criteria</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>LOC needle appears within ~10 NM of transmitter</li>
+              <li>APR armed (orange) before needle moves</li>
+              <li>At ½ dot: AP initiates capture turn</li>
+              <li>Rollout within 30° of CRS 359°</li>
+            </ul>
+            <div class="crit">If needle reaches full-scale before capture: disconnect AP and hand-fly the intercept.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div id="ils-final" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 5 — Final approach to DH</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Mandatory altitude callouts — FAF to DH</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>At FAF (MUCHO)</strong> — "Gear down, Flaps 17, Cleared ILS 34L"</li>
+              <li><strong>1,000 ft AGL</strong> — "One thousand feet"</li>
+              <li><strong>500 ft AGL</strong> — "Five hundred, stable" or "Go-around"</li>
+              <li><strong>DH (200 ft HAT)</strong> — "Minimums" then visual call or go-around</li>
+            </ul>
+            <div class="crit">Any stable approach criterion not met by 500 ft AGL = mandatory go-around.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Instructor monitoring — common errors</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>Wrong NAV mode</strong> — "Check PFD softkey — you need ILS not GPS"</li>
+              <li><strong>APR not armed</strong> — "Press APR on autopilot panel"</li>
+              <li><strong>Low on G/S</strong> — "You're low on glideslope — check needle"</li>
+              <li><strong>DH bust</strong> — "Go around — runway not in sight"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · MSFS 2024</p>
+  <p style="margin-top:6px"><a href="../index.html">Back to home</a> · <a href="glossary.html">ILS terms in glossary</a></p>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>

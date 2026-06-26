@@ -1,0 +1,2 @@
+# GitHub Pages config — disables Jekyll processing so HTML files serve as-is
+theme: null

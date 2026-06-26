@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B-1B Lancer — Editable Instructor Training Guide</title>
+<style>
+/* ── RESET & ROOT ─────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;--surface:#141720;--card:#1a1e2b;--card2:#1f2435;
+  --border:#2a3048;--border2:#3a4460;
+  --gold:#c8a951;--gold2:#f0cc72;
+  --blue:#4a90d9;--blue2:#7ab8ff;
+  --green:#3dba6e;--green2:#6ddea0;
+  --amber:#e09030;--amber2:#ffba58;
+  --red:#d04040;--red2:#ff7070;
+  --text:#e8eaf0;--text2:#9aa0b8;--text3:#5a6080;
+  --fms-bg:#030d03;--fms-green:#3aff3a;--fms-yellow:#ffff00;--fms-dim:#1a4a1a;
+  --accent-color:#c8a951;
+  --mono:'Courier New',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+
+/* ── EDIT MODE STYLES ─────────────────────────────────── */
+.edit-mode [contenteditable]{
+  outline:1px dashed rgba(200,169,81,.4);
+  border-radius:3px;
+  cursor:text;
+  transition:outline .15s;
+}
+.edit-mode [contenteditable]:hover{outline:1px solid var(--gold);background:rgba(200,169,81,.05);}
+.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:rgba(200,169,81,.08);}
+.edit-mode .editable-img{outline:2px dashed rgba(74,144,217,.5);cursor:pointer;border-radius:6px;}
+.edit-mode .editable-img:hover{outline:2px solid var(--blue);}
+[contenteditable]:empty:before{content:attr(data-placeholder);color:var(--text3);font-style:italic;}
+
+/* ── TOOLBAR ──────────────────────────────────────────── */
+#toolbar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:#0a0c12;
+  border-bottom:2px solid var(--gold);
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;
+  flex-wrap:wrap;
+  box-shadow:0 4px 24px rgba(0,0,0,.6);
+}
+.tb-brand{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-right:8px;white-space:nowrap;}
+.tb-sep{width:1px;height:28px;background:var(--border2);margin:0 4px;flex-shrink:0;}
+.tb-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:6px;
+  font-size:11px;font-weight:600;letter-spacing:.04em;
+  cursor:pointer;border:1px solid var(--border2);
+  background:var(--card2);color:var(--text2);
+  font-family:var(--sans);transition:all .12s;white-space:nowrap;
+}
+.tb-btn:hover{background:var(--card);color:var(--text);border-color:var(--border2);}
+.tb-btn.active{background:rgba(200,169,81,.15);color:var(--gold);border-color:var(--gold);}
+.tb-btn.primary{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700;}
+.tb-btn.primary:hover{background:var(--gold2);}
+.tb-btn.danger{border-color:var(--red);color:var(--red2);}
+.tb-btn.danger:hover{background:rgba(208,64,64,.1);}
+.tb-label{font-size:10px;color:var(--text3);white-space:nowrap;}
+.tb-color-wrap{display:flex;align-items:center;gap:5px;}
+.tb-color{width:26px;height:26px;border-radius:4px;border:1px solid var(--border2);cursor:pointer;padding:0;background:transparent;}
+.tb-select{
+  padding:4px 8px;border-radius:6px;
+  font-size:11px;font-family:var(--sans);
+  background:var(--card2);color:var(--text2);
+  border:1px solid var(--border2);cursor:pointer;
+}
+#edit-status{
+  margin-left:auto;font-size:11px;color:var(--text3);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);}
+.status-dot.on{background:var(--green);box-shadow:0 0 6px var(--green);}
+
+/* ── LOGO AREA ──────────────────────────────────────────  */
+#logo-area{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;
+}
+#logo-img{
+  height:48px;width:auto;max-width:160px;
+  object-fit:contain;border-radius:4px;
+  display:none;
+}
+#logo-img.visible{display:block;}
+#logo-placeholder{
+  width:120px;height:48px;
+  background:var(--card2);border:2px dashed var(--border2);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:10px;color:var(--text3);text-align:center;
+  transition:all .15s;padding:4px;
+}
+#logo-placeholder:hover{border-color:var(--blue);color:var(--blue2);}
+#logo-placeholder.hidden{display:none;}
+#logo-upload{display:none;}
+
+/* ── TOP NAV ─────────────────────────────────────────── */
+.topnav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;gap:0;
+  position:sticky;top:56px;z-index:100;flex-wrap:wrap;
+  margin-top:56px;
+}
+.topnav-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px 10px 0;border-right:1px solid var(--border);
+  margin-right:16px;flex-shrink:0;
+}
+.insignia{
+  width:32px;height:32px;background:var(--gold);
+  border-radius:4px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:#000;
+}
+.title-main{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;}
+.title-sub{font-size:10px;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;}
+.nav-tabs{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+.nav-tab{
+  padding:0 18px;height:56px;display:flex;align-items:center;
+  font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;
+  background:none;border-top:none;border-left:none;border-right:none;
+  font-family:var(--sans);
+}
+.nav-tab:hover{color:var(--text2);border-bottom-color:var(--border2);}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── PAGES ──────────────────────────────────────────── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── HERO ───────────────────────────────────────────── */
+.page-hero{
+  background:linear-gradient(180deg,#0a0c10 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border);
+  padding:28px 32px 22px;position:relative;overflow:hidden;
+}
+.page-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top left,rgba(200,169,81,.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.hero-title{font-size:24px;font-weight:800;color:var(--text);margin-bottom:5px;letter-spacing:-.3px;}
+.hero-sub{font-size:13px;color:var(--text2);max-width:640px;}
+
+/* ── SECTION ────────────────────────────────────────── */
+.section{padding:22px 32px;}
+.section+.section{border-top:1px solid var(--border);}
+.section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+
+/* ── GRID ───────────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.span-2{grid-column:span 2;}
+.span-full{grid-column:1/-1;}
+@media(max-width:680px){.grid-2,.grid-3{grid-template-columns:1fr;}.span-2,.span-full{grid-column:span 1;}.section{padding:18px 14px;}.page-hero{padding:22px 14px 18px;}.topnav{padding:0 10px;}}
+
+/* ── CARDS ──────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.card-header{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--card2);border-bottom:1px solid var(--border);}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#000;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-num.blue{background:var(--blue);}.step-num.green{background:var(--green);}.step-num.red{background:var(--red);color:#fff;}
+.card-head-text{font-size:12px;font-weight:600;color:var(--text);}
+.card-body{padding:12px 14px;}
+
+/* ── FMS ────────────────────────────────────────────── */
+.fms{
+  background:var(--fms-bg);border:1px solid #1a3a1a;border-radius:4px;
+  padding:7px 9px;font-family:var(--mono);font-size:11px;
+  color:var(--fms-green);line-height:1.7;margin-bottom:7px;white-space:pre;
+}
+.fms .hi{color:var(--fms-yellow);}.fms .dim{color:var(--fms-dim);}
+
+/* ── AP PANEL ───────────────────────────────────────── */
+.ap-panel{background:#0a0c10;border:1px solid #2a3048;border-radius:6px;padding:9px;margin-bottom:7px;}
+.ap-row{display:flex;gap:4px;margin-bottom:4px;justify-content:center;}
+.ap-btn{min-width:36px;padding:5px 3px;border-radius:4px;font-size:10px;font-weight:700;text-align:center;border:1px solid;font-family:var(--sans);position:relative;}
+.ap-btn.on{background:#0f2a0f;border-color:#3a8a3a;color:#44ff44;}
+.ap-btn.armed{background:#2a1a00;border-color:#aa8800;color:#ffdd00;}
+.ap-btn.cap{background:#0a1a3a;border-color:#4488cc;color:#88ccff;}
+.ap-btn.off{background:#0d0f14;border-color:#2a3048;color:#3a4060;}
+.ap-btn .dot{position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;}
+.ap-btn.on .dot{background:#44ff44;box-shadow:0 0 4px #44ff44;}
+.ap-btn.armed .dot{background:#ffdd00;box-shadow:0 0 4px #ffdd00;}
+.ap-btn.cap .dot{background:#88ccff;box-shadow:0 0 4px #88ccff;}
+.ap-lbl{font-size:9px;color:var(--text3);text-align:center;margin-top:2px;letter-spacing:.05em;}
+
+/* ── PFD ────────────────────────────────────────────── */
+.pfd{background:#06081a;border:1px solid #1a2050;border-radius:4px;padding:7px 9px;font-family:var(--mono);font-size:10px;color:#8899cc;line-height:1.7;margin-bottom:7px;}
+.pfd .ann{color:#ffaa00;font-weight:700;}.pfd .grn{color:#44ff44;font-weight:700;}.pfd .wht{color:#fff;font-weight:700;}.pfd .dim{color:#334466;}
+
+/* ── CHECKLIST ──────────────────────────────────────── */
+.cl{list-style:none;}
+.cl li{font-size:12px;color:var(--text2);line-height:1.55;padding:2px 0;display:flex;gap:6px;align-items:flex-start;}
+.cl li::before{content:"→";color:var(--gold);flex-shrink:0;}
+.cl li strong{color:var(--text);}
+
+/* ── ALERTS ─────────────────────────────────────────── */
+.note,.warn,.crit,.ok{font-size:11px;padding:6px 9px;border-radius:6px;margin-top:7px;border-left:3px solid;line-height:1.5;}
+.note{background:rgba(74,144,217,.1);border-color:var(--blue);color:var(--blue2);}
+.warn{background:rgba(224,144,48,.1);border-color:var(--amber);color:var(--amber2);}
+.crit{background:rgba(208,64,64,.1);border-color:var(--red);color:var(--red2);}
+.ok{background:rgba(61,186,110,.1);border-color:var(--green);color:var(--green2);}
+
+/* ── MISC ───────────────────────────────────────────── */
+.plabel{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.freq-row{display:flex;justify-content:space-between;align-items:center;padding:4px 7px;border-radius:4px;margin-bottom:3px;background:var(--card2);}
+.freq-name{font-size:11px;color:var(--text2);}.freq-val{font-family:var(--mono);font-size:11px;color:var(--green2);font-weight:600;}
+
+/* ── PHASE TABS ─────────────────────────────────────── */
+.phase-nav{display:flex;gap:5px;flex-wrap:wrap;padding:14px 32px 0;border-bottom:1px solid var(--border);}
+.phase-btn{padding:6px 13px;border-radius:5px 5px 0 0;font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;background:var(--surface);border:1px solid var(--border);border-bottom:none;color:var(--text3);transition:all .12s;font-family:var(--sans);margin-bottom:-1px;}
+.phase-btn:hover{color:var(--text2);background:var(--card);}
+.phase-btn.active{color:var(--gold);background:var(--card2);border-color:var(--border2);border-bottom:1px solid var(--card2);}
+.phase-content{display:none;}.phase-content.active{display:block;}
+
+/* ── DATA TABLE ─────────────────────────────────────── */
+.dt{width:100%;border-collapse:collapse;font-size:11px;}
+.dt th{background:var(--card2);color:var(--text2);font-weight:600;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:7px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.dt td{padding:6px 9px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top;}
+.dt tr:last-child td{border-bottom:none;}
+.dt td strong{color:var(--text);}
+.b-on{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#0f2a0f;color:#44ff44;border:1px solid #3a8a3a;}
+.b-arm{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#2a1a00;color:#ffdd00;border:1px solid #aa8800;}
+.b-gs{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#0a1a3a;color:#88ccff;border:1px solid #4488cc;}
+.b-off{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#0d0f14;color:#3a4060;border:1px solid #2a3048;}
+.b-danger{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(208,64,64,.15);color:var(--red2);border:1px solid var(--red);}
+
+/* ── QRC ────────────────────────────────────────────── */
+.qrc-list{list-style:none;}
+.qrc-list li{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px dotted var(--border);font-size:12px;gap:8px;}
+.qrc-list li:last-child{border-bottom:none;}
+.qrc-item{color:var(--text2);flex:1;}
+.qrc-val{color:var(--gold2);font-weight:600;white-space:nowrap;font-size:11px;}
+
+/* ── FLOATING EDIT TOOLTIP ──────────────────────────── */
+#edit-tip{
+  position:fixed;bottom:16px;right:16px;z-index:9998;
+  background:var(--card2);border:1px solid var(--gold);border-radius:8px;
+  padding:10px 14px;font-size:11px;color:var(--text2);
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  display:none;max-width:220px;line-height:1.5;
+}
+#edit-tip.visible{display:block;}
+#edit-tip strong{color:var(--gold);}
+
+/* ── IMAGE UPLOAD OVERLAY ────────────────────────────── */
+#img-overlay{
+  display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,.7);align-items:center;justify-content:center;
+}
+#img-overlay.visible{display:flex;}
+.img-dialog{
+  background:var(--card);border:1px solid var(--border2);border-radius:12px;
+  padding:24px;max-width:380px;width:90%;
+}
+.img-dialog h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.img-dialog p{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.img-drop{
+  border:2px dashed var(--border2);border-radius:8px;
+  padding:28px;text-align:center;cursor:pointer;
+  font-size:12px;color:var(--text3);transition:all .15s;
+  margin-bottom:14px;
+}
+.img-drop:hover{border-color:var(--blue);color:var(--blue2);}
+.img-drop.dragover{border-color:var(--gold);background:rgba(200,169,81,.05);color:var(--gold);}
+.img-dialog-btns{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ── PRINT ──────────────────────────────────────────── */
+@media print{
+  #toolbar,#edit-tip,#img-overlay{display:none!important;}
+  .topnav{top:0!important;margin-top:0!important;}
+  body{background:#fff;color:#000;}
+  .page{display:block!important;page-break-before:always;}
+  .page:first-of-type{page-break-before:auto;}
+  .card{border:1px solid #ccc;background:#fff;}
+  .fms{background:#000;color:#0f0;}
+  .note,.warn,.crit,.ok{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOOLBAR ══════════════════════════════════════════════════ -->
+<div id="toolbar">
+  <span class="tb-brand">✈ B-1B Guide Editor</span>
+  <div class="tb-sep"></div>
+
+  <button class="tb-btn" id="edit-toggle-btn" onclick="toggleEditMode()">
+    ✏️ Edit Mode
+  </button>
+  <div class="tb-sep"></div>
+
+  <button class="tb-btn" onclick="openImgDialog()" title="Upload squadron logo">
+    🖼 Logo
+  </button>
+  <button class="tb-btn" onclick="removeLogo()" title="Remove logo">
+    ✕ Logo
+  </button>
+  <div class="tb-sep"></div>
+
+  <span class="tb-label">Accent:</span>
+  <div class="tb-color-wrap">
+    <input type="color" class="tb-color" id="color-accent" value="#c8a951" oninput="setAccent(this.value)" title="Accent color">
+    <input type="color" class="tb-color" id="color-bg" value="#0d0f14" oninput="setBg(this.value)" title="Background color">
+  </div>
+  <span class="tb-label">Bg:</span>
+  <div class="tb-sep"></div>
+
+  <span class="tb-label">Theme:</span>
+  <select class="tb-select" onchange="applyTheme(this.value)">
+    <option value="dark-gold">Dark Gold (default)</option>
+    <option value="dark-blue">Dark Blue</option>
+    <option value="dark-red">Dark Red</option>
+    <option value="light">Light</option>
+    <option value="stealth">Stealth Black</option>
+  </select>
+  <div class="tb-sep"></div>
+
+  <button class="tb-btn" onclick="window.print()" title="Print or save as PDF">🖨 Print / PDF</button>
+  <button class="tb-btn primary" onclick="exportHTML()" title="Download edited HTML">⬇ Export</button>
+
+  <div id="edit-status">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">View mode</span>
+  </div>
+</div>
+
+<!-- ══ LOGO UPLOAD OVERLAY ══════════════════════════════════════ -->
+<div id="img-overlay">
+  <div class="img-dialog">
+    <h3>Upload squadron logo</h3>
+    <p>Your logo will appear in the top navigation bar. PNG or SVG with transparent background works best.</p>
+    <div class="img-drop" id="img-drop" onclick="document.getElementById('logo-upload').click()">
+      Click to choose image<br>or drag &amp; drop here<br>
+      <span style="font-size:10px;color:var(--text3);margin-top:4px;display:block">PNG · JPG · SVG · WEBP</span>
+    </div>
+    <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoFile(this.files[0])">
+    <div class="img-dialog-btns">
+      <button class="tb-btn" onclick="closeImgDialog()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOP NAV ══════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div id="logo-area">
+      <img id="logo-img" src="" alt="Squadron logo">
+      <div id="logo-placeholder" class="editable-img" onclick="openImgDialog()">
+        Click to add<br>squadron logo
+      </div>
+    </div>
+    <div>
+      <div class="title-main" contenteditable="false" data-placeholder="Unit Name">Virtual Flying Squadron</div>
+      <div class="title-sub" contenteditable="false" data-placeholder="Sub-title">B-1B Lancer · KDYS · MSFS 2024</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchPage('ils')">ILS Approach</button>
+    <button class="nav-tab" onclick="switchPage('rnav')">RNAV / GPS</button>
+    <button class="nav-tab" onclick="switchPage('vor')">VOR Approach</button>
+    <button class="nav-tab" onclick="switchPage('ap')">Autopilot Ref</button>
+    <button class="nav-tab" onclick="switchPage('fms')">FMS Setup</button>
+    <button class="nav-tab" onclick="switchPage('qrc')">QRC Checklist</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — ILS
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-ils" class="page active">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">Precision Approach — KwikFlight B-1B</div>
+    <div class="hero-title" contenteditable="false">ILS Approach Configuration Guide</div>
+    <div class="hero-sub" contenteditable="false">Step-by-step FMS, NAV page, and autopilot setup for a full ILS approach from vectors to touchdown or go-around. Primary: KDYS ILS RWY 34L (110.3 / I-DYS / CRS 359°).</div>
+  </div>
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('ils','setup')">1 — Pre-approach</button>
+    <button class="phase-btn" onclick="switchPhase('ils','fmsload')">2 — FMS / FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('ils','apmodes')">3 — A/P Modes</button>
+    <button class="phase-btn" onclick="switchPhase('ils','intercept')">4 — LOC Intercept</button>
+    <button class="phase-btn" onclick="switchPhase('ils','final')">5 — Final & DH</button>
+  </div>
+
+  <!-- Phase 1 -->
+  <div id="ils-setup" class="phase-content active">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 1 — Pre-approach setup</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">FMS APPR PAGE — flaps, VREF, DH, QNH</div></div>
+          <div class="card-body">
+            <div class="plabel">FMS — PERF → CRZ PG → APPR PG</div>
+            <div class="fms">APPR PAGE
+<span class="hi">FLAPS --&gt; 17°</span>
+<span class="hi">VREF --&gt; □□□ Kt</span>   ← click to auto-compute
+DH <span class="hi">□□□□</span> RADIO           ← type DH (e.g. 200)
+LAND QNH --&gt; <span class="hi">29.92</span>      ← from ATIS
+&lt;--CRZ PG</div>
+            <ul class="cl">
+              <li>Press <strong>PERF</strong> key on FMS CDU</li>
+              <li>Navigate right → <strong>CRZ PG</strong> → <strong>APPR PG</strong></li>
+              <li>Left key to toggle flaps → <strong>17°</strong></li>
+              <li>Click VREF — auto-computes for weight + config</li>
+              <li>Type DH from approach plate (e.g. <strong>200</strong>)</li>
+              <li>Update QNH from current ATIS</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">FMS NAV PAGE — tune ILS frequency and course</div></div>
+          <div class="card-body">
+            <div class="plabel">FMS — press NAV key</div>
+            <div class="fms">RADIO NAV
+<span class="hi">VOR1/FREQ          CRS</span>
+[<span class="hi">I-DYS</span>]/<span class="hi">110.3</span>        <span class="hi">359</span>
+<span class="dim">VOR2/FREQ          CRS</span>
+<span class="dim">[  ]/[  ]          ---</span>
+<span class="dim">ADF1/FREQ          BRG</span>
+<span class="dim">[  ]/890           ---</span></div>
+            <ul class="cl">
+              <li>Press <strong>NAV</strong> key on FMS CDU</li>
+              <li>Type ILS freq: <strong>110.3</strong> → left key → VOR1</li>
+              <li>Confirm identifier shows <strong>I-DYS</strong></li>
+              <li>Type inbound course <strong>359</strong> → right key → CRS</li>
+              <li>Verify CRS needle on PFD compass rose</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">3</div><div class="card-head-text" contenteditable="false">PFD — switch nav mode to ILS (lower softkey)</div></div>
+          <div class="card-body">
+            <div class="plabel">PFD lower softkeys</div>
+            <div class="fms" style="font-size:10px">VSD | <span class="dim">ADF</span> | <span class="hi">[ILS]</span> | <span class="dim">NAV1</span> | <span class="dim">GPS</span>
+                 ↑ press this softkey</div>
+            <div class="pfd">AP ALT HDG <span class="dim">NAV</span> ATH <span class="ann">APR</span>
+HDG [<span class="wht">257</span>]      CRS <span class="grn">359</span>
+                          VOR1 DME
+                          <span class="grn">I-DYS</span></div>
+            <div class="note">APR box shows white when unarmed, orange when LOC is armed, green when captured.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">4</div><div class="card-head-text" contenteditable="false">KDYS ILS 34L — quick reference data</div></div>
+          <div class="card-body">
+            <div class="freq-row"><span class="freq-name" contenteditable="false">ILS Frequency</span><span class="freq-val" contenteditable="false">110.3</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Identifier</span><span class="freq-val" contenteditable="false">I-DYS</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Inbound Course</span><span class="freq-val" contenteditable="false">359°</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Decision Height</span><span class="freq-val" contenteditable="false">200 ft HAT</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Glideslope Angle</span><span class="freq-val" contenteditable="false">3.0°</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">FAF Fix</span><span class="freq-val" contenteditable="false">MUCHO</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Runway Length</span><span class="freq-val" contenteditable="false">10,000 ft</span></div>
+            <div class="freq-row"><span class="freq-name" contenteditable="false">Field Elevation</span><span class="freq-val" contenteditable="false">1,789 ft MSL</span></div>
+            <div class="warn" contenteditable="false">Always verify approach plate before flight. Brief all fixes, DH, and missed approach before vectors.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div id="ils-fmsload" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 2 — FMS approach loading</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">FPLN → destination → STAR screen</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">KDYS STARS
+RWY   SID     TRANS
+---   ------  ------
+AVAILABLE RUNWAYS
+<span class="hi">←34L  3048M</span>
+←16R  3048M
+←34R  1890M
+&lt;RETURN</div>
+            <ul class="cl">
+              <li>Press <strong>FPLN</strong> → scroll to destination KDYS → left key</li>
+              <li>Select <strong>RWY 34L</strong></li>
+              <li>Select STAR (or NONE for vectors)</li>
+              <li>Select approach: <strong>ILS 34L</strong></li>
+              <li>Press <strong>INSERT</strong> right key to activate</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">Verify FPLN shows approach fixes</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">FROM KDYS RWY 34L
+  ...en route...
+  MUCHO (FAF)  DIST 5NM
+<span class="hi">  RWY34L</span>      DIST 5NM
+----END OF ROUTE----</div>
+            <ul class="cl">
+              <li>Confirm <strong>MUCHO</strong> (FAF) in flight plan</li>
+              <li>Confirm <strong>RWY34L</strong> as final fix</li>
+              <li>PFD nav mode must be set to <strong>ILS</strong> not GPS</li>
+              <li>FMS NAV page VOR1 confirms <strong>I-DYS / 110.3</strong></li>
+            </ul>
+            <div class="crit" contenteditable="false">If PFD nav mode shows GPS instead of ILS — APR mode will not capture the localizer. Switch to ILS mode on PFD softkey.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div id="ils-apmodes" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 3 — Autopilot mode sequence</div>
+      <div class="grid-2">
+        <div class="card span-2">
+          <div class="card-header"><div class="step-num blue">▶</div><div class="card-head-text" contenteditable="false">Complete A/P mode sequence — vectors to DH</div></div>
+          <div class="card-body">
+            <div style="overflow-x:auto">
+              <table class="dt">
+                <thead><tr><th>Flight Phase</th><th>AP</th><th>HDG</th><th>NAV</th><th>ALT</th><th>APR</th><th>A/T</th><th>PFD Note</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Descending on vectors</strong></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td>AP ALT HDG ATH</td></tr>
+                  <tr><td><strong>Arm APR — final vectors</strong></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-arm">ARMED</span></td><td><span class="b-on">ON</span></td><td>APR box orange</td></tr>
+                  <tr><td><strong>LOC captured</strong></td><td><span class="b-on">ON</span></td><td><span class="b-off">drops</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td>APR box green</td></tr>
+                  <tr><td><strong>G/S captured</strong></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-off">—</span></td><td><span class="b-gs">G/S</span></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td>ALT → G/S</td></tr>
+                  <tr><td><strong>At DH</strong></td><td colspan="7"><span class="b-danger">DISENGAGE AP — land manually or execute go-around</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">Arm APR before localizer intercept</div></div>
+          <div class="card-body">
+            <div class="ap-panel">
+              <div class="ap-row">
+                <div class="ap-btn on">AP<div class="dot"></div></div>
+                <div class="ap-btn on">ALT<div class="dot"></div></div>
+                <div class="ap-btn on">HDG<div class="dot"></div></div>
+                <div class="ap-btn off">NAV</div>
+                <div class="ap-btn on">ATH<div class="dot"></div></div>
+                <div class="ap-btn armed">APR<div class="dot"></div></div>
+              </div>
+              <div class="ap-lbl">← press APR to arm</div>
+            </div>
+            <div class="pfd">AP ALT HDG ATH <span class="ann">APR</span>
+<span class="dim">APR box = ORANGE = LOC armed</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">G/S captured — ALT becomes G/S</div></div>
+          <div class="card-body">
+            <div class="ap-panel">
+              <div class="ap-row">
+                <div class="ap-btn on">AP<div class="dot"></div></div>
+                <div class="ap-btn cap">G/S<div class="dot"></div></div>
+                <div class="ap-btn off">HDG</div>
+                <div class="ap-btn off">NAV</div>
+                <div class="ap-btn on">ATH<div class="dot"></div></div>
+                <div class="ap-btn on">APR<div class="dot"></div></div>
+              </div>
+              <div class="ap-lbl">ALT becomes G/S when slope captured ↑</div>
+            </div>
+            <div class="pfd">AP <span class="grn">G/S</span> ATH APR
+<span class="grn">Following 3.0° glideslope</span></div>
+            <div class="warn" contenteditable="false">A/T disengages below 2,500 ft AGL. Manually manage throttle on short final.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div id="ils-intercept" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 4 — Localizer intercept</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">Set HDG bug to ATC intercept heading</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Rotate <strong>HDG</strong> selector knob (lower center panel) to ATC heading</li>
+              <li>Confirm HDG bug moves on PFD compass rose</li>
+              <li>HDG HOLD must be active (green)</li>
+              <li>Intercept angle: <strong>≤ 30°</strong> to inbound CRS 359°</li>
+              <li>Speed: set A/T to <strong>VREF + 20 KIAS</strong> on vectors</li>
+            </ul>
+            <div class="note" contenteditable="false">Ideal intercept: 15–30° to localizer from base leg. A 30° cut at 10 NM gives clean capture without overshoot.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">Monitor LOC needle — intercept criteria</div></div>
+          <div class="card-body">
+            <div class="pfd">     <span class="grn">▼</span>  ← LOC needle moving
+──────┼──────
+      <span class="wht">N</span>               VOR1 DME
+                      <span class="grn">I-DYS 8.4</span>
+
+Full-scale = 2.5° off course
+½ dot     = 1.25° off course</div>
+            <ul class="cl">
+              <li>LOC needle appears within ~10 NM of transmitter</li>
+              <li>APR armed (orange) before needle moves</li>
+              <li>At ½ dot: AP initiates capture turn</li>
+              <li>Rollout within 30° of CRS 359°</li>
+            </ul>
+            <div class="crit" contenteditable="false">If needle reaches full-scale before capture: disconnect AP and hand-fly the intercept.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div id="ils-final" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 5 — Final approach to DH</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">Mandatory altitude callouts — FAF to DH</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>At FAF (MUCHO)</strong> — "Gear down, Flaps 17, Cleared ILS 34L"</li>
+              <li><strong>1,000 ft AGL</strong> — "One thousand feet"</li>
+              <li><strong>500 ft AGL</strong> — "Five hundred, stable" or "Go-around"</li>
+              <li><strong>DH (200 ft HAT)</strong> — "Minimums" then visual call or go-around</li>
+            </ul>
+            <div class="plabel" style="margin-top:10px">Stable approach by 500 ft AGL</div>
+            <ul class="cl">
+              <li>Localizer within <strong>½ dot</strong></li>
+              <li>Glideslope within <strong>½ dot</strong></li>
+              <li>Speed <strong>VREF ±5 KIAS</strong></li>
+              <li>Config: gear down, flaps 17°</li>
+            </ul>
+            <div class="crit" contenteditable="false">Any criterion not met by 500 ft AGL = mandatory go-around.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">Instructor monitoring — common student errors</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>Low on G/S</strong> — chasing localizer, neglecting pitch</li>
+              <li><strong>Speed decay</strong> — A/T off or set too low</li>
+              <li><strong>APR not showing G/S</strong> — G/S not captured; still on ALT</li>
+              <li><strong>Wrong NAV mode</strong> — GPS selected, no LOC needle</li>
+              <li><strong>DH bust</strong> — no call, continuing below minimums</li>
+            </ul>
+            <div class="plabel" style="margin-top:10px">Correction phrases</div>
+            <ul class="cl">
+              <li>"Check PFD softkey — you need <strong>ILS</strong> not GPS"</li>
+              <li>"APR not armed — press APR on autopilot panel"</li>
+              <li>"You're low on glideslope — check G/S needle"</li>
+              <li>"Go around — runway not in sight"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — RNAV
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-rnav" class="page">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">Non-Precision / APV Approach — KwikFlight B-1B</div>
+    <div class="hero-title" contenteditable="false">RNAV / GPS Approach Configuration Guide</div>
+    <div class="hero-sub" contenteditable="false">FMS FPLN and NAV HOLD autopilot setup for GPS/RNAV approaches. No ILS frequency required. PFD softkey must be GPS or NAV1. Vertical guidance is managed manually.</div>
+  </div>
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('rnav','setup')">1 — Pre-approach</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','fpln')">2 — FMS / FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','apmodes')">3 — A/P Modes</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','final')">4 — Final & MDA</button>
+  </div>
+  <div id="rnav-setup" class="phase-content active">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 1 — Key differences from ILS</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">!</div><div class="card-head-text" contenteditable="false">RNAV — no NAV frequency required</div></div>
+          <div class="card-body">
+            <div class="note" contenteditable="false">RNAV approaches use the FMS GPS position — not a ground-based navaid. Do NOT tune a frequency for RNAV. The FMS FPLN drives lateral guidance.</div>
+            <div class="plabel" style="margin-top:10px">What you DO need</div>
+            <ul class="cl">
+              <li>RNAV approach loaded in <strong>FMS FPLN</strong></li>
+              <li>PFD nav mode softkey set to <strong>GPS</strong></li>
+              <li>Autopilot <strong>NAV HOLD</strong> — not APR mode</li>
+              <li>MDA/DA entered on <strong>APPR PAGE</strong></li>
+            </ul>
+            <div class="warn" contenteditable="false">Do not press APR for RNAV. APR looks for a localizer signal only. With no ILS tuned it captures nothing.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">PFD — set nav mode to GPS</div></div>
+          <div class="card-body">
+            <div class="plabel">PFD lower softkeys</div>
+            <div class="fms" style="font-size:10px">VSD | <span class="dim">ADF</span> | <span class="dim">ILS</span> | <span class="dim">NAV1</span> | <span class="hi">[GPS]</span>
+                                             ↑ press this</div>
+            <div class="pfd">AP ALT HDG <span class="grn">NAV</span> ATH <span class="dim">APR</span>
+GPS TRACK
+<span class="grn">Active WPT: MUCHO</span></div>
+            <div class="note" contenteditable="false">GPS mode shows the FMS track deviation needle (magenta). NAV HOLD tracks this needle along the loaded flight plan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rnav-fpln" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 2 — FMS FPLN loading</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">Load RNAV approach — same FPLN flow as ILS</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Press <strong>FPLN</strong> → destination KDYS → left key</li>
+              <li>Select <strong>RWY 34L</strong></li>
+              <li>Select approach type: <strong>RNAV 34L</strong> or <strong>GPS 34L</strong></li>
+              <li>Press <strong>INSERT</strong> to activate</li>
+              <li>Confirm IAF, IF, FAF, and RWY34L all appear in FPLN</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">DIR — fly direct to any fix</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">DIRECT TO
+FPLN WPTS
+→IAF fix
+→IF fix
+<span class="hi">→FAF fix  &lt;-- select this</span>
+→RWY34L</div>
+            <ul class="cl">
+              <li>Press <strong>DIR</strong> shortcut key on FMS</li>
+              <li>Select desired fix with left key</li>
+              <li>Press <strong>Direct Now</strong> bottom right key</li>
+              <li>Use when ATC vectors you direct to final</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rnav-apmodes" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 3 — Autopilot modes (RNAV)</div>
+      <div class="grid-2">
+        <div class="card span-2">
+          <div class="card-header"><div class="step-num blue">▶</div><div class="card-head-text" contenteditable="false">RNAV A/P mode sequence</div></div>
+          <div class="card-body">
+            <table class="dt">
+              <thead><tr><th>Phase</th><th>AP</th><th>HDG</th><th>NAV</th><th>ALT</th><th>APR</th><th>A/T</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Vectors</strong></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td>HDG holds ATC vector</td></tr>
+                <tr><td><strong>Intercept FMS track</strong></td><td><span class="b-on">ON</span></td><td><span class="b-off">drops</span></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td>Press NAV, HDG drops</td></tr>
+                <tr><td><strong>FAF — begin descent</strong></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">V/S</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td>Disengage ALT, set V/S</td></tr>
+                <tr><td><strong>At MDA — level off</strong></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td><span class="b-on">ON</span></td><td><span class="b-off">—</span></td><td><span class="b-on">ON</span></td><td>Re-engage ALT at MDA</td></tr>
+                <tr><td><strong>MAP — no visual</strong></td><td colspan="7"><span class="b-danger">DISENGAGE AP — execute missed approach</span></td></tr>
+              </tbody>
+            </table>
+            <div class="warn" style="margin-top:10px" contenteditable="false">No glideslope for LNAV. Manually manage descent rate. Rule of thumb: groundspeed × 5 = fpm for 3° descent (e.g. 160 kt → 800 fpm).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rnav-final" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">Phase 4 — Final approach and MDA</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">LNAV MDA procedure</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Descend to MDA — <strong>do not go below</strong> without runway in sight</li>
+              <li>At MDA: re-engage ALT HOLD to prevent further descent</li>
+              <li>Continue inbound at MDA looking for runway environment</li>
+              <li>Runway in sight before MAP: land</li>
+              <li>At MAP with no visual: immediate go-around</li>
+            </ul>
+            <div class="crit" contenteditable="false">MDA is a hard floor. Do not descend below until over the runway threshold with landing assured.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">Common student errors — RNAV</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>Wrong AP mode</strong> — pressing APR instead of NAV</li>
+              <li><strong>MDA bust</strong> — forgetting ALT HOLD at MDA</li>
+              <li><strong>Late descent</strong> — not starting at FAF; too high final</li>
+              <li><strong>Wrong PFD mode</strong> — ILS selected, no GPS track shown</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — VOR
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-vor" class="page">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">Non-Precision Approach — KwikFlight B-1B</div>
+    <div class="hero-title" contenteditable="false">VOR Approach Configuration Guide</div>
+    <div class="hero-sub" contenteditable="false">FMS NAV page and autopilot setup for VOR approaches. Uses VOR1 frequency, OBS course, and NAV HOLD. Vertical guidance managed manually via step-down altitudes.</div>
+  </div>
+  <div class="section">
+    <div class="section-title" contenteditable="false">VOR approach setup</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">FMS NAV PAGE — tune VOR and course</div></div>
+        <div class="card-body">
+          <div class="fms">RADIO NAV
+<span class="hi">VOR1/FREQ          CRS</span>
+[<span class="hi">ABI</span>]/<span class="hi">113.7</span>         <span class="hi">359</span>
+<span class="dim">VOR2/FREQ          CRS</span>
+<span class="dim">[  ]/[  ]          ---</span></div>
+          <ul class="cl">
+            <li>Press <strong>NAV</strong> key on FMS CDU</li>
+            <li>Type VOR freq → left key → VOR1</li>
+            <li>Confirm identifier shows station ID</li>
+            <li>Type inbound course → right key → CRS</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">PFD — NAV1 mode and autopilot NAV HOLD</div></div>
+        <div class="card-body">
+          <div class="fms" style="font-size:10px">VSD | <span class="dim">ADF</span> | <span class="dim">ILS</span> | <span class="hi">[NAV1]</span> | <span class="dim">GPS</span>
+                             ↑ press this</div>
+          <div class="ap-panel">
+            <div class="ap-row">
+              <div class="ap-btn on">AP<div class="dot"></div></div>
+              <div class="ap-btn on">ALT<div class="dot"></div></div>
+              <div class="ap-btn off">HDG</div>
+              <div class="ap-btn on">NAV<div class="dot"></div></div>
+              <div class="ap-btn on">ATH<div class="dot"></div></div>
+              <div class="ap-btn off">APR</div>
+            </div>
+            <div class="ap-lbl">NAV HOLD tracks VOR course — do NOT use APR</div>
+          </div>
+        </div>
+      </div>
+      <div class="card span-2">
+        <div class="card-header"><div class="step-num blue">▶</div><div class="card-head-text" contenteditable="false">Approach type comparison — ILS vs RNAV vs VOR</div></div>
+        <div class="card-body">
+          <table class="dt">
+            <thead><tr><th>Feature</th><th>ILS</th><th>RNAV/GPS</th><th>VOR</th></tr></thead>
+            <tbody>
+              <tr><td><strong>FMS NAV page</strong></td><td>ILS freq + CRS</td><td>Not required</td><td>VOR freq + CRS</td></tr>
+              <tr><td><strong>PFD softkey</strong></td><td>ILS</td><td>GPS</td><td>NAV1</td></tr>
+              <tr><td><strong>Lateral AP mode</strong></td><td>APR → LOC capture</td><td>NAV HOLD</td><td>NAV HOLD</td></tr>
+              <tr><td><strong>Vertical AP mode</strong></td><td>APR → G/S capture</td><td>Manual V/S + ALT</td><td>Manual steps + ALT</td></tr>
+              <tr><td><strong>Minimums</strong></td><td>DH (Decision Height)</td><td>MDA or DA</td><td>MDA</td></tr>
+              <tr><td><strong>Precision?</strong></td><td>Yes</td><td>APV or non-precision</td><td>No</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — AUTOPILOT
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-ap" class="page">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">Autopilot Panel — KwikFlight B-1B</div>
+    <div class="hero-title" contenteditable="false">Autopilot Quick Reference</div>
+    <div class="hero-sub" contenteditable="false">All autopilot modes, selectors, and PFD annunciations. Panel located left side of main instrument panel (item 1 in cockpit layout). 4 selector knobs for CRS, HDG, ALT, SPD on lower center panel (item 5).</div>
+  </div>
+  <div class="section">
+    <div class="grid-2">
+      <div class="card span-2">
+        <div class="card-header"><div class="step-num blue">▼</div><div class="card-head-text" contenteditable="false">Autopilot panel — all modes</div></div>
+        <div class="card-body">
+          <div class="ap-panel" style="max-width:420px;margin:0 auto 12px">
+            <div class="ap-row">
+              <div class="ap-btn on" style="min-width:52px">AP<div class="dot"></div></div>
+              <div class="ap-btn on" style="min-width:52px">ALT<div class="dot"></div></div>
+              <div class="ap-btn on" style="min-width:52px">HDG<div class="dot"></div></div>
+              <div class="ap-btn off" style="min-width:52px">NAV</div>
+              <div class="ap-btn on" style="min-width:52px">ATH<div class="dot"></div></div>
+              <div class="ap-btn off" style="min-width:52px">APR</div>
+            </div>
+            <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;font-size:9px;color:var(--text3)">
+              <span style="min-width:52px;text-align:center">MASTER</span>
+              <span style="min-width:52px;text-align:center">ALT HOLD</span>
+              <span style="min-width:52px;text-align:center">HDG HOLD</span>
+              <span style="min-width:52px;text-align:center">NAV HOLD</span>
+              <span style="min-width:52px;text-align:center">AUTO THROT</span>
+              <span style="min-width:52px;text-align:center">APPROACH</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div class="step-num">AP</div><div class="card-head-text" contenteditable="false">AP — Autopilot Master</div></div><div class="card-body"><ul class="cl"><li>Toggles autopilot master on/off</li><li>Must be ON for any other mode to function</li><li>Green emissive + PFD annunciation when active</li><li>Disengage before touchdown or go-around</li></ul></div></div>
+      <div class="card"><div class="card-header"><div class="step-num">HDG</div><div class="card-head-text" contenteditable="false">HDG HOLD — Heading Hold</div></div><div class="card-body"><ul class="cl"><li>Holds heading set on HDG selector knob</li><li>Rotate knob to change target heading</li><li>Use for ATC vectors, pattern work, departure</li><li>Drops out automatically when LOC captured (ILS)</li></ul></div></div>
+      <div class="card"><div class="card-header"><div class="step-num">NAV</div><div class="card-head-text" contenteditable="false">NAV HOLD — Navigation Hold</div></div><div class="card-body"><ul class="cl"><li>Tracks VOR course needle (NAV1) or FMS GPS track (GPS)</li><li>Check PFD nav mode softkey to confirm source</li><li>Use for RNAV approaches, VOR approaches, en route LNAV</li><li>Do NOT use APR mode as substitute</li></ul><div class="warn" contenteditable="false">Check PFD nav mode softkey — NAV HOLD behavior changes between GPS and NAV1 mode.</div></div></div>
+      <div class="card"><div class="card-header"><div class="step-num">ALT</div><div class="card-head-text" contenteditable="false">ALT HOLD — Altitude Hold</div></div><div class="card-body"><ul class="cl"><li>Holds altitude at moment of engagement</li><li>Set target on ALT selector knob before level-off</li><li>PFD shows ALT when active, G/S when glideslope captured</li></ul></div></div>
+      <div class="card"><div class="card-header"><div class="step-num">APR</div><div class="card-head-text" contenteditable="false">APR — Approach Mode (ILS only)</div></div><div class="card-body"><ul class="cl"><li>Arms and captures ILS localizer and glideslope</li><li>APR box: white=off, orange=LOC armed, green=LOC captured</li><li>ILS frequency must be tuned in NAV page first</li><li>PFD nav mode must be set to ILS</li></ul><div class="crit" contenteditable="false">APR only works with an ILS signal. Use NAV HOLD for RNAV and VOR.</div></div></div>
+      <div class="card"><div class="card-header"><div class="step-num">ATH</div><div class="card-head-text" contenteditable="false">AUTO THROT — Autothrottle</div></div><div class="card-body"><ul class="cl"><li>Holds airspeed set at moment of engagement</li><li>Rotate SPD selector knob to change target speed</li><li><strong>Only operative above 2,500 ft AGL</strong></li><li>Set VREF before final — manually manage throttle below 2,500 ft</li></ul><div class="crit" contenteditable="false">A/T disengages below 2,500 ft AGL. Manually manage throttle on short final.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — FMS
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-fms" class="page">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">Flight Management System — KwikFlight B-1B</div>
+    <div class="hero-title" contenteditable="false">FMS Setup & Page Reference</div>
+    <div class="hero-sub" contenteditable="false">Complete guide to FMS initialization, FPLN building, PERF pages, COM/NAV tuning, and the DIR/PSN pages. CDU is on the center pedestal (item 4 in central panel layout).</div>
+  </div>
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('fms','init')">IDEN / INIT</button>
+    <button class="phase-btn" onclick="switchPhase('fms','fpln')">FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('fms','perf')">PERF</button>
+    <button class="phase-btn" onclick="switchPhase('fms','com')">COM / NAV</button>
+    <button class="phase-btn" onclick="switchPhase('fms','dir')">DIR / PSN</button>
+  </div>
+  <div id="fms-init" class="phase-content active">
+    <div class="section">
+      <div class="section-title" contenteditable="false">IDEN → INIT — startup sequence</div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">IDEN page — press L4 to proceed to INIT</div></div><div class="card-body"><div class="fms">           BONE-1B
+ENGINES
+G-E F101
+
+ACTIVE DATA BASE
+SEP050CT02/24          DB
+
+<span class="hi">→ INIT PAGE</span>
+
+                  BLOCK D
+               GNSS/JAMM3.4</div><ul class="cl"><li>Verify database date current for AIRAC cycle</li><li>Press <strong>L4 key</strong> (→ INIT PAGE) to proceed</li></ul></div></div>
+        <div class="card"><div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">INIT page — departure, destination, cruise FL</div></div><div class="card-body"><div class="fms">      ROUTE INIT
+FROM                   TO
+<span class="hi">KDYS</span>               <span class="hi">KTIK</span>
+
+                FLT IDENT
+                   B1 Jet
+
+FINAL FL            FL PLN --&gt;
+FL<span class="hi">360</span></div><ul class="cl"><li>Type departure ICAO → left key → FROM</li><li>Type destination ICAO → right key → TO</li><li>Type cruise FL → left key → FINAL FL</li><li>Press FPLN key to continue</li></ul></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="fms-fpln" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">FPLN — building the route</div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">Select SID from origin airport</div></div><div class="card-body"><div class="fms" style="font-size:10px">    LNAV FOR KDYS
+N32°25.2 W099°51.1
+<span class="hi">←SID</span>
+                  NEXT WPT →→
+                  AIRWAYS →
+<span class="hi">←FPLN PAGE</span></div><ul class="cl"><li>Press left key next to origin (KDYS)</li><li>Press <strong>←SID</strong> left key</li><li>Select runway → SID name → INSERT</li></ul></div></div>
+        <div class="card"><div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">Add waypoints — activate route</div></div><div class="card-body"><ul class="cl"><li>Type waypoint ID → left key to insert</li><li>Use up/down arrows to scroll</li><li>Click destination to add STAR + approach</li><li>Press right accept key to <strong>activate route</strong></li></ul></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="fms-perf" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">PERF pages — V-speeds, cruise, approach data</div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><div class="step-num">1</div><div class="card-head-text" contenteditable="false">PERF → TKOF PAGE — V-speeds</div></div><div class="card-body"><div class="fms">      TAKE OFF
+<span class="hi">V1 --&gt; □□□</span>        FLAPS
+<span class="hi">VR --&gt; □□□</span>          <span class="hi">--&gt; 0°</span>
+<span class="hi">V2 --&gt; □□□</span>           17°
+
+DENS ALT            AUTO
+-304 ft       <span class="hi">V SPEEDS --&gt;</span>
+
+              <span class="hi">CRZ PG--&gt;</span></div><ul class="cl"><li>Select flap setting with right keys (0° or 17°)</li><li>Press V SPEEDS → for auto-computation</li><li>Or manually type V1, VR, V2</li></ul></div></div>
+        <div class="card"><div class="card-header"><div class="step-num">2</div><div class="card-head-text" contenteditable="false">APPR PAGE — flaps, VREF, DH, QNH</div></div><div class="card-body"><div class="fms">      APPR PAGE
+<span class="hi">FLAPS --&gt; 17°</span>
+<span class="hi">VREF --&gt; □□□ Kt</span>
+DH <span class="hi">□□□□</span> RADIO
+LAND QNH --&gt; <span class="hi">29.92</span> inHg
+&lt;--CRZ PG</div><ul class="cl"><li>Enter MDA/DA from approach plate in DH field</li><li>Click VREF for auto-computation</li><li>Update QNH from ATIS</li></ul></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="fms-com" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">COM and NAV pages</div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><div class="step-num">COM</div><div class="card-head-text" contenteditable="false">COM page — radio tuning</div></div><div class="card-body"><div class="fms">      RADIO COM
+ACTIVE              STBY
+COM 1               COM 1
+<span class="hi">118.705</span> &lt;-------&gt; 124.850
+XPDR MODE           XPDR CODE
+<span class="hi">ALT</span>                  <span class="hi">2000</span></div><ul class="cl"><li>Type freq with dot (e.g. <strong>118.10</strong>)</li><li>Left key → ACTIVE immediately</li><li>Right key → STANDBY</li><li>CLR then click active freq to swap with standby</li><li>Bottom left key toggles XPDR mode</li></ul></div></div>
+        <div class="card"><div class="card-header"><div class="step-num">NAV</div><div class="card-head-text" contenteditable="false">NAV page — ILS, VOR, ADF, TACAN</div></div><div class="card-body"><div class="fms">      RADIO NAV
+VOR1/FREQ           CRS
+[<span class="hi">I-DYS</span>]/<span class="hi">110.3</span>        <span class="hi">359</span>
+ADF1/FREQ           BRG
+[  ]/<span class="hi">890</span>            ---
+TAC1/FREQ           CRS
+[  ]/[  ]           ---</div><ul class="cl"><li>Type freq → left key → VOR1 or VOR2</li><li>Type OBS course → right key → CRS</li><li>TAC = TACAN for military approaches / AR</li></ul></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="fms-dir" class="phase-content">
+    <div class="section">
+      <div class="section-title" contenteditable="false">DIR and PSN pages</div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><div class="step-num">DIR</div><div class="card-head-text" contenteditable="false">DIR page — fly direct to any waypoint</div></div><div class="card-body"><div class="fms">DIRECT TO
+FPLN WPTS
+<span class="hi">→D196J</span>
+→D196F
+→BAPAG
+→BPK</div><ul class="cl"><li>Press <strong>DIR</strong> shortcut key</li><li>Scroll to waypoint → left key</li><li>Press Direct Now → activates immediately</li></ul><div class="note" contenteditable="false">Use when ATC gives "Cleared direct [waypoint]".</div></div></div>
+        <div class="card"><div class="card-header"><div class="step-num">PSN</div><div class="card-head-text" contenteditable="false">PSN page — current GPS position</div></div><div class="card-body"><div class="fms">   CURRENT POSITION
+32.4648° -99.4841°
+--&gt; CHANGE NOTATION
+--&gt; STORE PRESENT POS
+NO POS° NO POS°</div><ul class="cl"><li>Shows real-time GPS coordinates</li><li>Left key → change notation format</li><li>STORE PRESENT POS → saves for weapons use</li></ul></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE — QRC
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-qrc" class="page">
+  <div class="page-hero">
+    <div class="hero-eyebrow" contenteditable="false">KwikFlight B-1B · Quick Reference Card</div>
+    <div class="hero-title" contenteditable="false">Full Checklist — Ground to Parking</div>
+    <div class="hero-sub" contenteditable="false">Complete QRC from the KwikFlight B-1B manual. Tap any item to mark it complete. Reset buttons available per phase.</div>
+  </div>
+  <div class="section">
+    <div class="grid-3" id="qrc-grid"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="resetAll()" style="padding:7px 14px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--sans)">Reset all</button>
+      <button onclick="window.print()" style="padding:7px 14px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--sans)">Print / PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT TIP ══════════════════════════════════════════════════ -->
+<div id="edit-tip">
+  <strong>Edit mode active</strong><br>
+  Click any <span style="color:var(--gold)">gold-highlighted</span> text to edit it directly.<br>
+  Click the logo area to upload your squadron image.
+</div>
+
+<script>
+// ── PAGE / PHASE SWITCHING ───────────────────────────────────────────
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0,56);
+}
+function switchPhase(page,phase){
+  const prefix=page+'-';
+  document.querySelectorAll('[id^="'+prefix+'"].phase-content').forEach(p=>p.classList.remove('active'));
+  document.getElementById(prefix+phase).classList.add('active');
+  const nav=event.target.closest('.phase-nav');
+  if(nav)nav.querySelectorAll('.phase-btn').forEach(b=>b.classList.toggle('active',b===event.target));
+}
+
+// ── EDIT MODE ───────────────────────────────────────────────────────
+let editMode=false;
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  document.querySelectorAll('[contenteditable]').forEach(el=>{
+    el.contentEditable=editMode?'true':'false';
+  });
+  const btn=document.getElementById('edit-toggle-btn');
+  const dot=document.getElementById('status-dot');
+  const txt=document.getElementById('status-text');
+  const tip=document.getElementById('edit-tip');
+  btn.classList.toggle('active',editMode);
+  dot.classList.toggle('on',editMode);
+  txt.textContent=editMode?'Edit mode ON':'View mode';
+  tip.classList.toggle('visible',editMode);
+}
+
+// ── LOGO ─────────────────────────────────────────────────────────────
+function openImgDialog(){document.getElementById('img-overlay').classList.add('visible');}
+function closeImgDialog(){document.getElementById('img-overlay').classList.remove('visible');}
+function removeLogo(){
+  const img=document.getElementById('logo-img');
+  const ph=document.getElementById('logo-placeholder');
+  img.src='';img.classList.remove('visible');ph.classList.remove('hidden');
+}
+function handleLogoFile(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById('logo-img');
+    const ph=document.getElementById('logo-placeholder');
+    img.src=e.target.result;
+    img.classList.add('visible');
+    ph.classList.add('hidden');
+    closeImgDialog();
+  };
+  r.readAsDataURL(file);
+}
+// Drag and drop
+const drop=document.getElementById('img-drop');
+drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('dragover');});
+drop.addEventListener('dragleave',()=>drop.classList.remove('dragover'));
+drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f)handleLogoFile(f);});
+document.getElementById('logo-upload').addEventListener('change',e=>handleLogoFile(e.target.files[0]));
+document.getElementById('img-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('img-overlay'))closeImgDialog();});
+
+// ── THEME ─────────────────────────────────────────────────────────────
+function setAccent(v){document.documentElement.style.setProperty('--gold',v);document.documentElement.style.setProperty('--gold2',lighten(v));}
+function setBg(v){document.documentElement.style.setProperty('--bg',v);}
+function lighten(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return'rgb('+(Math.min(255,r+40))+','+(Math.min(255,g+40))+','+(Math.min(255,b+40))+')';}
+
+function applyTheme(t){
+  const root=document.documentElement;
+  const themes={
+    'dark-gold':{bg:'#0d0f14',surface:'#141720',card:'#1a1e2b',card2:'#1f2435',gold:'#c8a951',gold2:'#f0cc72',text:'#e8eaf0',text2:'#9aa0b8'},
+    'dark-blue':{bg:'#0a0e1a',surface:'#101828',card:'#141e30',card2:'#1a2540',gold:'#4a90d9',gold2:'#7ab8ff',text:'#dce8ff',text2:'#7a9abc'},
+    'dark-red': {bg:'#140a0a',surface:'#1e1010',card:'#281414',card2:'#321818',gold:'#d04040',gold2:'#ff7070',text:'#ffe8e8',text2:'#b07878'},
+    'light':    {bg:'#f4f6fa',surface:'#ffffff',card:'#ffffff',card2:'#f0f2f8',gold:'#1a4a9a',gold2:'#2a6ac8',text:'#1a1e2b',text2:'#4a5070'},
+    'stealth':  {bg:'#080808',surface:'#0e0e0e',card:'#141414',card2:'#1a1a1a',gold:'#606060',gold2:'#a0a0a0',text:'#cccccc',text2:'#707070'},
+  };
+  const s=themes[t];if(!s)return;
+  Object.entries(s).forEach(([k,v])=>root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(),v));
+  document.getElementById('color-accent').value=s.gold;
+}
+
+// ── EXPORT ─────────────────────────────────────────────────────────
+function exportHTML(){
+  // capture current CSS variables inline
+  const styles=getComputedStyle(document.documentElement);
+  const vars=['--bg','--surface','--card','--card2','--border','--border2','--gold','--gold2','--blue','--blue2','--green','--green2','--amber','--amber2','--red','--red2','--text','--text2','--text3'];
+  let overrides=':root{';
+  vars.forEach(v=>overrides+=v+':'+styles.getPropertyValue(v)+';');
+  overrides+='}';
+
+  // get logo as data URL if present
+  const logoImg=document.getElementById('logo-img');
+  const logoData=logoImg.classList.contains('visible')?logoImg.src:'';
+
+  // clone document
+  const clone=document.documentElement.cloneNode(true);
+
+  // inject overrides
+  const styleEl=clone.querySelector('style');
+  if(styleEl)styleEl.textContent=overrides+styleEl.textContent;
+
+  // set logo in clone
+  if(logoData){const ci=clone.querySelector('#logo-img');if(ci){ci.src=logoData;ci.classList.add('visible');const cp=clone.querySelector('#logo-placeholder');if(cp)cp.classList.add('hidden');}}
+
+  // remove toolbar from export
+  const tb=clone.querySelector('#toolbar');if(tb)tb.remove();
+  const tip=clone.querySelector('#edit-tip');if(tip)tip.remove();
+  const ov=clone.querySelector('#img-overlay');if(ov)ov.remove();
+
+  // reset margins
+  const nav=clone.querySelector('.topnav');
+  if(nav){nav.style.top='0';nav.style.marginTop='0';}
+
+  // disable edit mode in export
+  clone.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+
+  const html='<!DOCTYPE html>\n'+clone.outerHTML;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='B1B_Training_Guide_Custom.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── QRC ─────────────────────────────────────────────────────────────
+const QRC=[
+  {title:'Preliminary cockpit preparation',color:'var(--blue)',items:[['Fuel Panel Switches','ALL HORIZONTAL'],['Main Battery Switch','OFF'],['Throttle Lever','IDLE'],['Landing Gear Lever','DOWN'],['Parking Brake','ON'],['Engine Generator Switches','OFF / DOWN'],['Bleed Air Panel','ALL OFF'],['Cabin Packs','BOTH OFF']]},
+  {title:'Cockpit preparation',color:'var(--blue)',items:[['Main Battery Switch','ON'],['External Power','ON (if available)'],['Internal Lights','AS REQUIRED'],['CDU – Flight Plan','CHECK'],['Fuel Quantity','CHECK'],['CDU – Performance Speeds','CHECK'],['Take-off Briefing','PERFORM']]},
+  {title:'Before start',color:'var(--amber)',items:[['APU 1 and APU 2','BOTH ON'],['Crew Hatch','CLOSED'],['Beacon Lights','ON'],['External Power','OFF and disconnected'],['Fuel Panel Switches','ALL VERTICAL']]},
+  {title:'Engine start',color:'var(--amber)',items:[['Engine 1 Switch','START'],['Engine 1 Parameters','CHECK N1 above 18%'],['Engine 2 Switch','START'],['Engine 2 Parameters','CHECK N1 above 18%'],['Engine 3 Switch','START'],['Engine 3 Parameters','CHECK N1 above 18%'],['Engine 4 Switch','START'],['Engine 4 Parameters','CHECK N1 above 18%']]},
+  {title:'After start',color:'var(--amber)',items:[['Engine Generator Switches','ALL ON'],['APU 1 and APU 2','BOTH OFF'],['Pitch Trim','AS REQUIRED'],['Flaps','SET'],['Engines Bleed Air','ALL ON'],['Cabin Packs','BOTH ON'],['Warning System','CHECK NO WARNINGS']]},
+  {title:'Taxi',color:'var(--gold)',items:[['Taxi Lights','ON'],['Nose Wheel Steering','ON'],['Parking Brake','OFF'],['MFD – FCH page','NO Xs'],['Barometer Setting','SET'],['Take-off Briefing','PERFORM'],['Exterior Lights','SET']]},
+  {title:'Take-off',color:'var(--gold)',items:[['Nose Wheel Steering','ON'],['Cabin Packs','AS REQUIRED'],['Landing Lights','ON']]},
+  {title:'After take-off',color:'var(--green)',items:[['Landing Gear','UP'],['Flaps','RETRACTED'],['Cabin Packs','AS REQUIRED'],['Landing Lights','OFF']]},
+  {title:'Cruise',color:'var(--green)',items:[['MFD – STATS Page','CHECK NO WARNINGS'],['Fuel Quantity','CHECK']]},
+  {title:'Landing',color:'var(--blue)',items:[['Nose Wheel Steering','ON'],['Landing Lights','ON'],['Landing Gear','DOWN'],['Flaps','EXTENDED'],['Spoilers','ARM']]},
+  {title:'After landing',color:'var(--blue)',items:[['Nose Wheel Steering','ON'],['Landing Lights','OFF'],['Taxi Lights','ON'],['Spoilers','DISARM'],['Flaps','RETRACTED'],['APU 1 or APU 2','ON']]},
+  {title:'Parking / shutdown',color:'var(--red)',items:[['Engines','ALL OFF'],['Exterior Lights','ALL OFF'],['Parking Brake','ON'],['APU 1 and APU 2','BOTH OFF'],['Fuel Panel Switches','ALL HORIZONTAL'],['Engine Generator Switches','ALL OFF'],['Internal Lights','ALL OFF'],['Main Battery Switch','OFF']]},
+];
+const state={};
+function buildQRC(){
+  const grid=document.getElementById('qrc-grid');grid.innerHTML='';
+  QRC.forEach((s,si)=>{
+    if(!state[si])state[si]={};
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<div class="card-header" style="border-left:3px solid ${s.color}"><div class="card-head-text">${s.title}</div><span style="margin-left:auto;font-size:10px;color:var(--text3)" id="prog-${si}"></span></div><div class="card-body" style="padding:8px 12px"><ul class="qrc-list" id="qrc-${si}"></ul><button onclick="resetSection(${si})" style="margin-top:6px;padding:3px 9px;background:var(--card2);border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--text3);cursor:pointer;font-family:var(--sans)">Reset</button></div>`;
+    grid.appendChild(card);renderSection(si);
+  });
+}
+function renderSection(si){
+  const ul=document.getElementById('qrc-'+si);const prog=document.getElementById('prog-'+si);
+  ul.innerHTML='';let done=0;
+  QRC[si].items.forEach((item,ii)=>{
+    const checked=state[si][ii];if(checked)done++;
+    const li=document.createElement('li');li.style.cursor='pointer';li.style.opacity=checked?'.4':'1';
+    li.innerHTML=`<span class="qrc-item" style="text-decoration:${checked?'line-through':'none'}">${item[0]}</span><span class="qrc-val" style="color:${checked?'var(--text3)':'var(--gold2)'}">${item[1]}</span>`;
+    li.onclick=()=>{state[si][ii]=!state[si][ii];renderSection(si);};
+    ul.appendChild(li);
+  });
+  prog.textContent=`${done}/${QRC[si].items.length}`;
+  prog.style.color=done===QRC[si].items.length?'var(--green2)':'var(--text3)';
+}
+function resetSection(si){state[si]={};renderSection(si);}
+function resetAll(){QRC.forEach((_,si)=>{state[si]={};});buildQRC();}
+buildQRC();
+</script>
+</body>
+</html>

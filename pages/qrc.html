@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QRC Checklist — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.qrc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.prog-bar { height: 4px; border-radius: 2px; background: var(--border); margin-top: 6px; }
+.prog-fill { height: 100%; border-radius: 2px; background: var(--gold); transition: width .3s; }
+</style>
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+<section class="hero" style="padding:40px 24px 32px">
+  <div class="hero-eyebrow">KwikFlight B-1B · Interactive Checklist</div>
+  <h1 class="hero-title" style="font-size:clamp(24px,4vw,38px)">Quick Reference <span>Checklist</span></h1>
+  <p class="hero-sub" style="font-size:14px">Tap any item to check it off. Progress tracked per phase. Based on the official KwikFlight B-1B QRC.</p>
+</section>
+<div class="container page-body">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+    <button onclick="resetAllQRC('qrc-grid')" class="btn btn-outline" style="font-size:12px">Reset all</button>
+    <button onclick="window.print()" class="btn btn-outline" style="font-size:12px">Print / PDF</button>
+    <span id="overall-prog" style="margin-left:auto;font-size:13px;color:var(--text3);align-self:center"></span>
+  </div>
+  <div class="qrc-grid" id="qrc-grid"></div>
+</div>
+<footer class="site-footer"><p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS)</p><p style="margin-top:6px"><a href="../index.html">Back to home</a></p></footer>
+<script src="../assets/main.js"></script>
+<script>
+buildQRC(window._qrcData, 'qrc-grid');
+function updateOverall() {
+  let total=0,done=0;
+  window._qrcData.forEach((_,si)=>{ total+=window._qrcData[si].items.length; Object.values(qrcState[si]||{}).forEach(v=>{ if(v)done++; }); });
+  document.getElementById('overall-prog').textContent=done+' / '+total+' items complete';
+}
+const origRender=renderQSection;
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Virtual B-1B Lancer training guide for Microsoft Flight Simulator 2024 — KwikFlight B-1B, Dyess AFB (KDYS). ILS, RNAV, VOR approaches, FMS setup, autopilot reference, and full QRC checklist.">
+<title>B-1B Lancer Virtual Training — Dyess AFB</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.home-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 32px; }
+.home-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 22px; text-decoration: none; color: inherit;
+  transition: border-color .15s, transform .15s; display: flex; flex-direction: column; gap: 10px;
+}
+.home-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.home-card .icon { font-size: 28px; margin-bottom: 2px; }
+.home-card .hc-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.home-card .hc-sub   { font-size: 13px; color: var(--text2); line-height: 1.6; flex: 1; }
+.home-card .hc-link  { font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: .04em; margin-top: 4px; }
+.stats-row { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 32px 0; }
+.stat { text-align: center; }
+.stat .val { font-size: 32px; font-weight: 900; color: var(--gold); line-height: 1.1; }
+.stat .lbl { font-size: 11px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-top: 4px; }
+.announce-bar {
+  background: rgba(200,169,81,.08); border: 1px solid rgba(200,169,81,.2);
+  border-radius: 8px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--text2); margin-bottom: 32px;
+}
+.announce-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green2); box-shadow: 0 0 6px var(--green2); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="nav-logo" href="index.html">
+      <div class="badge">B1</div>
+      <div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="pages/ils.html">ILS</a>
+      <a href="pages/rnav.html">RNAV</a>
+      <a href="pages/vor.html">VOR</a>
+      <a href="pages/autopilot.html">Autopilot</a>
+      <a href="pages/fms.html">FMS</a>
+      <a href="pages/glossary.html">Glossary</a>
+      <a href="pages/qrc.html">QRC</a>
+    </div>
+    <button class="nav-mobile-btn" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Virtual Flying Squadron · Dyess AFB · MSFS 2024</div>
+  <h1 class="hero-title">B-1B <span>Lancer</span><br>Instructor Training Guide</h1>
+  <p class="hero-sub">Complete IFR approach procedures, FMS configuration, autopilot reference, phrase glossary, and interactive checklists — built specifically for the KwikFlight B-1B add-on.</p>
+  <div class="hero-actions">
+    <a href="pages/ils.html" class="btn btn-primary">▶ Start with ILS</a>
+    <a href="pages/glossary.html" class="btn btn-outline">📖 Phrase Glossary</a>
+    <a href="pages/qrc.html" class="btn btn-outline">✓ QRC Checklist</a>
+  </div>
+</section>
+
+<div class="container page-body">
+
+  <div class="announce-bar">
+    <div class="dot"></div>
+    <span>KwikFlight B-1B · Microsoft Flight Simulator 2024 · Phases 2 &amp; 3 Syllabus · Base: KDYS (Dyess AFB, Abilene TX)</span>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="val">6</div><div class="lbl">Phase 2 Events</div></div>
+    <div class="stat"><div class="val">6</div><div class="lbl">Phase 3 Events</div></div>
+    <div class="stat"><div class="val">3</div><div class="lbl">Approach Types</div></div>
+    <div class="stat"><div class="val">80+</div><div class="lbl">Glossary Terms</div></div>
+    <div class="stat"><div class="val">12</div><div class="lbl">QRC Phases</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Training modules</div>
+    <div class="home-card-grid">
+
+      <a href="pages/ils.html" class="home-card">
+        <div class="icon">🎯</div>
+        <div class="hc-title">ILS Approach</div>
+        <div class="hc-sub">Precision approach using the instrument landing system. FMS NAV page setup, APR mode arming sequence, localizer intercept, and DH procedures for KDYS RWY 34L.</div>
+        <div class="hc-link">Open guide →</div>
+      </a>
+
+      <a href="pages/rnav.html" class="home-card">
+        <div class="icon">🛰</div>
+        <div class="hc-title">RNAV / GPS Approach</div>
+        <div class="hc-sub">GPS-based approach using FMS flight plan for lateral guidance. NAV HOLD mode, manual descent management, MDA procedures, and DIR direct-to usage.</div>
+        <div class="hc-link">Open guide →</div>
+      </a>
+
+      <a href="pages/vor.html" class="home-card">
+        <div class="icon">📡</div>
+        <div class="hc-title">VOR Approach</div>
+        <div class="hc-sub">Non-precision approach using VOR station tracking. NAV page frequency tuning, NAV1 PFD mode, NAV HOLD intercept, and step-down altitude management.</div>
+        <div class="hc-link">Open guide →</div>
+      </a>
+
+      <a href="pages/autopilot.html" class="home-card">
+        <div class="icon">🕹</div>
+        <div class="hc-title">Autopilot Reference</div>
+        <div class="hc-sub">Complete reference for all six autopilot modes — AP, HDG, NAV, ALT, APR, and ATH. PFD annunciations, selector knob functions, and common errors.</div>
+        <div class="hc-link">Open guide →</div>
+      </a>
+
+      <a href="pages/fms.html" class="home-card">
+        <div class="icon">⌨️</div>
+        <div class="hc-title">FMS Setup Guide</div>
+        <div class="hc-sub">From IDEN startup through FPLN route building, SID/STAR loading, PERF V-speeds, APPR page setup, COM/NAV tuning, and DIR/PSN reference.</div>
+        <div class="hc-link">Open guide →</div>
+      </a>
+
+      <a href="pages/glossary.html" class="home-card">
+        <div class="icon">📖</div>
+        <div class="hc-title">Phrase & Term Glossary</div>
+        <div class="hc-sub">Searchable A–Z reference covering every abbreviation, ATC phrase, navigation term, autopilot mode, and systems acronym used in B-1B virtual training.</div>
+        <div class="hc-link">Open glossary →</div>
+      </a>
+
+      <a href="pages/qrc.html" class="home-card">
+        <div class="icon">✅</div>
+        <div class="hc-title">QRC Checklist</div>
+        <div class="hc-sub">Interactive tap-to-check checklist covering all 12 phases: Preliminary Cockpit Prep through Parking/Shutdown. Based on the official KwikFlight QRC.</div>
+        <div class="hc-link">Open checklist →</div>
+      </a>
+
+      <a href="pages/training.html" class="home-card">
+        <div class="icon">🎓</div>
+        <div class="hc-title">Phase 2 &amp; 3 Training Guide</div>
+        <div class="hc-sub">Full instructor syllabus for all Phase 2 and Phase 3 events — graded items tables, step-by-step instruction sequences, and evaluation standards.</div>
+        <div class="hc-link">Open syllabus →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-label">Aircraft &amp; airfield reference</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-icon">📋</div><div class="card-title">KwikFlight B-1B Specifications</div></div>
+        <div class="card-body">
+          <div class="freq-row"><span class="freq-name">Cruise Speed</span><span class="freq-val">400 KTAS</span></div>
+          <div class="freq-row"><span class="freq-name">Max Altitude</span><span class="freq-val">60,000 ft</span></div>
+          <div class="freq-row"><span class="freq-name">Max Weight</span><span class="freq-val">477,000 lbs</span></div>
+          <div class="freq-row"><span class="freq-name">Fuel Capacity</span><span class="freq-val">35,593 Gal</span></div>
+          <div class="freq-row"><span class="freq-name">Range</span><span class="freq-val">6,478 NM</span></div>
+          <div class="freq-row"><span class="freq-name">Length</span><span class="freq-val">80 ft</span></div>
+          <div class="freq-row"><span class="freq-name">Wingspan</span><span class="freq-val">100 ft (fwd sweep)</span></div>
+          <div class="freq-row"><span class="freq-name">Wing Sweep Range</span><span class="freq-val">15° – 67.5°</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon">📻</div><div class="card-title">KDYS Key Frequencies</div></div>
+        <div class="card-body">
+          <div class="freq-row"><span class="freq-name">ATIS</span><span class="freq-val">134.05</span></div>
+          <div class="freq-row"><span class="freq-name">Ground</span><span class="freq-val">121.65</span></div>
+          <div class="freq-row"><span class="freq-name">Tower</span><span class="freq-val">126.2</span></div>
+          <div class="freq-row"><span class="freq-name">Approach / Departure</span><span class="freq-val">119.3</span></div>
+          <div class="freq-row"><span class="freq-name">ILS RWY 34L</span><span class="freq-val">110.3 / I-DYS</span></div>
+          <div class="freq-row"><span class="freq-name">ILS Inbound Course</span><span class="freq-val">359°</span></div>
+          <div class="freq-row"><span class="freq-name">Field Elevation</span><span class="freq-val">1,789 ft MSL</span></div>
+          <div class="freq-row"><span class="freq-name">Primary Runway</span><span class="freq-val">34L / 16R (10,000 ft)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · Microsoft Flight Simulator 2024 · KwikFlight B-1B</p>
+  <p style="margin-top:6px">For simulation use only. Not for real-world aviation. <a href="https://github.com">Hosted on GitHub Pages</a>.</p>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

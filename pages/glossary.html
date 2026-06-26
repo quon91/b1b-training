@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phrase & Term Glossary — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+#term-count { font-size: 12px; color: var(--text3); margin-bottom: 16px; }
+.no-results { text-align: center; padding: 48px; color: var(--text3); font-size: 14px; }
+.alpha-index { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alpha-btn { width: 34px; height: 34px; border-radius: 6px; background: var(--card); border: 1px solid var(--border); color: var(--text3); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: var(--sans); transition: all .12s; }
+.alpha-btn:hover { border-color: var(--border2); color: var(--text2); }
+.alpha-btn.active { background: rgba(200,169,81,.15); border-color: var(--gold); color: var(--gold); }
+.alpha-section { margin-bottom: 32px; }
+.alpha-head { font-size: 22px; font-weight: 900; color: var(--gold); padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; letter-spacing: .04em; }
+.terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="nav-logo" href="../index.html">
+      <div class="badge">B1</div>
+      <div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="ils.html">ILS</a>
+      <a href="rnav.html">RNAV</a>
+      <a href="vor.html">VOR</a>
+      <a href="autopilot.html">Autopilot</a>
+      <a href="fms.html">FMS</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="qrc.html">QRC</a>
+    </div>
+    <button class="nav-mobile-btn" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
+  </div>
+</nav>
+
+<section class="hero" style="padding:40px 24px 32px">
+  <div class="hero-eyebrow">B-1B Virtual Training Reference</div>
+  <h1 class="hero-title" style="font-size:clamp(24px,4vw,38px)">Phrase &amp; Term <span>Glossary</span></h1>
+  <p class="hero-sub" style="font-size:14px">Every abbreviation, ATC phrase, navigation term, autopilot mode, FMS page name, and system acronym used in B-1B virtual training — searchable and filtered by category.</p>
+</section>
+
+<div class="container page-body">
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" class="search-box" placeholder="Search terms, abbreviations, or descriptions…" oninput="filterTerms()">
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('nav', this)">🧭 Navigation</button>
+    <button class="filter-btn" onclick="setFilter('ap', this)">🕹 Autopilot</button>
+    <button class="filter-btn" onclick="setFilter('comm', this)">📻 ATC / Comms</button>
+    <button class="filter-btn" onclick="setFilter('sys', this)">⚙️ Systems</button>
+    <button class="filter-btn" onclick="setFilter('proc', this)">📋 Procedures</button>
+  </div>
+
+  <div class="alpha-index" id="alpha-index"></div>
+  <div id="term-count"></div>
+  <div id="glossary-output"></div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · Microsoft Flight Simulator 2024</p>
+  <p style="margin-top:6px">For simulation use only. <a href="../index.html">Back to home</a>.</p>
+</footer>
+
+<script src="../assets/main.js"></script>
+<script>
+const TERMS = [
+  // ── NAVIGATION ──────────────────────────────────────────────────────
+  { abbr:'ILS',   full:'Instrument Landing System',       cat:'nav',  def:'A ground-based precision approach system that provides both lateral (localizer) and vertical (glideslope) guidance to the runway threshold. In KwikFlight B-1B: tune frequency in FMS NAV page VOR1, set CRS, set PFD softkey to ILS, then engage APR mode.' },
+  { abbr:'LOC',   full:'Localizer',                       cat:'nav',  def:'The lateral component of an ILS that guides the aircraft left/right along the extended runway centerline. Tracked by APR mode after arming. Full-scale deflection = 2.5° off course; half-scale = 1.25°. Stay within ½ dot from FAF to DH.' },
+  { abbr:'G/S',   full:'Glideslope',                      cat:'nav',  def:'The vertical component of an ILS that provides a 3° descent path to the runway. Captured automatically by APR mode after localizer is established. When captured, ALT HOLD changes to G/S on the PFD annunciation.' },
+  { abbr:'RNAV',  full:'Area Navigation',                  cat:'nav',  def:'A navigation method that allows aircraft to fly along any flight path using GPS or other sensors, not constrained to fly directly over ground stations. In the KwikFlight B-1B: lateral guidance comes from the FMS flight plan. Use NAV HOLD (not APR) on autopilot. PFD softkey must be GPS.' },
+  { abbr:'GPS',   full:'Global Positioning System',        cat:'nav',  def:'Satellite-based navigation providing continuous position information. The FMS uses GPS as its primary navigation source for RNAV operations. In KwikFlight B-1B, GPS mode on the PFD shows the FMS track deviation needle.' },
+  { abbr:'VOR',   full:'VHF Omnidirectional Range',        cat:'nav',  def:'A ground-based radio navigation aid transmitting signals on VHF frequencies (108–117.95 MHz) that allow aircraft to determine their bearing from the station. Tune frequency in FMS NAV page VOR1, set inbound course in CRS field, set PFD softkey to NAV1, use NAV HOLD autopilot.' },
+  { abbr:'NDB',   full:'Non-Directional Beacon',           cat:'nav',  def:'A radio navigation aid transmitting on AM frequencies (190–1750 kHz) that the aircraft ADF receiver uses to determine the bearing to the station. Tuned via ADF1/FREQ in FMS NAV page. Used for ADF approaches.' },
+  { abbr:'DME',   full:'Distance Measuring Equipment',     cat:'nav',  def:'Radio navigation equipment that measures slant-range distance from the aircraft to a ground station. Displayed on PFD compass rose alongside VOR1 identifier and frequency (e.g. "I-DYS 8.4" means 8.4 NM from I-DYS).' },
+  { abbr:'TACAN', full:'Tactical Air Navigation',           cat:'nav',  def:'Military equivalent of VOR/DME combined, operating on UHF frequencies. Used for military approaches and aerial refueling rendezvous. Tuned via TAC1/FREQ in FMS NAV page. Provides bearing and distance to a military station or tanker.' },
+  { abbr:'IAF',   full:'Initial Approach Fix',             cat:'nav',  def:'The fix that marks the beginning of an instrument approach procedure. Aircraft transition from the en route or arrival phase to the approach phase at the IAF. Appears in the FMS FPLN when an approach is loaded.' },
+  { abbr:'IF',    full:'Intermediate Fix',                 cat:'nav',  def:'A fix between the IAF and the FAF in an RNAV approach. Used to establish the aircraft inbound on final approach course before the FAF.' },
+  { abbr:'FAF',   full:'Final Approach Fix',               cat:'nav',  def:'The fix from which the final approach segment begins. For ILS: usually where the glideslope intercept occurs. For non-precision: the fix from which descent to MDA is started. For KDYS ILS 34L: MUCHO fix.' },
+  { abbr:'MAP',   full:'Missed Approach Point',            cat:'nav',  def:'The point on an instrument approach by which the pilot must have the runway environment in sight, or must execute a missed approach. For precision approaches, the DH replaces the MAP. For non-precision: typically a fix at the runway end.' },
+  { abbr:'SID',   full:'Standard Instrument Departure',    cat:'nav',  def:'A published departure procedure that provides a standardized route from the runway to the en route structure. In FMS FPLN: accessed by clicking the origin airport then selecting ←SID. Select runway, then SID name, then INSERT.' },
+  { abbr:'STAR',  full:'Standard Terminal Arrival Route',  cat:'nav',  def:'A published arrival procedure providing a standardized route from the en route structure to an approach fix or airport. In FMS FPLN: accessed by clicking the destination airport. Continue steps like the SID to select and insert.' },
+  { abbr:'LNAV',  full:'Lateral Navigation',               cat:'nav',  def:'The lateral guidance component of an RNAV approach using GPS. Provides left/right track guidance along the FMS flight plan. No vertical guidance — descent must be managed manually using step-down altitudes. Minimums type: MDA.' },
+  { abbr:'LPV',   full:'Localizer Performance with Vertical',  cat:'nav', def:'An RNAV approach type using WAAS GPS that provides both lateral and vertical guidance comparable to an ILS. Decision altitude (DA) similar to ILS. Not currently simulated in KwikFlight B-1B; use LNAV with manual descent.' },
+  { abbr:'WAAS',  full:'Wide Area Augmentation System',    cat:'nav',  def:'A ground-based augmentation system for GPS that provides increased accuracy and integrity, enabling LPV approaches. Required for LPV approach minima.' },
+  { abbr:'OBS',   full:'Omni Bearing Selector',            cat:'nav',  def:'The course selector used to set the VOR radial or ILS course you want to track. In FMS NAV page: the CRS field. On the autopilot panel: the CRS selector knob. For ILS 34L: set to 359°.' },
+  { abbr:'CRS',   full:'Course',                           cat:'nav',  def:'The magnetic course set for a VOR radial or ILS localizer. Entered in the CRS field on the FMS NAV page using the right key. Also set via CRS selector knob on the autopilot lower panel.' },
+  { abbr:'HDG',   full:'Heading',                          cat:'nav',  def:'The direction the aircraft nose is pointed, measured in degrees magnetic. Set using the HDG selector knob on the autopilot lower panel. HDG HOLD autopilot mode maintains this heading.' },
+  { abbr:'TRK',   full:'Track',                            cat:'nav',  def:'The actual path the aircraft is flying over the ground. May differ from heading due to wind. In GPS mode, the FMS shows track deviation from the filed flight plan route.' },
+  { abbr:'GS',    full:'Groundspeed',                      cat:'nav',  def:'The speed of the aircraft relative to the ground. Used to calculate TOT (time on target), fuel burn, and descent rate for RNAV approaches (GS × 5 ≈ fpm for 3° descent).' },
+  { abbr:'NM',    full:'Nautical Mile',                    cat:'nav',  def:'The standard unit of distance in aviation. One NM = 6,076 feet = 1.852 km. Displayed in FMS FPLN as DIST.' },
+  { abbr:'FL',    full:'Flight Level',                     cat:'nav',  def:'Altitude expressed in hundreds of feet above the standard datum (29.92 inHg). FL360 = 36,000 ft. Used above the transition altitude. Entered in FMS INIT page as FINAL FL.' },
+  { abbr:'MSL',   full:'Mean Sea Level',                   cat:'nav',  def:'The standard reference for altitude measurement. KDYS field elevation is 1,789 ft MSL. DH for ILS 34L expressed in MSL (1,789 + 200 HAT = ~1,989 ft MSL).' },
+  { abbr:'AGL',   full:'Above Ground Level',               cat:'nav',  def:'Height above the terrain directly below the aircraft. DH is expressed in feet HAT (Height Above Touchdown), which is functionally AGL at the runway threshold. Auto-throttle disengages below 2,500 ft AGL.' },
+  { abbr:'DIR',   full:'Direct To',                        cat:'nav',  def:'FMS function that creates a great-circle course from the present position directly to a chosen waypoint, bypassing intermediate fixes. Press DIR shortcut key → select waypoint → Direct Now. Used when ATC issues "Cleared direct [fix]".' },
+  { abbr:'WPT',   full:'Waypoint',                         cat:'nav',  def:'A defined geographical position used in flight planning and navigation. May be a named fix (MUCHO, BAPAG), a VOR/airport ICAO identifier, or lat/long coordinates. Added to FMS FPLN via keyboard.' },
+  { abbr:'ICAO',  full:'International Civil Aviation Organization',  cat:'nav', def:'The UN body that standardizes international aviation. Also refers to the 4-letter airport identifier system (KDYS = Dyess AFB, KTIK = Tinker AFB). Used in FMS INIT page FROM and TO fields.' },
+  { abbr:'PSN',   full:'Position',                         cat:'nav',  def:'FMS page showing the aircraft\'s current GPS coordinates in decimal degrees. Access via PSN shortcut key. Use STORE PRESENT POS to save coordinates for use as a waypoint or weapon target reference.' },
+
+  // ── AUTOPILOT ───────────────────────────────────────────────────────
+  { abbr:'AP',    full:'Autopilot',                        cat:'ap',   def:'The master autopilot switch on the KwikFlight B-1B autopilot panel (left side of main instrument panel). Must be ON for any other autopilot mode to function. Green emissive indicator and PFD annunciation when active.' },
+  { abbr:'HDG HOLD', full:'Heading Hold Mode',            cat:'ap',   def:'Autopilot mode that maintains the heading set on the HDG selector knob. Used for ATC vectors, pattern work, and departure headings. Automatically drops out when localizer is captured in APR mode. Press HDG button on autopilot panel.' },
+  { abbr:'NAV HOLD', full:'Navigation Hold Mode',         cat:'ap',   def:'Autopilot mode that tracks the course deviation needle on the PFD — either a VOR radial (NAV1 mode) or FMS GPS track (GPS mode). Used for RNAV and VOR approaches, and en route LNAV. Do NOT use APR mode as a substitute.' },
+  { abbr:'ALT HOLD', full:'Altitude Hold Mode',           cat:'ap',   def:'Autopilot mode that holds the current altitude at the moment of engagement. PFD shows ALT in altitude mode annunciation. Changes to G/S when the ILS glideslope is captured in APR mode.' },
+  { abbr:'APR',   full:'Approach Mode',                   cat:'ap',   def:'Autopilot mode that arms and captures the ILS localizer and glideslope. APR box on PFD: white = off, orange = LOC armed (awaiting capture), green = LOC captured. ALT HOLD changes to G/S when glideslope captures. ILS frequency must be tuned in FMS NAV page first.' },
+  { abbr:'ATH',   full:'Autothrottle',                    cat:'ap',   def:'Autopilot mode that holds the airspeed set at the moment of engagement. Target speed adjustable via SPD selector knob. CRITICAL: autothrottle only operative above 2,500 ft AGL — it disengages on short final. Manually manage throttle from that point.' },
+  { abbr:'G/S MODE', full:'Glideslope Mode',              cat:'ap',   def:'The altitude mode displayed on the PFD when the ILS glideslope has been captured in APR mode. Replaces ALT HOLD annunciation. Aircraft follows the 3° glideslope automatically down to DH.' },
+  { abbr:'FD',    full:'Flight Director',                 cat:'ap',   def:'Command bars on the PFD that show the pilot what control inputs are needed to follow the selected autopilot modes. Active whenever AP modes are engaged.' },
+  { abbr:'A/T',   full:'Auto-Throttle',                   cat:'ap',   def:'See ATH. Abbreviation used in autopilot mode tables. Holds airspeed above 2,500 ft AGL only.' },
+
+  // ── ATC / COMMS ─────────────────────────────────────────────────────
+  { abbr:'ATC',   full:'Air Traffic Control',             cat:'comm', def:'The service that provides separation and flow control for IFR aircraft. In MSFS: use built-in ATC or VATSIM/POSCON for live ATC. Frequencies managed via FMS COM page. All readbacks must be complete and correct.' },
+  { abbr:'ATIS',  full:'Automatic Terminal Information Service', cat:'comm', def:'Pre-recorded broadcast of current airport conditions including weather, active runways, NOTAMs, and altimeter setting. Listen before first contact with ATC. Enter QNH from ATIS into FMS APPR page. KDYS ATIS: 134.05.' },
+  { abbr:'QNH',   full:'Altimeter Setting',               cat:'comm', def:'The barometric pressure setting that makes the altimeter read airport elevation when on the ground. Obtained from ATIS. Entered in FMS APPR page LAND QNH field and on the barometer selector.' },
+  { abbr:'SQUAWK', full:'Transponder Code',               cat:'comm', def:'A 4-digit octal code assigned by ATC and entered into the transponder. Set in FMS COM page XPDR CODE field. Common codes: 1200 = VFR, 7700 = emergency, 7600 = comms failure, 7500 = hijack. Set mode ALT to report altitude.' },
+  { abbr:'XPDR',  full:'Transponder',                     cat:'comm', def:'The aircraft radio that responds to secondary surveillance radar interrogations. Mode C or Mode S reports altitude. Set via FMS COM page. Toggle mode with bottom left key (STBY/ON/ALT). Use ALT for normal operations.' },
+  { abbr:'COM',   full:'Communication Radio',             cat:'comm', def:'VHF radio for ATC communications. The FMS COM page shows two COM radios (COM 1 and COM 2) with active and standby frequencies. Type frequency → left key = active, right key = standby. CLR + click to swap active/standby.' },
+  { abbr:'FREQ',  full:'Frequency',                       cat:'comm', def:'The radio channel used for communication or navigation. COM frequencies: 118.000–136.975 MHz. NAV (VOR/ILS): 108.0–117.95 MHz. Enter with decimal notation (e.g. 110.3 for ILS, 118.10 for ATC).' },
+  { abbr:'HOW READS', full:'Radio Check Phrase',          cat:'comm', def:'ATC phrase used to check communication quality. Standard response: "[Callsign], reads you [1-5]" where 5 is clear, 1 is unreadable. In sim use: "Reads you loud and clear" or just confirm contact.' },
+  { abbr:'WILCO', full:'Will Comply',                     cat:'comm', def:'Radio phraseology meaning "I have received your message, understand it, and will comply." Used after receiving an ATC clearance or instruction. Do not use WILCO and ROGER together.' },
+  { abbr:'ROGER', full:'Message Received',                cat:'comm', def:'Radio phraseology meaning "I have received all of your last transmission." Does NOT indicate compliance — use WILCO for that. Use for acknowledging information-only transmissions.' },
+  { abbr:'CLEARED', full:'ATC Clearance Phrase',          cat:'comm', def:'Authorizes the pilot to proceed under specified conditions. "Cleared ILS runway 34L approach" authorizes flying the ILS 34L procedure. Must be read back completely including runway and approach type.' },
+  { abbr:'READBACK', full:'Readback',                     cat:'comm', def:'The pilot\'s repetition of ATC instructions to confirm receipt. Required for: clearances, runway assignments, altimeter settings, transponder codes, hold short instructions, and IFR routing. Incorrect readbacks must be corrected by ATC.' },
+  { abbr:'CONTACT', full:'Contact (ATC Phrase)',          cat:'comm', def:'ATC instruction to communicate with another facility. "Contact Abilene Approach 119.3." After the frequency change: check in with callsign, altitude, and request (e.g. "Abilene Approach, Bone 01, FL230 descending, ILS 34L").' },
+  { abbr:'REPORT', full:'Report (ATC Phrase)',            cat:'comm', def:'ATC instruction to advise of a specific event or position. "Report established localizer 34L." The pilot calls ATC when the condition is met: "Bone 01, established localizer 34L."' },
+  { abbr:'SAY AGAIN', full:'Repeat Last Transmission',   cat:'comm', def:'Radio phrase requesting the other party to repeat their last transmission. More professional than "repeat" (which in military contexts means a fire mission request). Use when a transmission is unclear.' },
+  { abbr:'NEGATIVE', full:'No / Incorrect',              cat:'comm', def:'Radio word meaning no, or that the information is incorrect. Never say "no" on the radio — always "negative." Example: "Negative, we request runway 34L."' },
+  { abbr:'AFFIRM', full:'Yes / Affirmative',              cat:'comm', def:'Radio word meaning yes or correct. Never say "yes" or "yeah" — use "affirm" or "affirmative." Example: "Affirm, request ILS 34L."' },
+  { abbr:'MAYDAY', full:'Emergency Distress Call',        cat:'comm', def:'The international distress call indicating a life-threatening emergency. Transmitted three times on guard frequency (121.5 or 243.0 MHz). In sim: declared for engine failures, structural issues, fuel critical. Squawk 7700.' },
+  { abbr:'PAN-PAN', full:'Urgency Call',                  cat:'comm', def:'The international urgency call indicating a serious but not immediately life-threatening situation. Below MAYDAY in severity. Transmitted three times on guard or working frequency.' },
+
+  // ── SYSTEMS ─────────────────────────────────────────────────────────
+  { abbr:'FMS',   full:'Flight Management System',        cat:'sys',  def:'The computer system managing navigation, flight planning, performance, and communication. In KwikFlight B-1B: the CDU (Control Display Unit) on the center pedestal. Pages: IDEN, INIT, FPLN, PERF, COM, NAV, PSN, DIR. Accessed via shortcut keys at the bottom of the CDU.' },
+  { abbr:'CDU',   full:'Control Display Unit',            cat:'sys',  def:'The keyboard/display unit used to interact with the FMS. Located on the center pedestal (item 4 in central panel layout). Has L1–L6 left keys, R1–R6 right keys, page shortcut tabs (COM, NAV, PERF, INIT, IDEN, FPLN, PSN, DIR), alphanumeric keyboard, and CLR key.' },
+  { abbr:'MFD',   full:'Multi-Function Display',          cat:'sys',  def:'The large display screens in the cockpit showing navigation, systems, and engine data. The B-1B has multiple MFDs. Left screens: PFD. Right screens: Navigation/Systems. Center: Engine Display. Right-hand MFDs show MAP, TCAS, TFR, ENG, FLT, ELEC, FMS, ENV via softkeys.' },
+  { abbr:'PFD',   full:'Primary Flight Display',          cat:'sys',  def:'The left-hand screen on each side showing primary flight instruments: airspeed, attitude, altitude, vertical speed, heading, and autopilot mode annunciations. Lower softkeys (VSD, ADF, ILS, NAV1, GPS) change the navigation mode displayed on the compass rose.' },
+  { abbr:'TCAS',  full:'Traffic Collision Avoidance System', cat:'sys', def:'System that monitors surrounding traffic and issues Resolution Advisories (RAs) to avoid collisions. Shown on MFD TCAS page. In MSFS: monitors AI traffic if enabled. Set mode and range on MFD.' },
+  { abbr:'TFR',   full:'Terrain Following Radar',         cat:'sys',  def:'Forward-looking radar that provides terrain clearance data. Shown on MFD TFR page. In MSFS: provides a downward-looking terrain video view with ground distance display. Note: blurred when very close to ground.' },
+  { abbr:'APU',   full:'Auxiliary Power Unit',            cat:'sys',  def:'A small turbine engine providing electrical and pneumatic power when main engines are off. The B-1B has APU 1 and APU 2. Start both before engine start, shut off after generators are online. Controlled from overhead panel APU panel (item 6 in cockpit).' },
+  { abbr:'EGT',   full:'Exhaust Gas Temperature',         cat:'sys',  def:'Temperature of exhaust gases leaving the turbine section. Monitored on MFD ENG page for all four engines. High EGT indicates engine overtemperature. On the KwikFlight B-1B: shown as dial gauges for each engine.' },
+  { abbr:'N1',    full:'Low-Pressure Compressor Speed',   cat:'sys',  def:'The speed of the fan/low-pressure compressor, expressed as a percentage. Primary power indicator for the GE F101 engines. After engine start: check N1 above 18% before starting next engine. Normal cruise: typically 75–90%.' },
+  { abbr:'N2',    full:'High-Pressure Compressor Speed',  cat:'sys',  def:'The speed of the high-pressure compressor, expressed as a percentage. Secondary engine parameter. Monitored on MFD ENG page alongside N1 and EGT.' },
+  { abbr:'FF PPH', full:'Fuel Flow — Pounds Per Hour',    cat:'sys',  def:'The rate of fuel consumption for each engine, measured in pounds per hour. Shown on MFD ENG page. Monitor during all phases of flight for fuel planning.' },
+  { abbr:'FBW',   full:'Fly By Wire',                     cat:'sys',  def:'Electronic flight control system where pilot inputs are transmitted as electrical signals to control surface actuators rather than mechanical linkages. The B-1B uses FBW technology for stability. KwikFlight simulates this with conventional surfaces.' },
+  { abbr:'CFD',   full:'Computational Fluid Dynamics',    cat:'sys',  def:'The flight model technology used in the KwikFlight B-1B for accurate aerodynamic simulation. More realistic than legacy MSFS flight models. Care should be taken not to over-stress the airframe beyond performance limits.' },
+  { abbr:'MIL',   full:'Military Power',                  cat:'sys',  def:'Maximum dry thrust (without afterburner). Used for takeoff and go-around. Less aggressive on fuel than afterburner (AB). In KwikFlight B-1B: full throttle position without entering afterburner detent.' },
+  { abbr:'AB',    full:'Afterburner',                     cat:'sys',  def:'Thrust augmentation achieved by injecting fuel into the exhaust stream, significantly increasing thrust with high fuel consumption. Used for takeoff, emergency, or specific performance requirements.' },
+  { abbr:'BLEND', full:'Bleed Air',                       cat:'sys',  def:'Compressed air tapped from the engine compressor stages for pressurization, environmental control, and engine anti-ice. Set ALL ON after engine start via Engines Bleed Air switch (QRC: After Start checklist).' },
+
+  // ── PROCEDURES ──────────────────────────────────────────────────────
+  { abbr:'IFR',   full:'Instrument Flight Rules',         cat:'proc', def:'Flight conducted using instruments and ATC separation in place of visual references. Requires a flight plan, ATC clearance, and adherence to IFR procedures. All Phase 2 and 3 events are conducted under IFR.' },
+  { abbr:'VFR',   full:'Visual Flight Rules',             cat:'proc', def:'Flight conducted using visual references to maintain separation. Not used in Phase 2/3 events. VMC conditions may still allow visual approaches, but all training is conducted on IFR flight plans.' },
+  { abbr:'IMC',   full:'Instrument Meteorological Conditions', cat:'proc', def:'Weather conditions that require instrument flight: ceiling below 1,000 ft and/or visibility below 3 SM. Required for ILS approach training (Phase 2-2). Set in MSFS as custom weather scenario.' },
+  { abbr:'VMC',   full:'Visual Meteorological Conditions', cat:'proc', def:'Weather conditions that meet or exceed VFR minimums. Used for Phase 2-1 (takeoff, pattern, landing) training: ceiling ≥ 3,000 ft, visibility ≥ 5 SM.' },
+  { abbr:'DH',    full:'Decision Height',                 cat:'proc', def:'The altitude at which a pilot must decide whether to land (runway in sight) or execute a missed approach (runway not in sight). Used for precision approaches (ILS, LPV). For KDYS ILS 34L: 200 ft HAT. Call "Minimums" at DH.' },
+  { abbr:'MDA',   full:'Minimum Descent Altitude',        cat:'proc', def:'The lowest altitude to which aircraft may descend on a non-precision approach without visual reference to the runway. Unlike DH, the pilot levels off at MDA and continues to the MAP looking for visual contact. Used for LNAV and VOR approaches.' },
+  { abbr:'DA',    full:'Decision Altitude',               cat:'proc', def:'Similar to DH but referenced to MSL rather than field elevation. Used for LPV approaches. "You have reached DA — land or go around." The terms DH and DA are functionally equivalent for sim purposes.' },
+  { abbr:'HAT',   full:'Height Above Touchdown',          cat:'proc', def:'The height of the DH or MDA above the touchdown zone elevation. KDYS ILS 34L DH: 200 ft HAT. To get MSL: 200 + 1,789 (field elev) ≈ 1,989 ft MSL.' },
+  { abbr:'T&G',   full:'Touch-and-Go',                    cat:'proc', def:'A landing followed immediately by a takeoff without coming to a stop. Used in Phase 2-4 (cross-country event at KTIK). Standard T&G: land, full power, retract flaps, rotate and depart on same runway.' },
+  { abbr:'MA',    full:'Missed Approach',                 cat:'proc', def:'The procedure executed when a landing cannot be made from an instrument approach (runway not in sight at DH/MDA). Full power, positive climb, gear up, fly published missed approach procedure headings and altitudes.' },
+  { abbr:'TOT',   full:'Time On Target',                  cat:'proc', def:'The planned time of arrival over a target or fix. Used in Phase 2-5 and Phase 3 low-level events. Must be met within ±30 seconds. Adjust groundspeed during low-level flight to hit TOT. Rule: arrive early → slow down; arrive late → speed up.' },
+  { abbr:'AR',    full:'Aerial Refueling',                cat:'proc', def:'The in-flight transfer of fuel from a tanker aircraft to the B-1B receiver. The B-1B uses a flying boom receptacle on the fuselage spine. Pre-contact position: 50 ft directly behind boom. Phase 2-3 and Phase 3 event. Open receptacle door on overhead panel (AERIAL REFUEL LT switch).' },
+  { abbr:'IP',    full:'Initial Point',                   cat:'proc', def:'A well-defined fix from which the final attack run to a target begins. Aircraft fly from the IP to the target on a specific heading and altitude. Used in weapons employment events (Phase 2-6 and Phase 3).' },
+  { abbr:'CEP',   full:'Circular Error Probable',         cat:'proc', def:'A measure of weapon accuracy: the radius of a circle within which 50% of weapons will impact. Used in weapon impact assessment after delivery. Call "Splash" at impact and assess CEP from visual or MSFS weapon camera.' },
+  { abbr:'JDAM',  full:'Joint Direct Attack Munition',    cat:'proc', def:'A GPS/INS-guided bomb that converts unguided bombs to precision weapons. GBU-31 JDAM = 2,000 lb bomb. Used in KwikFlight B-1B weapons employment events. Load target coordinates via MFD Weapons page before the IP.' },
+  { abbr:'OFP',   full:'Operational Flight Plan',         cat:'proc', def:'The SimBrief-generated flight plan document used in Phase 2-4 and all Phase 3 events. Must include route, fuel, alternates, weather, and NOTAMs. Reviewed in the pre-flight brief. Student independently plans and briefs Phase 3.' },
+  { abbr:'VREF',  full:'Reference Landing Speed',         cat:'proc', def:'The target airspeed for the final approach and landing, based on aircraft weight and flap configuration. Auto-computed by clicking VREF on the FMS APPR page. Standard: maintain VREF ±5 KIAS on final approach. Phase 2-1 standard: stable at VREF by 500 ft AGL.' },
+  { abbr:'VR',    full:'Rotation Speed',                  cat:'proc', def:'The speed at which the pilot initiates the takeoff rotation by pulling back on the stick. Auto-computed by FMS PERF TKOF page V SPEEDS function. For KwikFlight B-1B at light weight: approximately 145–155 KIAS.' },
+  { abbr:'V1',    full:'Takeoff Decision Speed',          cat:'proc', def:'The speed above which the takeoff must continue even if an engine fails. Below V1: reject the takeoff. Above V1: continue to rotate. Computed on FMS PERF TKOF page.' },
+  { abbr:'V2',    full:'Takeoff Safety Speed',            cat:'proc', def:'The minimum safe climb speed after takeoff with one engine inoperative. Computed on FMS PERF TKOF page V SPEEDS function.' },
+  { abbr:'FPLN',  full:'Flight Plan',                     cat:'proc', def:'The route of flight entered in the FMS. Accessed via FPLN shortcut key. Contains: origin airport with SID, en route waypoints/airways, destination with STAR and approach. Must be activated with the right accept key to become the active route.' },
+  { abbr:'PERF',  full:'Performance',                     cat:'proc', def:'FMS page group covering takeoff performance (V-speeds, flap config), cruise flight level, and approach parameters (VREF, DH, QNH). Access via PERF shortcut key. Contains: TKOF PG → CRZ PG → APPR PG.' },
+  { abbr:'INIT',  full:'Initialize / Initialization',     cat:'proc', def:'FMS page for entering the departure airport (FROM), destination (TO), and cruise flight level (FINAL FL). First step in FMS setup after IDEN page. Access via INIT shortcut key or L4 from IDEN page.' },
+  { abbr:'IDEN',  full:'Identification',                  cat:'proc', def:'The first FMS page shown on startup, displaying aircraft type (BONE-1B), engine (G-E F101), active database date, and GNSS/JAM block. Press L4 (→ INIT PAGE) to proceed. Verify database date matches current AIRAC cycle.' },
+  { abbr:'ABORT', full:'Abort Criteria / Reject Takeoff', cat:'proc', def:'Decision to discontinue a takeoff (below V1) or a low-level mission. Abort criteria for low-level: weather below minimums, navigation error >5 NM, fuel emergency, ATC stop-and-identify. Call "Abort, Abort" on interphone, initiate immediate climb to 2,000 ft AGL.' },
+  { abbr:'STABLE', full:'Stable Approach',                cat:'proc', def:'An approach meeting all stabilization criteria by 500 ft AGL: localizer/glideslope/track within limits, speed at VREF ±5 KIAS, correct configuration, appropriate sink rate. Any criterion not met = mandatory go-around. Call "Five hundred, stable" or "Five hundred, unstable — go around."' },
+];
+
+let activeFilter = 'all';
+let activeLetter = 'all';
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeLetter = 'all';
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+  render();
+}
+
+function setLetter(letter, btn) {
+  activeLetter = activeLetter === letter ? 'all' : letter;
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+  if (activeLetter !== 'all') btn.classList.add('active');
+  render();
+}
+
+function filterTerms() { activeLetter = 'all'; document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active')); render(); }
+
+function render() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const out = document.getElementById('glossary-output');
+  const count = document.getElementById('term-count');
+
+  let filtered = TERMS.filter(t => {
+    const catOk = activeFilter === 'all' || t.cat === activeFilter;
+    const letterOk = activeLetter === 'all' || t.abbr[0].toUpperCase() === activeLetter;
+    const qOk = !q || t.abbr.toLowerCase().includes(q) || t.full.toLowerCase().includes(q) || t.def.toLowerCase().includes(q);
+    return catOk && letterOk && qOk;
+  });
+
+  filtered.sort((a, b) => a.abbr.localeCompare(b.abbr));
+
+  if (!filtered.length) {
+    out.innerHTML = '<div class="no-results">No terms match your search. Try different keywords or clear the filters.</div>';
+    count.textContent = '0 terms';
+    return;
+  }
+
+  count.textContent = filtered.length + ' term' + (filtered.length === 1 ? '' : 's');
+
+  if (q || activeLetter !== 'all') {
+    out.innerHTML = '<div class="terms-grid">' + filtered.map(termHTML).join('') + '</div>';
+    return;
+  }
+
+  // Group by first letter
+  const groups = {};
+  filtered.forEach(t => {
+    const l = t.abbr[0].toUpperCase();
+    if (!groups[l]) groups[l] = [];
+    groups[l].push(t);
+  });
+
+  out.innerHTML = Object.keys(groups).sort().map(l =>
+    `<div class="alpha-section">
+      <div class="alpha-head">${l}</div>
+      <div class="terms-grid">${groups[l].map(termHTML).join('')}</div>
+    </div>`
+  ).join('');
+}
+
+const catLabels = { nav:'nav', ap:'autopilot', comm:'atc/comms', sys:'systems', proc:'procedures' };
+const catClass  = { nav:'tag-nav', ap:'tag-ap', comm:'tag-comm', sys:'tag-sys', proc:'tag-proc' };
+
+function termHTML(t) {
+  return `<div class="term-card">
+    <div class="term-abbr">${t.abbr}</div>
+    <div class="term-full">${t.full}</div>
+    <div class="term-def">${t.def}</div>
+    <span class="term-tag ${catClass[t.cat]}">${catLabels[t.cat]}</span>
+  </div>`;
+}
+
+// Build alpha index
+function buildAlpha() {
+  const letters = [...new Set(TERMS.map(t => t.abbr[0].toUpperCase()))].sort();
+  const idx = document.getElementById('alpha-index');
+  idx.innerHTML = letters.map(l =>
+    `<button class="alpha-btn" onclick="setLetter('${l}', this)">${l}</button>`
+  ).join('');
+}
+
+buildAlpha();
+render();
+</script>
+</body>
+</html>
