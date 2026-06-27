@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autopilot Reference — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a><a href="training.html">Training</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Autopilot Panel · KwikFlight B-1B</div>
+  <h1 class="hero-title">Autopilot <span>Quick Reference</span></h1>
+  <p class="hero-sub">Complete reference for all six autopilot modes — AP, HDG, NAV, ALT, APR, and ATH. Panel located on the left side of the main instrument panel (item 1 in cockpit layout). Four selector knobs for CRS, HDG, ALT, and SPD on lower center panel (item 5).</p>
+</section>
+
+<div class="container page-body">
+
+  <div class="section">
+    <div class="section-label">Autopilot panel layout</div>
+    <div class="card" style="max-width:500px;margin:0 auto 24px">
+      <div class="card-header"><div class="card-icon blue">▼</div><div class="card-title">Panel — left side of main instrument panel</div></div>
+      <div class="card-body">
+        <div class="ap-panel">
+          <div class="ap-row">
+            <div class="ap-btn on" style="min-width:56px">AP<div class="dot"></div></div>
+            <div class="ap-btn on" style="min-width:56px">ALT<div class="dot"></div></div>
+            <div class="ap-btn on" style="min-width:56px">HDG<div class="dot"></div></div>
+            <div class="ap-btn off" style="min-width:56px">NAV</div>
+            <div class="ap-btn on" style="min-width:56px">ATH<div class="dot"></div></div>
+            <div class="ap-btn off" style="min-width:56px">APR</div>
+          </div>
+          <div style="display:flex;gap:0;justify-content:center;margin-top:8px">
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">MASTER</div>
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">ALT HOLD</div>
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">HDG HOLD</div>
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">NAV HOLD</div>
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">AUTO THROT</div>
+            <div style="min-width:56px;text-align:center;font-size:9px;color:var(--text-muted)">APPROACH</div>
+          </div>
+        </div>
+        <div class="note">Selector knobs (lower center panel, item 5): CRS · HDG · ALT · SPD. Rotate each knob to set the target value before engaging the corresponding mode.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--gold2);color:#000;font-size:10px;font-weight:900">AP</div><div class="card-title">AP — Autopilot Master</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Toggles the entire autopilot system on or off</li>
+            <li>Must be <strong>ON</strong> before any other mode will function</li>
+            <li>Green emissive indicator on the button when active</li>
+            <li>PFD top strip shows <strong>AP</strong> annunciation when engaged</li>
+            <li>Disengage before touchdown — press the button or use the disconnect switch on the stick</li>
+          </ul>
+          <div class="pfd">AP  ALT  HDG  NAV  ATH  APR
+↑ AP annunciation appears here when master is on</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--gold2);color:#000;font-size:9px;font-weight:900">HDG</div><div class="card-title">HDG HOLD — Heading Hold</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Holds the aircraft on the heading set by the <strong>HDG selector knob</strong></li>
+            <li>Rotate HDG knob to change the target heading — aircraft follows</li>
+            <li>Use for: ATC vectors, departure headings, pattern work, missed approach headings</li>
+            <li><strong>Automatically drops out</strong> when the ILS localizer is captured in APR mode</li>
+            <li>Do not re-engage HDG after LOC capture on ILS approach</li>
+          </ul>
+          <div class="pfd">AP  ALT  <span class="ann">HDG</span>  ATH
+HDG [<span class="wht">257</span>]   ← target heading</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-icon blue" style="font-size:9px;font-weight:900">NAV</div><div class="card-title">NAV HOLD — Navigation Hold</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Tracks the course deviation needle shown on the PFD compass rose</li>
+            <li><strong>In NAV1 mode:</strong> tracks the VOR radial set in FMS NAV page CRS field</li>
+            <li><strong>In GPS mode:</strong> tracks the FMS flight plan GPS deviation path</li>
+            <li>Check the PFD nav mode softkey first — it determines what NAV HOLD follows</li>
+            <li>Use for: RNAV approaches, VOR approaches, en route navigation</li>
+            <li><strong>Never use APR as a substitute</strong> for NAV HOLD on non-ILS approaches</li>
+          </ul>
+          <div class="pfd">AP  ALT  <span class="ann">NAV</span>  ATH
+GPS TRACK  or  VOR1 CRS 359</div>
+          <div class="warn" style="margin-top:8px">Confirm PFD softkey matches your intended source before engaging NAV HOLD. Wrong softkey = wrong tracking.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-icon green" style="font-size:9px;font-weight:900">ALT</div><div class="card-title">ALT HOLD — Altitude Hold</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Holds the altitude the aircraft is at <strong>the moment you press the button</strong></li>
+            <li>Pre-select target on <strong>ALT selector knob</strong> — aircraft will level at that altitude</li>
+            <li>PFD shows <strong>ALT</strong> in the altitude mode annunciation when active</li>
+            <li>Changes to <strong>G/S</strong> automatically when ILS glideslope is captured in APR mode</li>
+            <li>For RNAV / VOR step-downs: disengage ALT to descend, re-engage at each step altitude</li>
+          </ul>
+          <div class="pfd">AP  <span class="ann">ALT</span>  HDG  ATH  ← normal
+AP  <span class="grn">G/S</span>   APR  ATH  ← ILS glideslope captured</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--amber);color:#000;font-size:9px;font-weight:900">APR</div><div class="card-title">APR — Approach Mode (ILS ONLY)</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Arms and then captures the <strong>ILS localizer</strong> and <strong>glideslope</strong></li>
+            <li>APR box on PFD: <strong>white</strong> = off, <strong>orange</strong> = LOC armed, <strong>green</strong> = LOC captured</li>
+            <li>When LOC is captured: HDG HOLD drops out automatically</li>
+            <li>When G/S is captured: ALT HOLD changes to G/S automatically</li>
+            <li>Requires ILS frequency tuned in <strong>FMS NAV page VOR1</strong></li>
+            <li>Requires PFD nav mode softkey set to <strong>ILS</strong></li>
+          </ul>
+          <div class="pfd"><span class="ann">APR</span> armed:  box = ORANGE
+<span class="grn">APR</span> active: box = GREEN
+G/S captured: ALT changes to <span class="grn">G/S</span></div>
+          <div class="crit" style="margin-top:8px">APR mode only works with an ILS signal. For RNAV or VOR approaches use NAV HOLD. Pressing APR for non-ILS approaches wastes time and provides no tracking.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-icon green" style="font-size:9px;font-weight:900">ATH</div><div class="card-title">ATH — Autothrottle</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Holds the airspeed the aircraft is flying <strong>at the moment of engagement</strong></li>
+            <li>Rotate <strong>SPD selector knob</strong> to change the target airspeed</li>
+            <li><strong>Critical limitation: only operative above 2,500 ft AGL</strong></li>
+            <li>Disengages automatically when descending through 2,500 ft AGL</li>
+            <li>Set VREF on the SPD knob before final — manage throttle manually on short final</li>
+            <li>Use A/T for: en route cruise, descents, approach setup above 2,500 ft</li>
+          </ul>
+          <div class="crit" style="margin-top:8px">A/T disengages below 2,500 ft AGL. If you rely on it to maintain VREF on short final and forget it has cut off, you will lose speed rapidly. Monitor airspeed continuously on final approach.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Autopilot mode quick-select by approach type</div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon blue">▶</div><div class="card-title">Which modes to use — at a glance</div></div>
+      <div class="card-body" style="overflow-x:auto">
+        <table class="dt">
+          <thead><tr><th>Approach type</th><th>PFD softkey</th><th>Lateral mode</th><th>Vertical mode</th><th>APR mode?</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ILS</strong></td><td>ILS</td><td>APR → captures LOC</td><td>APR → captures G/S</td><td class="badge b-on" style="display:table-cell">YES</td></tr>
+            <tr><td><strong>RNAV / GPS</strong></td><td>GPS</td><td>NAV HOLD</td><td>Manual V/S → ALT at MDA</td><td class="badge b-danger" style="display:table-cell">NO</td></tr>
+            <tr><td><strong>VOR</strong></td><td>NAV1</td><td>NAV HOLD</td><td>Step-down ALT holds</td><td class="badge b-danger" style="display:table-cell">NO</td></tr>
+            <tr><td><strong>En route LNAV</strong></td><td>GPS</td><td>NAV HOLD</td><td>ALT HOLD</td><td class="badge b-danger" style="display:table-cell">NO</td></tr>
+            <tr><td><strong>Vectors / ATC hdg</strong></td><td>Any</td><td>HDG HOLD</td><td>ALT HOLD</td><td class="badge b-danger" style="display:table-cell">NO</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · MSFS 2024</p>
+  <p style="margin-top:6px"><a href="../index.html">Home</a> · <a href="ils.html">ILS</a> · <a href="fms.html">FMS Setup</a> · <a href="glossary.html">Glossary</a></p>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>
