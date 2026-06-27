@@ -3,42 +3,273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="v7th Bomb Wing Instructor Guide">
+<meta name="description" content="vTAC 7th Bomb Wing Instructor Training Guide">
 <title>vTAC 7th Bomb Wing</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
-.home-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 32px; }
-.home-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  padding: 22px; text-decoration: none; color: inherit;
-  transition: border-color .15s, transform .15s; display: flex; flex-direction: column; gap: 10px;
+/* ── SLIDESHOW ─────────────────────────────────────────── */
+.slideshow-wrap{
+  position:relative;width:100%;
+  background:#000;overflow:hidden;
+  max-height:480px;min-height:220px;
 }
-.home-card:hover { border-color: var(--gold); transform: translateY(-2px); }
-.home-card .icon { font-size: 28px; margin-bottom: 2px; }
-.home-card .hc-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.home-card .hc-sub   { font-size: 13px; color: var(--text2); line-height: 1.6; flex: 1; }
-.home-card .hc-link  { font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: .04em; margin-top: 4px; }
-.stats-row { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 32px 0; }
-.stat { text-align: center; }
-.stat .val { font-size: 32px; font-weight: 900; color: var(--gold); line-height: 1.1; }
-.stat .lbl { font-size: 11px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-top: 4px; }
-.announce-bar {
-  background: rgba(200,169,81,.08); border: 1px solid rgba(200,169,81,.2);
-  border-radius: 8px; padding: 10px 16px;
-  display: flex; align-items: center; gap: 10px;
-  font-size: 13px; color: var(--text2); margin-bottom: 32px;
+.slideshow-track{
+  display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);
+  height:100%;
 }
-.announce-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green2); box-shadow: 0 0 6px var(--green2); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.slide{
+  min-width:100%;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;max-height:480px;min-height:220px;
+}
+.slide img{
+  width:100%;height:100%;object-fit:cover;
+  max-height:480px;min-height:220px;
+  display:block;
+}
+.slide-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.75));
+  padding:32px 24px 16px;
+  color:#fff;font-size:15px;font-weight:500;
+}
+.slide-placeholder{
+  width:100%;min-height:320px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0d0f14 0%,#1a1e2b 100%);
+  color:#5a6080;gap:10px;
+}
+.slide-placeholder .icon{font-size:40px;opacity:.4;}
+.slide-placeholder p{font-size:13px;text-align:center;max-width:260px;line-height:1.6;opacity:.6;}
+/* arrows */
+.ss-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;z-index:10;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+.ss-arrow:hover{background:rgba(200,169,81,.7);}
+.ss-arrow.left{left:12px;}
+.ss-arrow.right{right:12px;}
+/* dots */
+.ss-dots{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:10;
+}
+.ss-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;
+}
+.ss-dot.active{background:#c8a951;transform:scale(1.3);}
+/* slide count badge */
+.ss-count{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);
+  border-radius:12px;padding:3px 10px;
+  font-size:11px;color:rgba(255,255,255,.8);z-index:10;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+/* add slide button */
+.ss-add-btn{
+  position:absolute;top:12px;left:12px;
+  background:rgba(200,169,81,.85);border:none;
+  border-radius:8px;padding:5px 12px;
+  font-size:11px;font-weight:600;color:#000;cursor:pointer;
+  z-index:10;font-family:var(--sans);display:none;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+.ss-add-btn:hover{background:#c8a951;}
+
+/* ── DISCORD LOGO SECTION ─────────────────────────────── */
+.logos-section{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:28px 24px;
+}
+.logos-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text3);
+  text-align:center;margin-bottom:20px;
+}
+.logos-grid{
+  display:flex;flex-wrap:wrap;gap:16px;
+  justify-content:center;align-items:center;
+  max-width:900px;margin:0 auto;
+}
+.logo-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.logo-img-wrap{
+  width:72px;height:72px;border-radius:50%;
+  overflow:hidden;background:var(--card);
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .15s,transform .15s;
+}
+.logo-item:hover .logo-img-wrap{border-color:var(--gold);transform:scale(1.08);}
+.logo-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.logo-name{font-size:10px;color:var(--text3);text-align:center;max-width:80px;line-height:1.3;}
+
+/* add logo button */
+.add-logo-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--card);border:2px dashed var(--border2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;font-size:10px;color:var(--text3);gap:4px;
+  transition:all .15s;display:none;
+}
+.add-logo-btn:hover{border-color:var(--gold);color:var(--gold);}
+.add-logo-btn .plus{font-size:20px;line-height:1;}
+
+/* ── MANAGE PANEL ─────────────────────────────────────── */
+.manage-bar{
+  background:rgba(200,169,81,.08);
+  border-bottom:1px solid rgba(200,169,81,.2);
+  padding:8px 16px;
+  display:none;
+  align-items:center;gap:10px;flex-wrap:wrap;
+}
+.manage-bar.visible{display:flex;}
+.manage-lbl{font-size:11px;font-weight:600;color:var(--gold);flex:1;}
+.manage-hint{font-size:11px;color:var(--text3);}
+
+/* edit mode toggles */
+body.edit-mode .ss-add-btn{display:block;}
+body.edit-mode .add-logo-btn{display:flex;}
+body.edit-mode .manage-bar{display:flex;}
+
+/* ── MODAL ────────────────────────────────────────────── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.7);
+  align-items:center;justify-content:center;
+  padding:16px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:14px;padding:24px;width:100%;max-width:440px;
+}
+.modal h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;}
+.modal-input{
+  width:100%;padding:10px 12px;border-radius:8px;
+  background:#0d1117;border:1px solid var(--border2);
+  color:var(--text);font-size:13px;font-family:var(--sans);
+  outline:none;margin-bottom:10px;transition:border-color .15s;
+}
+.modal-input:focus{border-color:var(--gold);}
+.modal-input::placeholder{color:var(--text3);}
+.modal-preview{
+  width:64px;height:64px;border-radius:50%;
+  object-fit:cover;border:2px solid var(--border2);
+  margin:0 auto 10px;display:block;
+}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;}
+.modal-btn{
+  padding:8px 16px;border-radius:7px;font-size:13px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border2);
+  background:var(--card2);color:var(--text2);font-family:var(--sans);
+}
+.modal-btn.primary{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600;}
+.modal-btn.primary:hover{background:var(--gold2);}
+.modal-btn:hover{background:var(--card);color:var(--text);}
+
+/* ── EDIT TOOLBAR ─────────────────────────────────────── */
+#edit-toolbar{
+  position:fixed;top:0;left:0;right:0;z-index:8000;
+  background:#08090e;border-bottom:2px solid var(--gold);
+  display:flex;align-items:center;gap:8px;
+  padding:7px 16px;flex-wrap:wrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+.tb-brand{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;}
+.tb-sep{width:1px;height:26px;background:var(--border2);margin:0 2px;flex-shrink:0;}
+.tb-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:6px;
+  font-size:11px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border2);
+  background:var(--card2);color:var(--text2);
+  font-family:var(--sans);transition:all .12s;white-space:nowrap;
+}
+.tb-btn:hover{background:var(--card);color:var(--text);}
+.tb-btn.active{background:rgba(200,169,81,.15);color:var(--gold);border-color:var(--gold);}
+.tb-btn.gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700;}
+.tb-btn.gold:hover{background:var(--gold2);}
+#tb-status{margin-left:auto;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);}
+.status-dot.on{background:var(--green);box-shadow:0 0 6px var(--green);}
+
+/* push content down when toolbar visible */
+body.edit-mode .site-nav{top:48px;}
+body.edit-mode{padding-top:48px;}
+#edit-toolbar{display:none;}
+body.edit-mode #edit-toolbar{display:flex;}
+
+/* inline editable text */
+body.edit-mode [contenteditable]{
+  outline:1px dashed rgba(200,169,81,.4);border-radius:3px;cursor:text;
+}
+body.edit-mode [contenteditable]:hover{outline:1px solid var(--gold);background:rgba(200,169,81,.05);}
+body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:rgba(200,169,81,.08);}
+
+/* ── HOME CARDS ───────────────────────────────────────── */
+.home-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:28px;}
+.home-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:8px;}
+.home-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.hc-icon{font-size:26px;}
+.hc-title{font-size:15px;font-weight:700;color:var(--text);}
+.hc-sub{font-size:12px;color:var(--text2);line-height:1.6;flex:1;}
+.hc-link{font-size:12px;font-weight:600;color:var(--gold);}
+
+/* stats */
+.stats-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:28px 0 0;}
+.stat{text-align:center;}
+.stat .val{font-size:30px;font-weight:900;color:var(--gold);line-height:1.1;}
+.stat .lbl{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
+
+.announce-bar{background:rgba(200,169,81,.08);border:1px solid rgba(200,169,81,.2);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);margin-bottom:28px;}
+.announce-dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 6px var(--green2);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 </style>
 </head>
 <body>
 
+<!-- ── EDIT TOOLBAR ─────────────────────────────────────── -->
+<div id="edit-toolbar">
+  <span class="tb-brand">✈ 7th BW Editor</span>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" id="edit-btn" onclick="toggleEdit()">✏️ Edit Mode</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="openSlideshowModal()">🖼 Add Slideshow Image</button>
+  <button class="tb-btn" onclick="openLogoModal()">🏅 Add Discord Logo</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn gold" onclick="saveToStorage()">💾 Save</button>
+  <button class="tb-btn" onclick="window.print()">🖨 Print</button>
+  <div id="tb-status">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-txt">View mode</span>
+  </div>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
 <nav class="site-nav">
   <div class="site-nav-inner">
     <a class="nav-logo" href="index.html">
-      <div class="badge">B1</div>
-      <div><div class="name">v7th Bomb Wing</div><div class="sub">KDYS</div></div>
+      <div id="nav-logo-wrap">
+        <img id="nav-logo-img" src="" alt="Squadron logo" style="height:34px;width:auto;display:none;border-radius:4px;">
+        <div class="badge" id="nav-badge">B1</div>
+      </div>
+      <div>
+        <div class="name" contenteditable="false" id="squad-name">vTAC 7th Bomb Wing</div>
+        <div class="sub" contenteditable="false" id="squad-sub">KDYS · MSFS 2024</div>
+      </div>
     </a>
     <div class="nav-links">
       <a href="index.html">Home</a>
@@ -49,15 +280,46 @@
       <a href="pages/fms.html">FMS</a>
       <a href="pages/glossary.html">Glossary</a>
       <a href="pages/qrc.html">QRC</a>
+      <a href="pages/training.html">Training</a>
     </div>
     <button class="nav-mobile-btn" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
   </div>
 </nav>
 
+<!-- ── SLIDESHOW ────────────────────────────────────────── -->
+<div class="slideshow-wrap" id="slideshow-wrap">
+  <div class="slideshow-track" id="ss-track"></div>
+  <button class="ss-arrow left" id="ss-left" onclick="ssMove(-1)">‹</button>
+  <button class="ss-arrow right" id="ss-right" onclick="ssMove(1)">›</button>
+  <div class="ss-dots" id="ss-dots"></div>
+  <div class="ss-count" id="ss-count"></div>
+  <button class="ss-add-btn" onclick="openSlideshowModal()">+ Add Image</button>
+</div>
+
+<!-- ── MANAGE BAR ────────────────────────────────────────── -->
+<div class="manage-bar" id="manage-bar">
+  <span class="manage-lbl">✏️ Edit mode active</span>
+  <span class="manage-hint">Click any text to edit · Use toolbar buttons to add images and logos · Click Save when done</span>
+</div>
+
+<!-- ── DISCORD LOGOS ────────────────────────────────────── -->
+<div class="logos-section" id="logos-section" style="display:none">
+  <div class="logos-label">Squadron & Partner Discord Servers</div>
+  <div class="logos-grid" id="logos-grid">
+    <div class="logo-item">
+      <div class="add-logo-btn" onclick="openLogoModal()">
+        <span class="plus">+</span>
+        <span>Add logo</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-eyebrow">v7th Bomb Wing</div>
+  <div class="hero-eyebrow" contenteditable="false" id="hero-eyebrow">vTAC 7th Bomb Wing · Dyess AFB</div>
   <h1 class="hero-title">B-1B <span>Lancer</span><br>Instructor Training Guide</h1>
-  <p class="hero-sub">Complete IFR approach procedures, FMS configuration, autopilot reference, phrase glossary, and interactive checklists — built specifically for the KwikFlight B-1B add-on.</p>
+  <p class="hero-sub" contenteditable="false" id="hero-sub">Complete IFR approach procedures, FMS configuration, autopilot reference, phrase glossary, and interactive checklists — built specifically for the KwikFlight B-1B add-on.</p>
   <div class="hero-actions">
     <a href="pages/ils.html" class="btn btn-primary">▶ Start with ILS</a>
     <a href="pages/glossary.html" class="btn btn-outline">📖 Phrase Glossary</a>
@@ -65,11 +327,12 @@
   </div>
 </section>
 
+<!-- ── MAIN CONTENT ──────────────────────────────────────── -->
 <div class="container page-body">
 
   <div class="announce-bar">
-    <div class="dot"></div>
-    <span>v7th Bomb Wing · Phases 2 &amp; 3 Syllabus · Base: KDYS (Dyess AFB, Abilene TX)</span>
+    <div class="announce-dot"></div>
+    <span contenteditable="false" id="announce-txt">Phases 2 &amp; 3 Syllabus · Base: KDYS (Dyess AFB, Abilene TX)</span>
   </div>
 
   <div class="stats-row">
@@ -80,66 +343,17 @@
     <div class="stat"><div class="val">12</div><div class="lbl">QRC Phases</div></div>
   </div>
 
-  <div class="section">
+  <div class="section" style="margin-top:32px">
     <div class="section-label">Training modules</div>
     <div class="home-card-grid">
-
-      <a href="pages/ils.html" class="home-card">
-        <div class="icon">🎯</div>
-        <div class="hc-title">ILS Approach</div>
-        <div class="hc-sub">Precision approach using the instrument landing system. FMS NAV page setup, APR mode arming sequence, localizer intercept, and DH procedures for KDYS RWY 34L.</div>
-        <div class="hc-link">Open guide →</div>
-      </a>
-
-      <a href="pages/rnav.html" class="home-card">
-        <div class="icon">🛰</div>
-        <div class="hc-title">RNAV / GPS Approach</div>
-        <div class="hc-sub">GPS-based approach using FMS flight plan for lateral guidance. NAV HOLD mode, manual descent management, MDA procedures, and DIR direct-to usage.</div>
-        <div class="hc-link">Open guide →</div>
-      </a>
-
-      <a href="pages/vor.html" class="home-card">
-        <div class="icon">📡</div>
-        <div class="hc-title">VOR Approach</div>
-        <div class="hc-sub">Non-precision approach using VOR station tracking. NAV page frequency tuning, NAV1 PFD mode, NAV HOLD intercept, and step-down altitude management.</div>
-        <div class="hc-link">Open guide →</div>
-      </a>
-
-      <a href="pages/autopilot.html" class="home-card">
-        <div class="icon">🕹</div>
-        <div class="hc-title">Autopilot Reference</div>
-        <div class="hc-sub">Complete reference for all six autopilot modes — AP, HDG, NAV, ALT, APR, and ATH. PFD annunciations, selector knob functions, and common errors.</div>
-        <div class="hc-link">Open guide →</div>
-      </a>
-
-      <a href="pages/fms.html" class="home-card">
-        <div class="icon">⌨️</div>
-        <div class="hc-title">FMS Setup Guide</div>
-        <div class="hc-sub">From IDEN startup through FPLN route building, SID/STAR loading, PERF V-speeds, APPR page setup, COM/NAV tuning, and DIR/PSN reference.</div>
-        <div class="hc-link">Open guide →</div>
-      </a>
-
-      <a href="pages/glossary.html" class="home-card">
-        <div class="icon">📖</div>
-        <div class="hc-title">Phrase & Term Glossary</div>
-        <div class="hc-sub">Searchable A–Z reference covering every abbreviation, ATC phrase, navigation term, autopilot mode, and systems acronym used in B-1B virtual training.</div>
-        <div class="hc-link">Open glossary →</div>
-      </a>
-
-      <a href="pages/qrc.html" class="home-card">
-        <div class="icon">✅</div>
-        <div class="hc-title">QRC Checklist</div>
-        <div class="hc-sub">Interactive tap-to-check checklist covering all 12 phases: Preliminary Cockpit Prep through Parking/Shutdown. Based on the official KwikFlight QRC.</div>
-        <div class="hc-link">Open checklist →</div>
-      </a>
-
-      <a href="pages/training.html" class="home-card">
-        <div class="icon">🎓</div>
-        <div class="hc-title">Phase 2 &amp; 3 Training Guide</div>
-        <div class="hc-sub">Full instructor syllabus for all Phase 2 and Phase 3 events — graded items tables, step-by-step instruction sequences, and evaluation standards.</div>
-        <div class="hc-link">Open syllabus →</div>
-      </a>
-
+      <a href="pages/ils.html" class="home-card"><div class="hc-icon">🎯</div><div class="hc-title">ILS Approach</div><div class="hc-sub">Precision approach using the instrument landing system. FMS NAV page setup, APR mode arming, LOC intercept, and DH procedures for KDYS RWY 34L.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/rnav.html" class="home-card"><div class="hc-icon">🛰</div><div class="hc-title">RNAV / GPS Approach</div><div class="hc-sub">GPS-based approach using FMS flight plan for lateral guidance. NAV HOLD mode, manual descent management, MDA procedures, and DIR usage.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/vor.html" class="home-card"><div class="hc-icon">📡</div><div class="hc-title">VOR Approach</div><div class="hc-sub">Non-precision approach using VOR station tracking. NAV page frequency tuning, NAV1 PFD mode, NAV HOLD intercept, and step-down altitude management.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/autopilot.html" class="home-card"><div class="hc-icon">🕹</div><div class="hc-title">Autopilot Reference</div><div class="hc-sub">Complete reference for all six autopilot modes — AP, HDG, NAV, ALT, APR, and ATH. PFD annunciations, selector knobs, and common errors.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/fms.html" class="home-card"><div class="hc-icon">⌨️</div><div class="hc-title">FMS Setup Guide</div><div class="hc-sub">From IDEN startup through FPLN route building, SID/STAR loading, PERF V-speeds, APPR page setup, COM/NAV tuning, and DIR/PSN reference.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/glossary.html" class="home-card"><div class="hc-icon">📖</div><div class="hc-title">Phrase &amp; Term Glossary</div><div class="hc-sub">Searchable A–Z reference covering every abbreviation, ATC phrase, navigation term, and systems acronym used in B-1B virtual training.</div><div class="hc-link">Open glossary →</div></a>
+      <a href="pages/qrc.html" class="home-card"><div class="hc-icon">✅</div><div class="hc-title">QRC Checklist</div><div class="hc-sub">Interactive tap-to-check checklist covering all 12 phases: Preliminary Cockpit Prep through Parking/Shutdown. Based on the official KwikFlight QRC.</div><div class="hc-link">Open checklist →</div></a>
+      <a href="pages/training.html" class="home-card"><div class="hc-icon">🎓</div><div class="hc-title">Phase 2 &amp; 3 Training Guide</div><div class="hc-sub">Full instructor syllabus for all Phase 2 and Phase 3 events — graded items, step-by-step instruction sequences, and evaluation standards.</div><div class="hc-link">Open syllabus →</div></a>
     </div>
   </div>
 
@@ -156,8 +370,6 @@
           <div class="freq-row"><span class="freq-name">Max Weight</span><span class="freq-val">477,000 lbs</span></div>
           <div class="freq-row"><span class="freq-name">Fuel Capacity</span><span class="freq-val">35,593 Gal</span></div>
           <div class="freq-row"><span class="freq-name">Range</span><span class="freq-val">6,478 NM</span></div>
-          <div class="freq-row"><span class="freq-name">Length</span><span class="freq-val">80 ft</span></div>
-          <div class="freq-row"><span class="freq-name">Wingspan</span><span class="freq-val">100 ft (fwd sweep)</span></div>
           <div class="freq-row"><span class="freq-name">Wing Sweep Range</span><span class="freq-val">15° – 67.5°</span></div>
         </div>
       </div>
@@ -169,7 +381,6 @@
           <div class="freq-row"><span class="freq-name">Tower</span><span class="freq-val">126.2</span></div>
           <div class="freq-row"><span class="freq-name">Approach / Departure</span><span class="freq-val">119.3</span></div>
           <div class="freq-row"><span class="freq-name">ILS RWY 34L</span><span class="freq-val">110.3 / I-DYS</span></div>
-          <div class="freq-row"><span class="freq-name">ILS Inbound Course</span><span class="freq-val">359°</span></div>
           <div class="freq-row"><span class="freq-name">Field Elevation</span><span class="freq-val">1,789 ft MSL</span></div>
           <div class="freq-row"><span class="freq-name">Primary Runway</span><span class="freq-val">34L / 16R (10,000 ft)</span></div>
         </div>
@@ -179,11 +390,254 @@
 
 </div>
 
+<!-- ── FOOTER ────────────────────────────────────────────── -->
 <footer class="site-footer">
-  <p>v7th Bomb Wing · B-1B Lancer Training · Dyess AFB (KDYS)</p>
-  <p style="margin-top:6px">For simulation use only. Not for real-world aviation. <a href="https://github.com">Hosted on GitHub Pages</a>.</p>
+  <p contenteditable="false" id="footer-txt">vTAC 7th Bomb Wing · B-1B Lancer Training · Dyess AFB (KDYS)</p>
+  <p style="margin-top:6px">For simulation use only. Not for real-world aviation. <a href="https://github.com/quon91/b1b-training">View on GitHub</a>.</p>
 </footer>
 
+<!-- ── ADD SLIDESHOW IMAGE MODAL ────────────────────────── -->
+<div class="modal-overlay" id="ss-modal">
+  <div class="modal">
+    <h3>🖼 Add slideshow image</h3>
+    <p>Paste a direct image URL from Discord, Imgur, or any image link. Right-click an image in Discord → <strong>Copy Link</strong> → paste below.</p>
+    <input class="modal-input" id="ss-url" placeholder="https://cdn.discordapp.com/attachments/..." oninput="previewSSImg()">
+    <img id="ss-preview" class="modal-preview" src="" alt="" style="display:none">
+    <input class="modal-input" id="ss-caption" placeholder="Caption (optional) — e.g. 86th BW on final approach KDYS">
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeSSModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="addSlide()">Add to slideshow</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADD DISCORD LOGO MODAL ───────────────────────────── -->
+<div class="modal-overlay" id="logo-modal">
+  <div class="modal">
+    <h3>🏅 Add Discord server logo</h3>
+    <p>Right-click your Discord server icon → <strong>Copy Link</strong> (or Copy Image Address) → paste below. Works with any squadron or partner server.</p>
+    <input class="modal-input" id="logo-url" placeholder="https://cdn.discordapp.com/icons/..." oninput="previewLogoImg()">
+    <img id="logo-preview" class="modal-preview" src="" alt="" style="display:none;border-radius:50%">
+    <input class="modal-input" id="logo-name" placeholder="Server name — e.g. 7th Bomb Wing">
+    <input class="modal-input" id="logo-link" placeholder="Discord invite link (optional) — https://discord.gg/...">
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeLogoModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="addLogo()">Add logo</button>
+    </div>
+  </div>
+</div>
+
 <script src="assets/main.js"></script>
+<script>
+// ── STORAGE KEY ──────────────────────────────────────────
+const STORE_KEY = 'b1b_home_v1';
+
+// ── STATE ────────────────────────────────────────────────
+let slides  = [];
+let logos   = [];
+let ssIndex = 0;
+let ssTimer = null;
+let editMode = false;
+
+// ── LOAD FROM STORAGE ────────────────────────────────────
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.slides)  slides  = d.slides;
+    if (d.logos)   logos   = d.logos;
+    if (d.texts) {
+      Object.entries(d.texts).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = val;
+      });
+    }
+  } catch(e) {}
+}
+
+// ── SAVE TO STORAGE ──────────────────────────────────────
+function saveToStorage() {
+  const texts = {};
+  ['squad-name','squad-sub','hero-eyebrow','hero-sub','announce-txt','footer-txt'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) texts[id] = el.innerHTML;
+  });
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ slides, logos, texts }));
+    showToast('✓ Saved!');
+  } catch(e) { showToast('Could not save — storage full'); }
+}
+
+// ── TOAST ────────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;transition:opacity .3s'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity = '1';
+  setTimeout(() => t.style.opacity = '0', 2200);
+}
+
+// ── EDIT MODE ────────────────────────────────────────────
+function toggleEdit() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  document.getElementById('edit-btn').classList.toggle('active', editMode);
+  document.getElementById('status-dot').classList.toggle('on', editMode);
+  document.getElementById('status-txt').textContent = editMode ? 'Edit mode ON' : 'View mode';
+}
+
+// ── SLIDESHOW ────────────────────────────────────────────
+function renderSlideshow() {
+  const track  = document.getElementById('ss-track');
+  const dots   = document.getElementById('ss-dots');
+  const count  = document.getElementById('ss-count');
+  const lArrow = document.getElementById('ss-left');
+  const rArrow = document.getElementById('ss-right');
+
+  if (slides.length === 0) {
+    track.innerHTML = `
+      <div class="slide">
+        <div class="slide-placeholder">
+          <span class="icon">🛩</span>
+          <p>No slideshow images yet.<br>Click <strong>Edit Mode</strong> then <strong>Add Image</strong> to add Discord screenshots or photos.</p>
+        </div>
+      </div>`;
+    dots.innerHTML = '';
+    count.textContent = '';
+    lArrow.style.display = rArrow.style.display = 'none';
+    return;
+  }
+
+  lArrow.style.display = rArrow.style.display = slides.length > 1 ? 'flex' : 'none';
+  track.innerHTML = slides.map((s, i) => `
+    <div class="slide">
+      <img src="${s.url}" alt="${s.caption||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=icon>⚠️</span><p>Image could not load — the Discord link may have expired.</p></div>'">
+      ${s.caption ? `<div class="slide-caption">${s.caption}</div>` : ''}
+      ${editMode ? `<button onclick="removeSlide(${i})" style="position:absolute;top:8px;right:8px;background:rgba(208,64,64,.8);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;">×</button>` : ''}
+    </div>`).join('');
+
+  dots.innerHTML = slides.map((_, i) =>
+    `<div class="ss-dot ${i===ssIndex?'active':''}" onclick="ssGoTo(${i})"></div>`).join('');
+  count.textContent = `${ssIndex+1} / ${slides.length}`;
+  track.style.transform = `translateX(-${ssIndex * 100}%)`;
+  startAutoPlay();
+}
+
+function ssMove(dir) {
+  ssIndex = (ssIndex + dir + slides.length) % slides.length;
+  renderSlideshow();
+}
+function ssGoTo(i) { ssIndex = i; renderSlideshow(); }
+
+function startAutoPlay() {
+  if (ssTimer) clearInterval(ssTimer);
+  if (slides.length > 1) ssTimer = setInterval(() => ssMove(1), 5000);
+}
+
+function removeSlide(i) {
+  slides.splice(i, 1);
+  ssIndex = Math.max(0, ssIndex - 1);
+  renderSlideshow();
+  saveToStorage();
+}
+
+// ── LOGOS ────────────────────────────────────────────────
+function renderLogos() {
+  const section = document.getElementById('logos-section');
+  const grid    = document.getElementById('logos-grid');
+
+  section.style.display = (logos.length > 0 || editMode) ? 'block' : 'none';
+
+  const addBtn = editMode ? `
+    <div class="logo-item">
+      <div class="add-logo-btn" onclick="openLogoModal()">
+        <span class="plus">+</span><span>Add logo</span>
+      </div>
+    </div>` : '';
+
+  grid.innerHTML = logos.map((l, i) => `
+    <div class="logo-item">
+      ${l.link ? `<a href="${l.link}" target="_blank" rel="noopener">` : '<div>'}
+        <div class="logo-img-wrap" style="position:relative">
+          <img src="${l.url}" alt="${l.name||'Server'}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\'><rect width=\'72\' height=\'72\' rx=\'36\' fill=\'%23313338\'/><text x=\'50%25\' y=\'55%25\' text-anchor=\'middle\' dominant-baseline=\'middle\' fill=\'%23fff\' font-size=\'24\'>?</text></svg>'">
+          ${editMode ? `<button onclick="removeLogo(${i})" style="position:absolute;top:-4px;right:-4px;background:#d04040;border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;">×</button>` : ''}
+        </div>
+      ${l.link ? '</a>' : '</div>'}
+      ${l.name ? `<span class="logo-name">${l.name}</span>` : ''}
+    </div>`).join('') + addBtn;
+}
+
+function removeLogo(i) {
+  logos.splice(i, 1);
+  renderLogos();
+  saveToStorage();
+}
+
+// ── SLIDESHOW MODAL ──────────────────────────────────────
+function openSlideshowModal() {
+  document.getElementById('ss-url').value = '';
+  document.getElementById('ss-caption').value = '';
+  document.getElementById('ss-preview').style.display = 'none';
+  document.getElementById('ss-modal').classList.add('open');
+}
+function closeSSModal() { document.getElementById('ss-modal').classList.remove('open'); }
+function previewSSImg() {
+  const url = document.getElementById('ss-url').value.trim();
+  const prev = document.getElementById('ss-preview');
+  if (url) { prev.src = url; prev.style.display = 'block'; prev.style.width='100%'; prev.style.height='120px'; prev.style.objectFit='cover'; prev.style.borderRadius='6px'; }
+  else prev.style.display = 'none';
+}
+function addSlide() {
+  const url = document.getElementById('ss-url').value.trim();
+  if (!url) { alert('Please paste an image URL first.'); return; }
+  const caption = document.getElementById('ss-caption').value.trim();
+  slides.push({ url, caption });
+  ssIndex = slides.length - 1;
+  closeSSModal();
+  renderSlideshow();
+  saveToStorage();
+  showToast('Image added to slideshow!');
+}
+
+// ── LOGO MODAL ───────────────────────────────────────────
+function openLogoModal() {
+  document.getElementById('logo-url').value = '';
+  document.getElementById('logo-name').value = '';
+  document.getElementById('logo-link').value = '';
+  document.getElementById('logo-preview').style.display = 'none';
+  document.getElementById('logo-modal').classList.add('open');
+}
+function closeLogoModal() { document.getElementById('logo-modal').classList.remove('open'); }
+function previewLogoImg() {
+  const url = document.getElementById('logo-url').value.trim();
+  const prev = document.getElementById('logo-preview');
+  if (url) { prev.src = url; prev.style.display = 'block'; }
+  else prev.style.display = 'none';
+}
+function addLogo() {
+  const url = document.getElementById('logo-url').value.trim();
+  if (!url) { alert('Please paste a logo URL first.'); return; }
+  const name = document.getElementById('logo-name').value.trim();
+  const link = document.getElementById('logo-link').value.trim();
+  logos.push({ url, name, link });
+  closeLogoModal();
+  renderLogos();
+  saveToStorage();
+  showToast('Logo added!');
+}
+
+// ── CLOSE MODALS ON BACKDROP ─────────────────────────────
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ── INIT ─────────────────────────────────────────────────
+loadFromStorage();
+renderSlideshow();
+renderLogos();
+</script>
 </body>
 </html>
