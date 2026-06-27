@@ -3,269 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="vTAC 7th Bomb Wing Instructor Training Guide">
 <title>vTAC 7th Bomb Wing</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
-/* ── SLIDESHOW ─────────────────────────────────────────── */
-.slideshow-wrap{
-  position:relative;width:100%;
-  background:#000;overflow:hidden;
-  max-height:480px;min-height:220px;
+/* ─── DISCORD AUTH UI ──────────────────────────────────────── */
+#auth-bar {
+  background: #1e1f22;
+  border-bottom: 1px solid #2b2d31;
+  padding: 8px 20px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; flex-wrap: wrap;
 }
-.slideshow-track{
-  display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);
-  height:100%;
+.discord-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #5865f2; color: #fff;
+  padding: 7px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; font-family: var(--sans);
+  text-decoration: none; transition: background .15s;
 }
-.slide{
-  min-width:100%;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;max-height:480px;min-height:220px;
+.discord-btn:hover { background: #4752c4; }
+.discord-btn svg { width: 18px; height: 18px; fill: #fff; flex-shrink: 0; }
+.auth-user {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text2);
 }
-.slide img{
-  width:100%;height:100%;object-fit:cover;
-  max-height:480px;min-height:220px;
-  display:block;
+.auth-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--gold); flex-shrink: 0;
 }
-.slide-caption{
-  position:absolute;bottom:0;left:0;right:0;
-  background:linear-gradient(transparent,rgba(0,0,0,.75));
-  padding:32px 24px 16px;
-  color:#fff;font-size:15px;font-weight:500;
+.auth-name { color: var(--text); font-weight: 500; }
+.auth-role {
+  font-size: 10px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--gold);
+  background: rgba(200,169,81,.12); padding: 2px 8px;
+  border-radius: 10px; border: 1px solid rgba(200,169,81,.3);
 }
-.slide-placeholder{
-  width:100%;min-height:320px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#0d0f14 0%,#1a1e2b 100%);
-  color:#5a6080;gap:10px;
+.auth-logout {
+  margin-left: auto; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; color: var(--text3); cursor: pointer;
+  background: none; border: 1px solid var(--border);
+  font-family: var(--sans); transition: all .12s;
 }
-.slide-placeholder .icon{font-size:40px;opacity:.4;}
-.slide-placeholder p{font-size:13px;text-align:center;max-width:260px;line-height:1.6;opacity:.6;}
-/* arrows */
-.ss-arrow{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:40px;height:40px;border-radius:50%;
-  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);
-  color:#fff;font-size:18px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .15s;z-index:10;
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+.auth-logout:hover { color: var(--red2); border-color: var(--red); }
+.auth-denied {
+  color: var(--red2); font-size: 13px;
+  display: flex; align-items: center; gap: 8px;
 }
-.ss-arrow:hover{background:rgba(200,169,81,.7);}
-.ss-arrow.left{left:12px;}
-.ss-arrow.right{right:12px;}
-/* dots */
-.ss-dots{
-  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-  display:flex;gap:6px;z-index:10;
-}
-.ss-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;
-}
-.ss-dot.active{background:#c8a951;transform:scale(1.3);}
-/* slide count badge */
-.ss-count{
-  position:absolute;top:12px;right:12px;
-  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);
-  border-radius:12px;padding:3px 10px;
-  font-size:11px;color:rgba(255,255,255,.8);z-index:10;
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
-}
-/* add slide button */
-.ss-add-btn{
-  position:absolute;top:12px;left:12px;
-  background:rgba(200,169,81,.85);border:none;
-  border-radius:8px;padding:5px 12px;
-  font-size:11px;font-weight:600;color:#000;cursor:pointer;
-  z-index:10;font-family:var(--sans);display:none;
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
-}
-.ss-add-btn:hover{background:#c8a951;}
+#auth-bar.hidden { display: none; }
 
-/* ── DISCORD LOGO SECTION ─────────────────────────────── */
-.logos-section{
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:28px 24px;
+/* ─── EDIT TOOLBAR ─────────────────────────────────────────── */
+#edit-toolbar {
+  display: none; /* hidden until Discord login */
+  position: sticky; top: 0; z-index: 500;
+  background: #08090e;
+  border-bottom: 2px solid var(--gold);
+  padding: 7px 16px;
+  align-items: center; gap: 8px; flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,.6);
 }
-.logos-label{
-  font-size:10px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--text3);
-  text-align:center;margin-bottom:20px;
+#edit-toolbar.visible { display: flex; }
+.tb-brand { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: .06em; text-transform: uppercase; flex-shrink: 0; }
+.tb-sep { width: 1px; height: 26px; background: var(--border2); margin: 0 2px; flex-shrink: 0; }
+.tb-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border2);
+  background: var(--card2); color: var(--text2);
+  font-family: var(--sans); transition: all .12s; white-space: nowrap;
 }
-.logos-grid{
-  display:flex;flex-wrap:wrap;gap:16px;
-  justify-content:center;align-items:center;
-  max-width:900px;margin:0 auto;
-}
-.logo-item{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  text-decoration:none;
-}
-.logo-img-wrap{
-  width:72px;height:72px;border-radius:50%;
-  overflow:hidden;background:var(--card);
-  border:2px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  transition:border-color .15s,transform .15s;
-}
-.logo-item:hover .logo-img-wrap{border-color:var(--gold);transform:scale(1.08);}
-.logo-img-wrap img{width:100%;height:100%;object-fit:cover;}
-.logo-name{font-size:10px;color:var(--text3);text-align:center;max-width:80px;line-height:1.3;}
+.tb-btn:hover { background: var(--card); color: var(--text); }
+.tb-btn.active { background: rgba(200,169,81,.15); color: var(--gold); border-color: var(--gold); }
+.tb-btn.gold { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+.tb-btn.gold:hover { background: var(--gold2); }
 
-/* add logo button */
-.add-logo-btn{
-  width:72px;height:72px;border-radius:50%;
-  background:var(--card);border:2px dashed var(--border2);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;font-size:10px;color:var(--text3);gap:4px;
-  transition:all .15s;display:none;
-}
-.add-logo-btn:hover{border-color:var(--gold);color:var(--gold);}
-.add-logo-btn .plus{font-size:20px;line-height:1;}
+/* ─── SLIDESHOW ────────────────────────────────────────────── */
+.slideshow-wrap { position: relative; width: 100%; background: #000; overflow: hidden; max-height: 480px; min-height: 220px; }
+.slideshow-track { display: flex; transition: transform .6s cubic-bezier(.4,0,.2,1); height: 100%; }
+.slide { min-width: 100%; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; max-height: 480px; min-height: 220px; }
+.slide img { width: 100%; height: 100%; object-fit: cover; max-height: 480px; min-height: 220px; display: block; }
+.slide-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent,rgba(0,0,0,.75)); padding: 32px 24px 16px; color: #fff; font-size: 15px; font-weight: 500; }
+.slide-placeholder { width: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg,#0d0f14 0%,#1a1e2b 100%); color: #5a6080; gap: 10px; }
+.slide-placeholder .icon { font-size: 40px; opacity: .4; }
+.slide-placeholder p { font-size: 13px; text-align: center; max-width: 260px; line-height: 1.6; opacity: .6; }
+.ss-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; z-index: 10; }
+.ss-arrow:hover { background: rgba(200,169,81,.7); }
+.ss-arrow.left { left: 12px; } .ss-arrow.right { right: 12px; }
+.ss-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+.ss-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.4); cursor: pointer; transition: all .2s; }
+.ss-dot.active { background: #c8a951; transform: scale(1.3); }
+.ss-count { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; color: rgba(255,255,255,.8); z-index: 10; }
+.ss-add-btn { position: absolute; top: 12px; left: 12px; background: rgba(200,169,81,.85); border: none; border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 600; color: #000; cursor: pointer; z-index: 10; font-family: var(--sans); display: none; }
+body.edit-mode .ss-add-btn { display: block; }
 
-/* ── MANAGE PANEL ─────────────────────────────────────── */
-.manage-bar{
-  background:rgba(200,169,81,.08);
-  border-bottom:1px solid rgba(200,169,81,.2);
-  padding:8px 16px;
-  display:none;
-  align-items:center;gap:10px;flex-wrap:wrap;
-}
-.manage-bar.visible{display:flex;}
-.manage-lbl{font-size:11px;font-weight:600;color:var(--gold);flex:1;}
-.manage-hint{font-size:11px;color:var(--text3);}
+/* ─── DISCORD LOGOS ────────────────────────────────────────── */
+.logos-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 28px 24px; }
+.logos-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); text-align: center; margin-bottom: 20px; }
+.logos-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; max-width: 900px; margin: 0 auto; }
+.logo-item { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; }
+.logo-img-wrap { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: border-color .15s, transform .15s; position: relative; }
+.logo-item:hover .logo-img-wrap { border-color: var(--gold); transform: scale(1.08); }
+.logo-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.logo-name { font-size: 10px; color: var(--text3); text-align: center; max-width: 80px; line-height: 1.3; }
+.add-logo-btn { width: 72px; height: 72px; border-radius: 50%; background: var(--card); border: 2px dashed var(--border2); display: none; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; color: var(--text3); gap: 4px; transition: all .15s; }
+.add-logo-btn:hover { border-color: var(--gold); color: var(--gold); }
+.add-logo-btn .plus { font-size: 20px; line-height: 1; }
+body.edit-mode .add-logo-btn { display: flex; }
 
-/* edit mode toggles */
-body.edit-mode .ss-add-btn{display:block;}
-body.edit-mode .add-logo-btn{display:flex;}
-body.edit-mode .manage-bar{display:flex;}
+/* ─── MODAL ────────────────────────────────────────────────── */
+.modal-overlay { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,.7); align-items: center; justify-content: center; padding: 16px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--card); border: 1px solid var(--border2); border-radius: 14px; padding: 24px; width: 100%; max-width: 440px; }
+.modal h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.modal p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.6; }
+.modal-input { width: 100%; padding: 10px 12px; border-radius: 8px; background: #0d1117; border: 1px solid var(--border2); color: var(--text); font-size: 13px; font-family: var(--sans); outline: none; margin-bottom: 10px; transition: border-color .15s; }
+.modal-input:focus { border-color: var(--gold); }
+.modal-input::placeholder { color: var(--text3); }
+.modal-preview-img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; display: none; }
+.modal-preview-logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border2); margin: 0 auto 10px; display: none; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 6px; }
+.modal-btn { padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border2); background: var(--card2); color: var(--text2); font-family: var(--sans); }
+.modal-btn.primary { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 600; }
+.modal-btn.primary:hover { background: var(--gold2); }
 
-/* ── MODAL ────────────────────────────────────────────── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;z-index:9000;
-  background:rgba(0,0,0,.7);
-  align-items:center;justify-content:center;
-  padding:16px;
-}
-.modal-overlay.open{display:flex;}
-.modal{
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:14px;padding:24px;width:100%;max-width:440px;
-}
-.modal h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.modal p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;}
-.modal-input{
-  width:100%;padding:10px 12px;border-radius:8px;
-  background:#0d1117;border:1px solid var(--border2);
-  color:var(--text);font-size:13px;font-family:var(--sans);
-  outline:none;margin-bottom:10px;transition:border-color .15s;
-}
-.modal-input:focus{border-color:var(--gold);}
-.modal-input::placeholder{color:var(--text3);}
-.modal-preview{
-  width:64px;height:64px;border-radius:50%;
-  object-fit:cover;border:2px solid var(--border2);
-  margin:0 auto 10px;display:block;
-}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;}
-.modal-btn{
-  padding:8px 16px;border-radius:7px;font-size:13px;font-weight:500;
-  cursor:pointer;border:1px solid var(--border2);
-  background:var(--card2);color:var(--text2);font-family:var(--sans);
-}
-.modal-btn.primary{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600;}
-.modal-btn.primary:hover{background:var(--gold2);}
-.modal-btn:hover{background:var(--card);color:var(--text);}
+/* ─── HOME CARDS ───────────────────────────────────────────── */
+.home-card-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 14px; margin-top: 28px; }
+.home-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-decoration: none; color: inherit; transition: border-color .15s,transform .15s; display: flex; flex-direction: column; gap: 8px; }
+.home-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.hc-icon { font-size: 26px; } .hc-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.hc-sub { font-size: 12px; color: var(--text2); line-height: 1.6; flex: 1; }
+.hc-link { font-size: 12px; font-weight: 600; color: var(--gold); }
+.stats-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 28px 0 0; }
+.stat { text-align: center; }
+.stat .val { font-size: 30px; font-weight: 900; color: var(--gold); line-height: 1.1; }
+.stat .lbl { font-size: 10px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-top: 3px; }
+.announce-bar { background: rgba(200,169,81,.08); border: 1px solid rgba(200,169,81,.2); border-radius: 8px; padding: 9px 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+.announce-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green2); box-shadow: 0 0 6px var(--green2); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
-/* ── EDIT TOOLBAR ─────────────────────────────────────── */
-#edit-toolbar{
-  position:fixed;top:0;left:0;right:0;z-index:8000;
-  background:#08090e;border-bottom:2px solid var(--gold);
-  display:flex;align-items:center;gap:8px;
-  padding:7px 16px;flex-wrap:wrap;
-  box-shadow:0 4px 20px rgba(0,0,0,.6);
-}
-.tb-brand{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;}
-.tb-sep{width:1px;height:26px;background:var(--border2);margin:0 2px;flex-shrink:0;}
-.tb-btn{
-  display:flex;align-items:center;gap:5px;
-  padding:5px 11px;border-radius:6px;
-  font-size:11px;font-weight:600;
-  cursor:pointer;border:1px solid var(--border2);
-  background:var(--card2);color:var(--text2);
-  font-family:var(--sans);transition:all .12s;white-space:nowrap;
-}
-.tb-btn:hover{background:var(--card);color:var(--text);}
-.tb-btn.active{background:rgba(200,169,81,.15);color:var(--gold);border-color:var(--gold);}
-.tb-btn.gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700;}
-.tb-btn.gold:hover{background:var(--gold2);}
-#tb-status{margin-left:auto;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);}
-.status-dot.on{background:var(--green);box-shadow:0 0 6px var(--green);}
-
-/* push content down when toolbar visible */
-body.edit-mode .site-nav{top:48px;}
-body.edit-mode{padding-top:48px;}
-#edit-toolbar{display:none;}
-body.edit-mode #edit-toolbar{display:flex;}
-
-/* inline editable text */
-body.edit-mode [contenteditable]{
-  outline:1px dashed rgba(200,169,81,.4);border-radius:3px;cursor:text;
-}
-body.edit-mode [contenteditable]:hover{outline:1px solid var(--gold);background:rgba(200,169,81,.05);}
-body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:rgba(200,169,81,.08);}
-
-/* ── HOME CARDS ───────────────────────────────────────── */
-.home-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:28px;}
-.home-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:8px;}
-.home-card:hover{border-color:var(--gold);transform:translateY(-2px);}
-.hc-icon{font-size:26px;}
-.hc-title{font-size:15px;font-weight:700;color:var(--text);}
-.hc-sub{font-size:12px;color:var(--text2);line-height:1.6;flex:1;}
-.hc-link{font-size:12px;font-weight:600;color:var(--gold);}
-
-/* stats */
-.stats-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:28px 0 0;}
-.stat{text-align:center;}
-.stat .val{font-size:30px;font-weight:900;color:var(--gold);line-height:1.1;}
-.stat .lbl{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
-
-.announce-bar{background:rgba(200,169,81,.08);border:1px solid rgba(200,169,81,.2);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);margin-bottom:28px;}
-.announce-dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 6px var(--green2);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+body.edit-mode [contenteditable] { outline: 1px dashed rgba(200,169,81,.4); border-radius: 3px; cursor: text; }
+body.edit-mode [contenteditable]:hover { outline: 1px solid var(--gold); background: rgba(200,169,81,.05); }
+body.edit-mode [contenteditable]:focus { outline: 2px solid var(--gold); background: rgba(200,169,81,.08); }
 </style>
 </head>
 <body>
 
-<!-- ── EDIT TOOLBAR ─────────────────────────────────────── -->
+<!-- ─── AUTH BAR ──────────────────────────────────────────── -->
+<div id="auth-bar">
+  <!-- State A: not logged in -->
+  <div id="auth-login-state">
+    <a class="discord-btn" href="#" id="discord-login-btn">
+      <svg viewBox="0 0 71 55" xmlns="http://www.w3.org/2000/svg"><path d="M60.1 4.9A58.6 58.6 0 0 0 45.6.9a40.8 40.8 0 0 0-1.8 3.7 54.2 54.2 0 0 0-16.2 0A41.5 41.5 0 0 0 25.8.9 58.5 58.5 0 0 0 11.2 5C1.6 19.4-1 33.4.3 47.3A59 59 0 0 0 18.1 55a44.4 44.4 0 0 0 3.8-6.2 38.4 38.4 0 0 1-6-2.9l1.5-1.1a42.2 42.2 0 0 0 36.1 0l1.5 1.1a38.4 38.4 0 0 1-6 2.9A44.3 44.3 0 0 0 52.8 55 58.8 58.8 0 0 0 70.6 47.3C72.2 31.1 67.8 17.2 60.1 4.9ZM23.7 38.8c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2c0 4-2.8 7.2-6.4 7.2Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.4 3.2 6.4 7.2c0 4-2.9 7.2-6.4 7.2Z"/></svg>
+      Login with Discord
+    </a>
+    <span style="font-size:12px;color:var(--text3)">Instructor access only — must be a member of the 7th Bomb Wing Discord</span>
+  </div>
+  <!-- State B: logged in -->
+  <div id="auth-user-state" style="display:none;width:100%;display:none;align-items:center;gap:10px;flex-wrap:wrap">
+    <img id="auth-avatar" class="auth-avatar" src="" alt="">
+    <span class="auth-name" id="auth-username"></span>
+    <span class="auth-role">Instructor</span>
+    <span style="font-size:12px;color:var(--text3)">Edit toolbar unlocked</span>
+    <button class="auth-logout" onclick="logout()">Log out</button>
+  </div>
+  <!-- State C: denied -->
+  <div id="auth-denied-state" style="display:none">
+    <span class="auth-denied">⛔ Access denied — you must have the Instructor role in the 7th Bomb Wing Discord server.</span>
+    <a class="discord-btn" href="#" id="discord-retry-btn" style="margin-left:12px">Try again</a>
+  </div>
+</div>
+
+<!-- ─── EDIT TOOLBAR (only shows when logged in) ─────────── -->
 <div id="edit-toolbar">
   <span class="tb-brand">✈ 7th BW Editor</span>
   <div class="tb-sep"></div>
   <button class="tb-btn" id="edit-btn" onclick="toggleEdit()">✏️ Edit Mode</button>
   <div class="tb-sep"></div>
-  <button class="tb-btn" onclick="openSlideshowModal()">🖼 Add Slideshow Image</button>
-  <button class="tb-btn" onclick="openLogoModal()">🏅 Add Discord Logo</button>
+  <button class="tb-btn" onclick="openSlideshowModal()">🖼 Add Image</button>
+  <button class="tb-btn" onclick="openLogoModal()">🏅 Add Logo</button>
   <div class="tb-sep"></div>
   <button class="tb-btn gold" onclick="saveToStorage()">💾 Save</button>
-  <button class="tb-btn" onclick="window.print()">🖨 Print</button>
-  <div id="tb-status">
-    <div class="status-dot" id="status-dot"></div>
-    <span id="status-txt">View mode</span>
-  </div>
 </div>
 
-<!-- ── NAV ─────────────────────────────────────────────── -->
+<!-- ─── NAV ──────────────────────────────────────────────── -->
 <nav class="site-nav">
   <div class="site-nav-inner">
     <a class="nav-logo" href="index.html">
-      <div id="nav-logo-wrap">
-        <img id="nav-logo-img" src="" alt="Squadron logo" style="height:34px;width:auto;display:none;border-radius:4px;">
-        <div class="badge" id="nav-badge">B1</div>
-      </div>
+      <div class="badge">B1</div>
       <div>
         <div class="name" contenteditable="false" id="squad-name">vTAC 7th Bomb Wing</div>
         <div class="sub" contenteditable="false" id="squad-sub">KDYS · MSFS 2024</div>
@@ -282,12 +207,12 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
       <a href="pages/qrc.html">QRC</a>
       <a href="pages/training.html">Training</a>
     </div>
-    <button class="nav-mobile-btn" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
+    <button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button>
   </div>
 </nav>
 
-<!-- ── SLIDESHOW ────────────────────────────────────────── -->
-<div class="slideshow-wrap" id="slideshow-wrap">
+<!-- ─── SLIDESHOW ─────────────────────────────────────────── -->
+<div class="slideshow-wrap">
   <div class="slideshow-track" id="ss-track"></div>
   <button class="ss-arrow left" id="ss-left" onclick="ssMove(-1)">‹</button>
   <button class="ss-arrow right" id="ss-right" onclick="ssMove(1)">›</button>
@@ -296,28 +221,15 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
   <button class="ss-add-btn" onclick="openSlideshowModal()">+ Add Image</button>
 </div>
 
-<!-- ── MANAGE BAR ────────────────────────────────────────── -->
-<div class="manage-bar" id="manage-bar">
-  <span class="manage-lbl">✏️ Edit mode active</span>
-  <span class="manage-hint">Click any text to edit · Use toolbar buttons to add images and logos · Click Save when done</span>
-</div>
-
-<!-- ── DISCORD LOGOS ────────────────────────────────────── -->
+<!-- ─── DISCORD LOGOS ─────────────────────────────────────── -->
 <div class="logos-section" id="logos-section" style="display:none">
-  <div class="logos-label">Squadron & Partner Discord Servers</div>
-  <div class="logos-grid" id="logos-grid">
-    <div class="logo-item">
-      <div class="add-logo-btn" onclick="openLogoModal()">
-        <span class="plus">+</span>
-        <span>Add logo</span>
-      </div>
-    </div>
-  </div>
+  <div class="logos-label">Squadron &amp; Partner Discord Servers</div>
+  <div class="logos-grid" id="logos-grid"></div>
 </div>
 
-<!-- ── HERO ─────────────────────────────────────────────── -->
+<!-- ─── HERO ──────────────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-eyebrow" contenteditable="false" id="hero-eyebrow">vTAC 7th Bomb Wing · Dyess AFB</div>
+  <div class="hero-eyebrow" contenteditable="false" id="hero-eyebrow">vTAC 7th Bomb Wing · Dyess AFB · MSFS 2024</div>
   <h1 class="hero-title">B-1B <span>Lancer</span><br>Instructor Training Guide</h1>
   <p class="hero-sub" contenteditable="false" id="hero-sub">Complete IFR approach procedures, FMS configuration, autopilot reference, phrase glossary, and interactive checklists — built specifically for the KwikFlight B-1B add-on.</p>
   <div class="hero-actions">
@@ -327,14 +239,9 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
   </div>
 </section>
 
-<!-- ── MAIN CONTENT ──────────────────────────────────────── -->
+<!-- ─── MAIN ──────────────────────────────────────────────── -->
 <div class="container page-body">
-
-  <div class="announce-bar">
-    <div class="announce-dot"></div>
-    <span contenteditable="false" id="announce-txt">Phases 2 &amp; 3 Syllabus · Base: KDYS (Dyess AFB, Abilene TX)</span>
-  </div>
-
+  <div class="announce-bar"><div class="announce-dot"></div><span contenteditable="false" id="announce-txt">KwikFlight B-1B · Microsoft Flight Simulator 2024 · Phases 2 &amp; 3 Syllabus · Base: KDYS</span></div>
   <div class="stats-row">
     <div class="stat"><div class="val">6</div><div class="lbl">Phase 2 Events</div></div>
     <div class="stat"><div class="val">6</div><div class="lbl">Phase 3 Events</div></div>
@@ -342,68 +249,42 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
     <div class="stat"><div class="val">80+</div><div class="lbl">Glossary Terms</div></div>
     <div class="stat"><div class="val">12</div><div class="lbl">QRC Phases</div></div>
   </div>
-
   <div class="section" style="margin-top:32px">
     <div class="section-label">Training modules</div>
     <div class="home-card-grid">
-      <a href="pages/ils.html" class="home-card"><div class="hc-icon">🎯</div><div class="hc-title">ILS Approach</div><div class="hc-sub">Precision approach using the instrument landing system. FMS NAV page setup, APR mode arming, LOC intercept, and DH procedures for KDYS RWY 34L.</div><div class="hc-link">Open guide →</div></a>
-      <a href="pages/rnav.html" class="home-card"><div class="hc-icon">🛰</div><div class="hc-title">RNAV / GPS Approach</div><div class="hc-sub">GPS-based approach using FMS flight plan for lateral guidance. NAV HOLD mode, manual descent management, MDA procedures, and DIR usage.</div><div class="hc-link">Open guide →</div></a>
-      <a href="pages/vor.html" class="home-card"><div class="hc-icon">📡</div><div class="hc-title">VOR Approach</div><div class="hc-sub">Non-precision approach using VOR station tracking. NAV page frequency tuning, NAV1 PFD mode, NAV HOLD intercept, and step-down altitude management.</div><div class="hc-link">Open guide →</div></a>
-      <a href="pages/autopilot.html" class="home-card"><div class="hc-icon">🕹</div><div class="hc-title">Autopilot Reference</div><div class="hc-sub">Complete reference for all six autopilot modes — AP, HDG, NAV, ALT, APR, and ATH. PFD annunciations, selector knobs, and common errors.</div><div class="hc-link">Open guide →</div></a>
-      <a href="pages/fms.html" class="home-card"><div class="hc-icon">⌨️</div><div class="hc-title">FMS Setup Guide</div><div class="hc-sub">From IDEN startup through FPLN route building, SID/STAR loading, PERF V-speeds, APPR page setup, COM/NAV tuning, and DIR/PSN reference.</div><div class="hc-link">Open guide →</div></a>
-      <a href="pages/glossary.html" class="home-card"><div class="hc-icon">📖</div><div class="hc-title">Phrase &amp; Term Glossary</div><div class="hc-sub">Searchable A–Z reference covering every abbreviation, ATC phrase, navigation term, and systems acronym used in B-1B virtual training.</div><div class="hc-link">Open glossary →</div></a>
-      <a href="pages/qrc.html" class="home-card"><div class="hc-icon">✅</div><div class="hc-title">QRC Checklist</div><div class="hc-sub">Interactive tap-to-check checklist covering all 12 phases: Preliminary Cockpit Prep through Parking/Shutdown. Based on the official KwikFlight QRC.</div><div class="hc-link">Open checklist →</div></a>
-      <a href="pages/training.html" class="home-card"><div class="hc-icon">🎓</div><div class="hc-title">Phase 2 &amp; 3 Training Guide</div><div class="hc-sub">Full instructor syllabus for all Phase 2 and Phase 3 events — graded items, step-by-step instruction sequences, and evaluation standards.</div><div class="hc-link">Open syllabus →</div></a>
+      <a href="pages/ils.html" class="home-card"><div class="hc-icon">🎯</div><div class="hc-title">ILS Approach</div><div class="hc-sub">Precision ILS approach — FMS setup, APR mode sequence, LOC intercept, and DH procedures for KDYS RWY 34L.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/rnav.html" class="home-card"><div class="hc-icon">🛰</div><div class="hc-title">RNAV / GPS Approach</div><div class="hc-sub">GPS approach with NAV HOLD, FMS FPLN loading, manual descent management, and MDA procedures.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/vor.html" class="home-card"><div class="hc-icon">📡</div><div class="hc-title">VOR Approach</div><div class="hc-sub">VOR frequency tuning, NAV1 PFD mode, NAV HOLD intercept, and step-down altitude management.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/autopilot.html" class="home-card"><div class="hc-icon">🕹</div><div class="hc-title">Autopilot Reference</div><div class="hc-sub">Complete reference for all six AP modes — AP, HDG, NAV, ALT, APR, ATH — with PFD annunciations.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/fms.html" class="home-card"><div class="hc-icon">⌨️</div><div class="hc-title">FMS Setup Guide</div><div class="hc-sub">IDEN/INIT startup, FPLN route building, PERF V-speeds, APPR page, COM/NAV, DIR/PSN reference.</div><div class="hc-link">Open guide →</div></a>
+      <a href="pages/glossary.html" class="home-card"><div class="hc-icon">📖</div><div class="hc-title">Phrase &amp; Term Glossary</div><div class="hc-sub">Searchable A–Z: every abbreviation, ATC phrase, navigation term, and systems acronym.</div><div class="hc-link">Open glossary →</div></a>
+      <a href="pages/qrc.html" class="home-card"><div class="hc-icon">✅</div><div class="hc-title">QRC Checklist</div><div class="hc-sub">Interactive tap-to-check checklist — all 12 phases from Preliminary Cockpit Prep to Parking.</div><div class="hc-link">Open checklist →</div></a>
+      <a href="pages/training.html" class="home-card"><div class="hc-icon">🎓</div><div class="hc-title">Phase 2 &amp; 3 Training</div><div class="hc-sub">Full instructor syllabus — graded items, step-by-step sequences, and evaluation standards.</div><div class="hc-link">Open syllabus →</div></a>
     </div>
   </div>
-
   <hr class="divider">
-
   <div class="section">
     <div class="section-label">Aircraft &amp; airfield reference</div>
     <div class="grid-2">
-      <div class="card">
-        <div class="card-header"><div class="card-icon">📋</div><div class="card-title">KwikFlight B-1B Specifications</div></div>
-        <div class="card-body">
-          <div class="freq-row"><span class="freq-name">Cruise Speed</span><span class="freq-val">400 KTAS</span></div>
-          <div class="freq-row"><span class="freq-name">Max Altitude</span><span class="freq-val">60,000 ft</span></div>
-          <div class="freq-row"><span class="freq-name">Max Weight</span><span class="freq-val">477,000 lbs</span></div>
-          <div class="freq-row"><span class="freq-name">Fuel Capacity</span><span class="freq-val">35,593 Gal</span></div>
-          <div class="freq-row"><span class="freq-name">Range</span><span class="freq-val">6,478 NM</span></div>
-          <div class="freq-row"><span class="freq-name">Wing Sweep Range</span><span class="freq-val">15° – 67.5°</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-icon">📻</div><div class="card-title">KDYS Key Frequencies</div></div>
-        <div class="card-body">
-          <div class="freq-row"><span class="freq-name">ATIS</span><span class="freq-val">134.05</span></div>
-          <div class="freq-row"><span class="freq-name">Ground</span><span class="freq-val">121.65</span></div>
-          <div class="freq-row"><span class="freq-name">Tower</span><span class="freq-val">126.2</span></div>
-          <div class="freq-row"><span class="freq-name">Approach / Departure</span><span class="freq-val">119.3</span></div>
-          <div class="freq-row"><span class="freq-name">ILS RWY 34L</span><span class="freq-val">110.3 / I-DYS</span></div>
-          <div class="freq-row"><span class="freq-name">Field Elevation</span><span class="freq-val">1,789 ft MSL</span></div>
-          <div class="freq-row"><span class="freq-name">Primary Runway</span><span class="freq-val">34L / 16R (10,000 ft)</span></div>
-        </div>
-      </div>
+      <div class="card"><div class="card-header"><div class="card-icon">📋</div><div class="card-title">KwikFlight B-1B Specifications</div></div><div class="card-body"><div class="freq-row"><span class="freq-name">Cruise Speed</span><span class="freq-val">400 KTAS</span></div><div class="freq-row"><span class="freq-name">Max Altitude</span><span class="freq-val">60,000 ft</span></div><div class="freq-row"><span class="freq-name">Max Weight</span><span class="freq-val">477,000 lbs</span></div><div class="freq-row"><span class="freq-name">Range</span><span class="freq-val">6,478 NM</span></div><div class="freq-row"><span class="freq-name">Wing Sweep</span><span class="freq-val">15° – 67.5°</span></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-icon">📻</div><div class="card-title">KDYS Key Frequencies</div></div><div class="card-body"><div class="freq-row"><span class="freq-name">ATIS</span><span class="freq-val">134.05</span></div><div class="freq-row"><span class="freq-name">Ground</span><span class="freq-val">121.65</span></div><div class="freq-row"><span class="freq-name">Tower</span><span class="freq-val">126.2</span></div><div class="freq-row"><span class="freq-name">ILS RWY 34L</span><span class="freq-val">110.3 / I-DYS</span></div><div class="freq-row"><span class="freq-name">Field Elevation</span><span class="freq-val">1,789 ft MSL</span></div></div></div>
     </div>
   </div>
-
 </div>
 
-<!-- ── FOOTER ────────────────────────────────────────────── -->
 <footer class="site-footer">
-  <p contenteditable="false" id="footer-txt">vTAC 7th Bomb Wing · B-1B Lancer Training · Dyess AFB (KDYS)</p>
-  <p style="margin-top:6px">For simulation use only. Not for real-world aviation. <a href="https://github.com/quon91/b1b-training">View on GitHub</a>.</p>
+  <p contenteditable="false" id="footer-txt">vTAC 7th Bomb Wing · B-1B Lancer Training · Dyess AFB (KDYS) · Microsoft Flight Simulator 2024</p>
+  <p style="margin-top:6px">For simulation use only. <a href="https://github.com/quon91/b1b-training">View on GitHub</a>.</p>
 </footer>
 
-<!-- ── ADD SLIDESHOW IMAGE MODAL ────────────────────────── -->
+<!-- ─── SLIDESHOW MODAL ───────────────────────────────────── -->
 <div class="modal-overlay" id="ss-modal">
   <div class="modal">
     <h3>🖼 Add slideshow image</h3>
-    <p>Paste a direct image URL from Discord, Imgur, or any image link. Right-click an image in Discord → <strong>Copy Link</strong> → paste below.</p>
+    <p>Paste a direct image URL from Discord. Right-click an image in Discord → <strong>Copy Link</strong> → paste below.</p>
     <input class="modal-input" id="ss-url" placeholder="https://cdn.discordapp.com/attachments/..." oninput="previewSSImg()">
-    <img id="ss-preview" class="modal-preview" src="" alt="" style="display:none">
-    <input class="modal-input" id="ss-caption" placeholder="Caption (optional) — e.g. 86th BW on final approach KDYS">
+    <img id="ss-preview" class="modal-preview-img" src="" alt="">
+    <input class="modal-input" id="ss-caption" placeholder="Caption (optional)">
     <div class="modal-btns">
       <button class="modal-btn" onclick="closeSSModal()">Cancel</button>
       <button class="modal-btn primary" onclick="addSlide()">Add to slideshow</button>
@@ -411,15 +292,15 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
   </div>
 </div>
 
-<!-- ── ADD DISCORD LOGO MODAL ───────────────────────────── -->
+<!-- ─── LOGO MODAL ────────────────────────────────────────── -->
 <div class="modal-overlay" id="logo-modal">
   <div class="modal">
     <h3>🏅 Add Discord server logo</h3>
-    <p>Right-click your Discord server icon → <strong>Copy Link</strong> (or Copy Image Address) → paste below. Works with any squadron or partner server.</p>
+    <p>Right-click your Discord server icon → <strong>Copy Link</strong> → paste below.</p>
     <input class="modal-input" id="logo-url" placeholder="https://cdn.discordapp.com/icons/..." oninput="previewLogoImg()">
-    <img id="logo-preview" class="modal-preview" src="" alt="" style="display:none;border-radius:50%">
-    <input class="modal-input" id="logo-name" placeholder="Server name — e.g. 7th Bomb Wing">
-    <input class="modal-input" id="logo-link" placeholder="Discord invite link (optional) — https://discord.gg/...">
+    <img id="logo-preview" class="modal-preview-logo" src="" alt="">
+    <input class="modal-input" id="logo-name" placeholder="Server name">
+    <input class="modal-input" id="logo-link" placeholder="Discord invite link (optional)">
     <div class="modal-btns">
       <button class="modal-btn" onclick="closeLogoModal()">Cancel</button>
       <button class="modal-btn primary" onclick="addLogo()">Add logo</button>
@@ -429,55 +310,88 @@ body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:
 
 <script src="assets/main.js"></script>
 <script>
-// ── STORAGE KEY ──────────────────────────────────────────
-const STORE_KEY = 'b1b_home_v1';
+// ════════════════════════════════════════════════════════════
+//  CONFIGURATION — update AUTH_SERVER_URL after deploying
+//  to Railway. Everything else works automatically.
+// ════════════════════════════════════════════════════════════
+const AUTH_SERVER_URL = 'https://b1b-auth-server-production.up.railway.app';
+// ════════════════════════════════════════════════════════════
 
-// ── STATE ────────────────────────────────────────────────
-let slides  = [];
-let logos   = [];
-let ssIndex = 0;
-let ssTimer = null;
-let editMode = false;
+const STORE_KEY = 'b1b_home_v2';
+let slides = [], logos = [], ssIndex = 0, ssTimer = null, editMode = false;
 
-// ── LOAD FROM STORAGE ────────────────────────────────────
-function loadFromStorage() {
+// ── SET LOGIN BUTTON URL ─────────────────────────────────────
+document.getElementById('discord-login-btn').href = AUTH_SERVER_URL + '/auth/login';
+document.getElementById('discord-retry-btn').href  = AUTH_SERVER_URL + '/auth/login';
+
+// ── AUTH: CHECK URL PARAMS ON PAGE LOAD ─────────────────────
+(function checkAuthReturn() {
+  const params = new URLSearchParams(location.search);
+  const auth   = params.get('auth');
+  const token  = params.get('token');
+
+  if (auth === 'success' && token) {
+    sessionStorage.setItem('b1b_token', token);
+    // Clean URL without reloading
+    history.replaceState({}, '', location.pathname);
+    verifyAndUnlock(token);
+  } else if (auth === 'denied') {
+    showDenied();
+    history.replaceState({}, '', location.pathname);
+  } else {
+    // Check existing session token
+    const stored = sessionStorage.getItem('b1b_token');
+    if (stored) verifyAndUnlock(stored);
+  }
+})();
+
+async function verifyAndUnlock(token) {
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (d.slides)  slides  = d.slides;
-    if (d.logos)   logos   = d.logos;
-    if (d.texts) {
-      Object.entries(d.texts).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = val;
-      });
+    const res  = await fetch(AUTH_SERVER_URL + '/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      showLoggedIn(data);
+    } else {
+      sessionStorage.removeItem('b1b_token');
     }
-  } catch(e) {}
+  } catch(e) {
+    // Server unreachable — fail silently (no edit toolbar shown)
+    console.warn('Auth server unreachable:', e.message);
+  }
 }
 
-// ── SAVE TO STORAGE ──────────────────────────────────────
-function saveToStorage() {
-  const texts = {};
-  ['squad-name','squad-sub','hero-eyebrow','hero-sub','announce-txt','footer-txt'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) texts[id] = el.innerHTML;
-  });
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify({ slides, logos, texts }));
-    showToast('✓ Saved!');
-  } catch(e) { showToast('Could not save — storage full'); }
+function showLoggedIn(user) {
+  document.getElementById('auth-login-state').style.display = 'none';
+  document.getElementById('auth-denied-state').style.display = 'none';
+  const us = document.getElementById('auth-user-state');
+  us.style.display = 'flex';
+  document.getElementById('auth-username').textContent = user.username;
+  const avatar = user.avatar
+    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+    : `https://cdn.discordapp.com/embed/avatars/0.png`;
+  document.getElementById('auth-avatar').src = avatar;
+  // Unlock the edit toolbar
+  document.getElementById('edit-toolbar').classList.add('visible');
 }
 
-// ── TOAST ────────────────────────────────────────────────
-function showToast(msg) {
-  let t = document.getElementById('toast');
-  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;transition:opacity .3s'; document.body.appendChild(t); }
-  t.textContent = msg; t.style.opacity = '1';
-  setTimeout(() => t.style.opacity = '0', 2200);
+function showDenied() {
+  document.getElementById('auth-login-state').style.display = 'none';
+  document.getElementById('auth-denied-state').style.display = 'flex';
 }
 
-// ── EDIT MODE ────────────────────────────────────────────
+function logout() {
+  sessionStorage.removeItem('b1b_token');
+  document.getElementById('auth-user-state').style.display  = 'none';
+  document.getElementById('auth-login-state').style.display = 'flex';
+  document.getElementById('edit-toolbar').classList.remove('visible');
+  if (editMode) toggleEdit();
+}
+
+// ── EDIT MODE ────────────────────────────────────────────────
 function toggleEdit() {
   editMode = !editMode;
   document.body.classList.toggle('edit-mode', editMode);
@@ -485,156 +399,98 @@ function toggleEdit() {
     el.contentEditable = editMode ? 'true' : 'false';
   });
   document.getElementById('edit-btn').classList.toggle('active', editMode);
-  document.getElementById('status-dot').classList.toggle('on', editMode);
-  document.getElementById('status-txt').textContent = editMode ? 'Edit mode ON' : 'View mode';
 }
 
-// ── SLIDESHOW ────────────────────────────────────────────
+// ── STORAGE ──────────────────────────────────────────────────
+function loadFromStorage() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    if (d.slides) slides = d.slides;
+    if (d.logos)  logos  = d.logos;
+    if (d.texts) Object.entries(d.texts).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = val;
+    });
+  } catch(e) {}
+}
+function saveToStorage() {
+  const texts = {};
+  ['squad-name','squad-sub','hero-eyebrow','hero-sub','announce-txt','footer-txt']
+    .forEach(id => { const el = document.getElementById(id); if (el) texts[id] = el.innerHTML; });
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ slides, logos, texts }));
+    showToast('✓ Saved!');
+  } catch(e) { showToast('Could not save'); }
+}
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;transition:opacity .3s'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity = '1';
+  setTimeout(() => t.style.opacity = '0', 2200);
+}
+
+// ── SLIDESHOW ────────────────────────────────────────────────
 function renderSlideshow() {
-  const track  = document.getElementById('ss-track');
-  const dots   = document.getElementById('ss-dots');
-  const count  = document.getElementById('ss-count');
-  const lArrow = document.getElementById('ss-left');
-  const rArrow = document.getElementById('ss-right');
-
-  if (slides.length === 0) {
-    track.innerHTML = `
-      <div class="slide">
-        <div class="slide-placeholder">
-          <span class="icon">🛩</span>
-          <p>No slideshow images yet.<br>Click <strong>Edit Mode</strong> then <strong>Add Image</strong> to add Discord screenshots or photos.</p>
-        </div>
-      </div>`;
-    dots.innerHTML = '';
-    count.textContent = '';
-    lArrow.style.display = rArrow.style.display = 'none';
-    return;
+  const track = document.getElementById('ss-track');
+  const dots  = document.getElementById('ss-dots');
+  const count = document.getElementById('ss-count');
+  const la    = document.getElementById('ss-left');
+  const ra    = document.getElementById('ss-right');
+  if (!slides.length) {
+    track.innerHTML = `<div class="slide"><div class="slide-placeholder"><span class="icon">🛩</span><p>Log in as Instructor and click <strong>Add Image</strong> to add photos.</p></div></div>`;
+    dots.innerHTML = ''; count.textContent = '';
+    la.style.display = ra.style.display = 'none'; return;
   }
-
-  lArrow.style.display = rArrow.style.display = slides.length > 1 ? 'flex' : 'none';
+  la.style.display = ra.style.display = slides.length > 1 ? 'flex' : 'none';
   track.innerHTML = slides.map((s, i) => `
     <div class="slide">
-      <img src="${s.url}" alt="${s.caption||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=icon>⚠️</span><p>Image could not load — the Discord link may have expired.</p></div>'">
+      <img src="${s.url}" alt="${s.caption||''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=icon>⚠️</span><p>Image could not load.</p></div>'">
       ${s.caption ? `<div class="slide-caption">${s.caption}</div>` : ''}
-      ${editMode ? `<button onclick="removeSlide(${i})" style="position:absolute;top:8px;right:8px;background:rgba(208,64,64,.8);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;">×</button>` : ''}
+      ${editMode ? `<button onclick="removeSlide(${i})" style="position:absolute;top:8px;right:8px;background:rgba(208,64,64,.85);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;">×</button>` : ''}
     </div>`).join('');
-
-  dots.innerHTML = slides.map((_, i) =>
-    `<div class="ss-dot ${i===ssIndex?'active':''}" onclick="ssGoTo(${i})"></div>`).join('');
+  dots.innerHTML = slides.map((_,i) => `<div class="ss-dot ${i===ssIndex?'active':''}" onclick="ssGoTo(${i})"></div>`).join('');
   count.textContent = `${ssIndex+1} / ${slides.length}`;
-  track.style.transform = `translateX(-${ssIndex * 100}%)`;
-  startAutoPlay();
-}
-
-function ssMove(dir) {
-  ssIndex = (ssIndex + dir + slides.length) % slides.length;
-  renderSlideshow();
-}
-function ssGoTo(i) { ssIndex = i; renderSlideshow(); }
-
-function startAutoPlay() {
+  track.style.transform = `translateX(-${ssIndex*100}%)`;
   if (ssTimer) clearInterval(ssTimer);
   if (slides.length > 1) ssTimer = setInterval(() => ssMove(1), 5000);
 }
+function ssMove(d) { ssIndex = (ssIndex+d+slides.length)%slides.length; renderSlideshow(); }
+function ssGoTo(i) { ssIndex = i; renderSlideshow(); }
+function removeSlide(i) { slides.splice(i,1); ssIndex = Math.max(0,ssIndex-1); renderSlideshow(); saveToStorage(); }
 
-function removeSlide(i) {
-  slides.splice(i, 1);
-  ssIndex = Math.max(0, ssIndex - 1);
-  renderSlideshow();
-  saveToStorage();
-}
-
-// ── LOGOS ────────────────────────────────────────────────
+// ── LOGOS ────────────────────────────────────────────────────
 function renderLogos() {
   const section = document.getElementById('logos-section');
   const grid    = document.getElementById('logos-grid');
-
   section.style.display = (logos.length > 0 || editMode) ? 'block' : 'none';
-
-  const addBtn = editMode ? `
+  const addBtn = editMode ? `<div class="logo-item"><div class="add-logo-btn" onclick="openLogoModal()"><span class="plus">+</span><span>Add</span></div></div>` : '';
+  grid.innerHTML = logos.map((l,i) => `
     <div class="logo-item">
-      <div class="add-logo-btn" onclick="openLogoModal()">
-        <span class="plus">+</span><span>Add logo</span>
-      </div>
-    </div>` : '';
-
-  grid.innerHTML = logos.map((l, i) => `
-    <div class="logo-item">
-      ${l.link ? `<a href="${l.link}" target="_blank" rel="noopener">` : '<div>'}
-        <div class="logo-img-wrap" style="position:relative">
-          <img src="${l.url}" alt="${l.name||'Server'}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\'><rect width=\'72\' height=\'72\' rx=\'36\' fill=\'%23313338\'/><text x=\'50%25\' y=\'55%25\' text-anchor=\'middle\' dominant-baseline=\'middle\' fill=\'%23fff\' font-size=\'24\'>?</text></svg>'">
-          ${editMode ? `<button onclick="removeLogo(${i})" style="position:absolute;top:-4px;right:-4px;background:#d04040;border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;">×</button>` : ''}
+      ${l.link?`<a href="${l.link}" target="_blank" rel="noopener">`:'<div>'}
+        <div class="logo-img-wrap">
+          <img src="${l.url}" alt="${l.name||''}" loading="lazy">
+          ${editMode?`<button onclick="removeLogo(${i})" style="position:absolute;top:-4px;right:-4px;background:#d04040;border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;">×</button>`:''}
         </div>
-      ${l.link ? '</a>' : '</div>'}
-      ${l.name ? `<span class="logo-name">${l.name}</span>` : ''}
+      ${l.link?'</a>':'</div>'}
+      ${l.name?`<span class="logo-name">${l.name}</span>`:''}
     </div>`).join('') + addBtn;
 }
+function removeLogo(i) { logos.splice(i,1); renderLogos(); saveToStorage(); }
 
-function removeLogo(i) {
-  logos.splice(i, 1);
-  renderLogos();
-  saveToStorage();
-}
-
-// ── SLIDESHOW MODAL ──────────────────────────────────────
-function openSlideshowModal() {
-  document.getElementById('ss-url').value = '';
-  document.getElementById('ss-caption').value = '';
-  document.getElementById('ss-preview').style.display = 'none';
-  document.getElementById('ss-modal').classList.add('open');
-}
+// ── MODALS ───────────────────────────────────────────────────
+function openSlideshowModal() { document.getElementById('ss-url').value=''; document.getElementById('ss-caption').value=''; document.getElementById('ss-preview').style.display='none'; document.getElementById('ss-modal').classList.add('open'); }
 function closeSSModal() { document.getElementById('ss-modal').classList.remove('open'); }
-function previewSSImg() {
-  const url = document.getElementById('ss-url').value.trim();
-  const prev = document.getElementById('ss-preview');
-  if (url) { prev.src = url; prev.style.display = 'block'; prev.style.width='100%'; prev.style.height='120px'; prev.style.objectFit='cover'; prev.style.borderRadius='6px'; }
-  else prev.style.display = 'none';
-}
-function addSlide() {
-  const url = document.getElementById('ss-url').value.trim();
-  if (!url) { alert('Please paste an image URL first.'); return; }
-  const caption = document.getElementById('ss-caption').value.trim();
-  slides.push({ url, caption });
-  ssIndex = slides.length - 1;
-  closeSSModal();
-  renderSlideshow();
-  saveToStorage();
-  showToast('Image added to slideshow!');
-}
+function previewSSImg() { const u=document.getElementById('ss-url').value.trim(); const p=document.getElementById('ss-preview'); if(u){p.src=u;p.style.display='block';}else p.style.display='none'; }
+function addSlide() { const u=document.getElementById('ss-url').value.trim(); if(!u){alert('Paste an image URL first.');return;} slides.push({url:u,caption:document.getElementById('ss-caption').value.trim()}); ssIndex=slides.length-1; closeSSModal(); renderSlideshow(); saveToStorage(); showToast('Image added!'); }
 
-// ── LOGO MODAL ───────────────────────────────────────────
-function openLogoModal() {
-  document.getElementById('logo-url').value = '';
-  document.getElementById('logo-name').value = '';
-  document.getElementById('logo-link').value = '';
-  document.getElementById('logo-preview').style.display = 'none';
-  document.getElementById('logo-modal').classList.add('open');
-}
+function openLogoModal() { document.getElementById('logo-url').value=''; document.getElementById('logo-name').value=''; document.getElementById('logo-link').value=''; document.getElementById('logo-preview').style.display='none'; document.getElementById('logo-modal').classList.add('open'); }
 function closeLogoModal() { document.getElementById('logo-modal').classList.remove('open'); }
-function previewLogoImg() {
-  const url = document.getElementById('logo-url').value.trim();
-  const prev = document.getElementById('logo-preview');
-  if (url) { prev.src = url; prev.style.display = 'block'; }
-  else prev.style.display = 'none';
-}
-function addLogo() {
-  const url = document.getElementById('logo-url').value.trim();
-  if (!url) { alert('Please paste a logo URL first.'); return; }
-  const name = document.getElementById('logo-name').value.trim();
-  const link = document.getElementById('logo-link').value.trim();
-  logos.push({ url, name, link });
-  closeLogoModal();
-  renderLogos();
-  saveToStorage();
-  showToast('Logo added!');
-}
+function previewLogoImg() { const u=document.getElementById('logo-url').value.trim(); const p=document.getElementById('logo-preview'); if(u){p.src=u;p.style.display='block';}else p.style.display='none'; }
+function addLogo() { const u=document.getElementById('logo-url').value.trim(); if(!u){alert('Paste a logo URL first.');return;} logos.push({url:u,name:document.getElementById('logo-name').value.trim(),link:document.getElementById('logo-link').value.trim()}); closeLogoModal(); renderLogos(); saveToStorage(); showToast('Logo added!'); }
 
-// ── CLOSE MODALS ON BACKDROP ─────────────────────────────
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
-});
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
 
-// ── INIT ─────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────
 loadFromStorage();
 renderSlideshow();
 renderLogos();
