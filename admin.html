@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Admin — B-1B Training</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;--surface:#141720;--card:#1a1e2b;--card2:#1f2435;
+  --border:#2a3048;--border2:#3a4460;
+  --gold:#c8a951;--gold2:#f0cc72;
+  --blue:#4a90d9;--green:#3dba6e;--green2:#6ddea0;
+  --amber:#e09030;--red:#d04040;--red2:#ff7070;
+  --text:#e8eaf0;--text2:#9aa0b8;--text3:#5a6080;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Courier New',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--surface);border-bottom:2px solid var(--gold);
+  padding:0 24px;display:flex;align-items:center;gap:12px;
+  height:54px;position:sticky;top:0;z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.topbar-brand{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
+.topbar-sep{width:1px;height:28px;background:var(--border2);flex-shrink:0}
+.tb-btn{
+  padding:5px 13px;border-radius:6px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border2);
+  background:var(--card2);color:var(--text2);font-family:var(--sans);
+  transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px;
+}
+.tb-btn:hover{background:var(--card);color:var(--text)}
+.tb-btn.primary{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+.tb-btn.primary:hover{background:var(--gold2)}
+.tb-btn.danger{color:var(--red2);border-color:var(--red)}
+.tb-btn.danger:hover{background:rgba(208,64,64,.1)}
+.saved-msg{font-size:12px;color:var(--green2);opacity:0;transition:opacity .3s;margin-left:auto}
+.saved-msg.show{opacity:1}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  padding:16px 0;position:sticky;top:54px;height:calc(100vh - 54px);
+  overflow-y:auto;
+}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:12px 16px 6px}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;font-size:13px;cursor:pointer;
+  color:var(--text2);transition:all .12s;border-left:2px solid transparent;
+}
+.nav-item:hover{background:var(--card);color:var(--text);border-left-color:var(--border2)}
+.nav-item.active{background:rgba(200,169,81,.08);color:var(--gold);border-left-color:var(--gold);font-weight:500}
+.nav-item .icon{font-size:16px;flex-shrink:0;width:20px;text-align:center}
+.main{flex:1;padding:28px 32px;max-width:900px}
+@media(max-width:700px){.sidebar{display:none}.main{padding:16px}}
+
+/* ── SECTIONS ── */
+.section{display:none}
+.section.active{display:block}
+.section-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+
+/* ── CARDS ── */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.panel-head{padding:12px 16px;background:var(--card2);border-bottom:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.panel-head .ph-icon{font-size:16px}
+.panel-body{padding:16px}
+
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:14px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:600px){.field-row{grid-template-columns:1fr}}
+label{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+input[type=text],input[type=url],input[type=color],select,textarea{
+  width:100%;padding:9px 12px;border-radius:7px;
+  background:#0d1117;border:1px solid var(--border2);
+  color:var(--text);font-size:13px;font-family:var(--sans);
+  outline:none;transition:border-color .15s;
+}
+input[type=text]:focus,input[type=url]:focus,select:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:80px}
+input[type=color]{padding:4px 6px;height:36px;cursor:pointer}
+select{cursor:pointer}
+.hint{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* ── COLOR SWATCHES ── */
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.swatch{width:32px;height:32px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .12s;flex-shrink:0}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--gold)}
+
+/* ── SLIDESHOW MANAGER ── */
+.slide-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.slide-item{
+  background:var(--card2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;display:flex;align-items:center;gap:10px;
+}
+.slide-thumb{width:60px;height:40px;border-radius:4px;object-fit:cover;background:var(--border);flex-shrink:0}
+.slide-info{flex:1;min-width:0}
+.slide-url{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slide-cap{font-size:12px;color:var(--text2);margin-top:2px}
+.slide-remove{background:none;border:none;color:var(--red2);cursor:pointer;font-size:16px;padding:4px;border-radius:4px;transition:background .12s;flex-shrink:0}
+.slide-remove:hover{background:rgba(208,64,64,.1)}
+.add-row{display:flex;gap:8px;flex-wrap:wrap}
+.add-input{flex:1;min-width:160px;padding:8px 10px;border-radius:6px;background:#0d1117;border:1px solid var(--border2);color:var(--text);font-size:12px;font-family:var(--sans);outline:none}
+.add-input:focus{border-color:var(--gold)}
+.add-btn{padding:8px 14px;border-radius:6px;background:var(--gold);color:#000;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);white-space:nowrap}
+.add-btn:hover{background:var(--gold2)}
+
+/* ── LOGO MANAGER ── */
+.logo-grid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.logo-item{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:var(--card2);border:1px solid var(--border);border-radius:10px;
+  padding:12px;width:100px;position:relative;
+}
+.logo-img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border2)}
+.logo-label{font-size:10px;color:var(--text3);text-align:center;word-break:break-word}
+.logo-del{position:absolute;top:4px;right:4px;background:var(--red);border:none;border-radius:50%;width:18px;height:18px;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+
+/* ── CARD BUILDER ── */
+.card-preview{
+  background:#0d1117;border:1px solid var(--border2);border-radius:8px;
+  padding:12px;margin-top:12px;
+}
+.card-preview-head{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.built-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.built-card-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--card2);border-bottom:1px solid var(--border)}
+.built-card-icon{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#000;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.built-card-title{font-size:12px;font-weight:600;color:var(--text)}
+.built-card-body{padding:12px}
+.built-cl{list-style:none}
+.built-cl li{font-size:12px;color:var(--text2);padding:2px 0;display:flex;gap:6px}
+.built-cl li::before{content:"→";color:var(--gold);flex-shrink:0}
+.alert-preview{font-size:11px;padding:6px 9px;border-radius:5px;margin-top:7px;border-left:3px solid}
+.alert-note{background:rgba(74,144,217,.1);border-color:var(--blue);color:#7ab8ff}
+.alert-warn{background:rgba(224,144,48,.1);border-color:var(--amber);color:#ffba58}
+.alert-crit{background:rgba(208,64,64,.1);border-color:var(--red);color:var(--red2)}
+.alert-ok{background:rgba(61,186,110,.1);border-color:var(--green);color:var(--green2)}
+
+/* ── CODE OUTPUT ── */
+.code-out{
+  background:#0d1117;border:1px solid #30363d;border-radius:8px;
+  padding:12px;font-family:var(--mono);font-size:11px;color:#c9d1d9;
+  line-height:1.8;white-space:pre-wrap;word-break:break-all;
+  margin-top:10px;max-height:300px;overflow-y:auto;
+  position:relative;
+}
+.copy-code-btn{
+  position:sticky;top:0;float:right;
+  background:#21262d;border:1px solid #30363d;border-radius:5px;
+  padding:3px 9px;font-size:10px;color:#8b949e;cursor:pointer;
+  font-family:var(--sans);transition:all .12s;margin-bottom:4px;
+}
+.copy-code-btn:hover{color:#c9d1d9;border-color:#8b949e}
+.copy-code-btn.ok{color:#3fb950;border-color:#3fb950}
+
+/* ── THEME PREVIEW ── */
+.theme-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.theme-card{
+  border-radius:8px;padding:12px 10px;cursor:pointer;
+  border:2px solid transparent;transition:all .15s;text-align:center;
+}
+.theme-card:hover{transform:translateY(-2px)}
+.theme-card.active{border-color:var(--gold)}
+.theme-name{font-size:11px;font-weight:600;margin-top:6px}
+.theme-dot-row{display:flex;justify-content:center;gap:4px;margin-top:4px}
+.theme-dot{width:10px;height:10px;border-radius:50%}
+
+/* ── NAV EDITOR ── */
+.nav-item-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:7px;padding:8px 10px;margin-bottom:6px;
+}
+.nav-grip{color:var(--text3);cursor:grab;font-size:16px;flex-shrink:0}
+.nav-item-inputs{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.nav-mini-input{padding:5px 8px;border-radius:5px;background:#0d1117;border:1px solid var(--border2);color:var(--text);font-size:12px;font-family:var(--sans);outline:none;flex:1;min-width:80px}
+.nav-mini-input:focus{border-color:var(--gold)}
+.nav-del{background:none;border:none;color:var(--red2);cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;flex-shrink:0}
+.nav-del:hover{background:rgba(208,64,64,.1)}
+
+/* ── MISC ── */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.badge-gold{background:rgba(200,169,81,.15);color:var(--gold);border:1px solid rgba(200,169,81,.3)}
+.badge-blue{background:rgba(74,144,217,.15);color:#7ab8ff;border:1px solid rgba(74,144,217,.3)}
+.empty-state{text-align:center;padding:28px;color:var(--text3);font-size:13px}
+
+/* toast */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:9px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;opacity:0;transition:opacity .3s}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <span class="topbar-brand">✈ 7th BW Admin</span>
+  <div class="topbar-sep"></div>
+  <button class="tb-btn primary" onclick="saveAll()">💾 Save All Changes</button>
+  <button class="tb-btn" onclick="window.open('../index.html')">👁 Preview Site</button>
+  <button class="tb-btn" onclick="window.open('https://github.com/quon91/b1b-training')" >⬆ Open GitHub</button>
+  <div class="topbar-sep"></div>
+  <button class="tb-btn danger" onclick="confirmReset()">🗑 Reset All</button>
+  <span class="saved-msg" id="saved-msg">✓ Saved!</span>
+</div>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="sidebar-label">Site settings</div>
+    <div class="nav-item active" onclick="showSection('branding')"><span class="icon">🎨</span> Branding</div>
+    <div class="nav-item" onclick="showSection('colors')"><span class="icon">🎨</span> Colors & Theme</div>
+    <div class="nav-item" onclick="showSection('navigation')"><span class="icon">🔗</span> Navigation</div>
+    <div class="nav-item" onclick="showSection('hero')"><span class="icon">✍️</span> Homepage Text</div>
+    <div class="sidebar-label">Media</div>
+    <div class="nav-item" onclick="showSection('slideshow')"><span class="icon">🖼</span> Slideshow</div>
+    <div class="nav-item" onclick="showSection('logos')"><span class="icon">🏅</span> Discord Logos</div>
+    <div class="sidebar-label">Content</div>
+    <div class="nav-item" onclick="showSection('cardbuilder')"><span class="icon">🃏</span> Card Builder</div>
+    <div class="nav-item" onclick="showSection('frequencies')"><span class="icon">📻</span> Frequencies</div>
+    <div class="nav-item" onclick="showSection('announcements')"><span class="icon">📢</span> Announcements</div>
+    <div class="sidebar-label">Site</div>
+    <div class="nav-item" onclick="showSection('export')"><span class="icon">⬇</span> Export / Backup</div>
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <!-- BRANDING -->
+    <div id="sec-branding" class="section active">
+      <div class="section-title">Branding</div>
+      <div class="section-sub">Squadron name, logo, and footer text that appear across every page.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">✍️</span> Squadron identity</div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>Squadron name</label>
+              <input type="text" id="squad-name" placeholder="vTAC 7th Bomb Wing">
+              <div class="hint">Shown in the top-left of every page</div>
+            </div>
+            <div class="field">
+              <label>Sub-title</label>
+              <input type="text" id="squad-sub" placeholder="KDYS · MSFS 2024">
+              <div class="hint">Small text below the name</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Nav badge text (2–3 letters)</label>
+            <input type="text" id="nav-badge" placeholder="B1" maxlength="3">
+            <div class="hint">The gold circle in the top-left — e.g. B1, 7B, VF</div>
+          </div>
+          <div class="field">
+            <label>Footer text</label>
+            <input type="text" id="footer-txt" placeholder="vTAC 7th Bomb Wing · B-1B Lancer Training...">
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🖼</span> Logo image (optional)</div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Logo image URL</label>
+            <input type="url" id="logo-url" placeholder="https://cdn.discordapp.com/icons/..." oninput="previewNavLogo()">
+            <div class="hint">Paste a Discord server icon URL or any image link. Leave blank to use the badge text instead.</div>
+          </div>
+          <div id="logo-preview-wrap" style="display:none;margin-top:8px;display:flex;align-items:center;gap:12px">
+            <img id="logo-preview-img" src="" style="width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border2)">
+            <div style="font-size:12px;color:var(--text2)">This image will replace the badge in the nav bar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLORS -->
+    <div id="sec-colors" class="section">
+      <div class="section-title">Colors & Theme</div>
+      <div class="section-sub">Change the accent color, background, and overall look of the site.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🎨</span> Quick themes</div>
+        <div class="panel-body">
+          <div class="theme-cards" id="theme-cards">
+            <div class="theme-card active" style="background:#0d0f14" onclick="applyTheme('dark-gold',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#c8a951"></div><div class="theme-dot" style="background:#0d0f14"></div><div class="theme-dot" style="background:#1a1e2b"></div></div>
+              <div class="theme-name" style="color:#c8a951">Dark Gold</div>
+            </div>
+            <div class="theme-card" style="background:#0a0e1a" onclick="applyTheme('dark-blue',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#4a90d9"></div><div class="theme-dot" style="background:#0a0e1a"></div><div class="theme-dot" style="background:#141e30"></div></div>
+              <div class="theme-name" style="color:#4a90d9">Dark Blue</div>
+            </div>
+            <div class="theme-card" style="background:#140a0a" onclick="applyTheme('dark-red',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#d04040"></div><div class="theme-dot" style="background:#140a0a"></div><div class="theme-dot" style="background:#281414"></div></div>
+              <div class="theme-name" style="color:#d04040">Dark Red</div>
+            </div>
+            <div class="theme-card" style="background:#0a1408" onclick="applyTheme('dark-green',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#3dba6e"></div><div class="theme-dot" style="background:#0a1408"></div><div class="theme-dot" style="background:#121e10"></div></div>
+              <div class="theme-name" style="color:#3dba6e">Dark Green</div>
+            </div>
+            <div class="theme-card" style="background:#080808" onclick="applyTheme('stealth',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#808080"></div><div class="theme-dot" style="background:#080808"></div><div class="theme-dot" style="background:#141414"></div></div>
+              <div class="theme-name" style="color:#aaa">Stealth</div>
+            </div>
+            <div class="theme-card" style="background:#f4f6fa;border:1px solid #ddd" onclick="applyTheme('light',this)">
+              <div class="theme-dot-row"><div class="theme-dot" style="background:#1a4a9a"></div><div class="theme-dot" style="background:#f4f6fa"></div><div class="theme-dot" style="background:#ffffff"></div></div>
+              <div class="theme-name" style="color:#1a4a9a">Light</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🖌</span> Custom colors</div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>Accent color (gold)</label>
+              <input type="color" id="color-accent" value="#c8a951" oninput="updateColorPreview()">
+              <div class="hint">Main highlight — tabs, borders, icons</div>
+            </div>
+            <div class="field">
+              <label>Background color</label>
+              <input type="color" id="color-bg" value="#0d0f14" oninput="updateColorPreview()">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Card background</label>
+              <input type="color" id="color-card" value="#1a1e2b" oninput="updateColorPreview()">
+            </div>
+            <div class="field">
+              <label>Primary text</label>
+              <input type="color" id="color-text" value="#e8eaf0" oninput="updateColorPreview()">
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">Changes preview on this page. Save then copy the CSS snippet to your <code style="background:var(--card2);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px">assets/style.css</code> file on GitHub.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">📋</span> CSS snippet to paste into style.css</div>
+        <div class="panel-body">
+          <div class="code-out" id="css-snippet-out">
+            <button class="copy-code-btn" onclick="copyCSSSnippet(this)">Copy</button>/* Paste this at the very top of assets/style.css, replacing the :root block */
+:root {
+  --bg:       #0d0f14;
+  --surface:  #141720;
+  --card:     #1a1e2b;
+  --card2:    #1f2435;
+  --border:   #2a3048;
+  --border2:  #3a4460;
+  --gold:     #c8a951;
+  --gold2:    #f0cc72;
+  --text:     #e8eaf0;
+  --text2:    #9aa0b8;
+  --text3:    #5a6080;
+}</div>
+          <button class="add-btn" style="margin-top:8px" onclick="generateCSSSnippet()">Generate from my colors</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div id="sec-navigation" class="section">
+      <div class="section-title">Navigation</div>
+      <div class="section-sub">Edit, reorder, or add links in the top navigation bar. Changes apply to all pages when you update each HTML file.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🔗</span> Nav links</div>
+        <div class="panel-body">
+          <div id="nav-items-list"></div>
+          <button class="add-btn" onclick="addNavItem()">+ Add link</button>
+          <hr class="divider">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Generated nav HTML — paste into every page's <code style="background:var(--card2);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px">&lt;div class="nav-links"&gt;</code> block</div>
+          <div class="code-out" id="nav-code-out">
+            <button class="copy-code-btn" onclick="copyNavCode(this)">Copy</button><span id="nav-code-text"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO TEXT -->
+    <div id="sec-hero" class="section">
+      <div class="section-title">Homepage Text</div>
+      <div class="section-sub">Edit the text blocks on the main homepage.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">✍️</span> Hero section</div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Eyebrow (small text above title)</label>
+            <input type="text" id="hero-eyebrow" placeholder="vTAC 7th Bomb Wing · Dyess AFB · MSFS 2024">
+          </div>
+          <div class="field">
+            <label>Sub-title paragraph</label>
+            <textarea id="hero-sub" placeholder="Complete IFR approach procedures..."></textarea>
+          </div>
+          <div class="field">
+            <label>Announcement bar text</label>
+            <input type="text" id="announce-txt" placeholder="KwikFlight B-1B · Microsoft Flight Simulator 2024...">
+          </div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);padding:8px 0">After saving, these values are stored in your browser. To make them permanent on GitHub, use the Export section to download an updated index.html.</div>
+    </div>
+
+    <!-- SLIDESHOW -->
+    <div id="sec-slideshow" class="section">
+      <div class="section-title">Slideshow</div>
+      <div class="section-sub">Add, remove, and reorder images shown in the homepage slideshow. Paste Discord image links directly.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🖼</span> Current slides</div>
+        <div class="panel-body">
+          <div id="slide-list">
+            <div class="empty-state">No slides yet — add one below</div>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Add new slide</div>
+          <div class="field">
+            <label>Image URL</label>
+            <div class="add-row">
+              <input class="add-input" id="new-slide-url" placeholder="https://cdn.discordapp.com/attachments/...">
+            </div>
+            <div class="hint">Right-click any image in Discord → Copy Link → paste above</div>
+          </div>
+          <div class="field">
+            <label>Caption (optional)</label>
+            <input class="add-input" id="new-slide-cap" placeholder="e.g. 86th BW on final approach KDYS" style="width:100%">
+          </div>
+          <button class="add-btn" onclick="addSlide()">Add to slideshow</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGOS -->
+    <div id="sec-logos" class="section">
+      <div class="section-title">Discord Logos</div>
+      <div class="section-sub">Add Discord server icons that appear as a row of clickable logos on the homepage.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🏅</span> Current logos</div>
+        <div class="panel-body">
+          <div class="logo-grid" id="logo-grid">
+            <div class="empty-state" style="width:100%">No logos yet</div>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px">Add Discord server logo</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Server icon URL</label>
+              <input class="add-input" id="new-logo-url" placeholder="https://cdn.discordapp.com/icons/..." style="width:100%" oninput="previewNewLogo()">
+              <div class="hint">Right-click server icon in Discord → Copy Link</div>
+            </div>
+            <div class="field">
+              <label>Server name</label>
+              <input class="add-input" id="new-logo-name" placeholder="7th Bomb Wing" style="width:100%">
+            </div>
+          </div>
+          <div class="field">
+            <label>Discord invite link (optional)</label>
+            <input class="add-input" id="new-logo-link" placeholder="https://discord.gg/..." style="width:100%">
+          </div>
+          <div id="new-logo-preview" style="display:none;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <img id="new-logo-img" src="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border2)">
+            <span style="font-size:12px;color:var(--text2)">Preview</span>
+          </div>
+          <button class="add-btn" onclick="addLogo()">Add logo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD BUILDER -->
+    <div id="sec-cardbuilder" class="section">
+      <div class="section-title">Card Builder</div>
+      <div class="section-sub">Build a card visually, preview it, then copy the HTML code to paste into any page on GitHub.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">🃏</span> Build your card</div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>Card title</label>
+              <input type="text" id="cb-title" placeholder="e.g. Refueling checklist" oninput="buildCard()">
+            </div>
+            <div class="field">
+              <label>Icon (number, letter, or emoji)</label>
+              <input type="text" id="cb-icon" placeholder="1" value="1" maxlength="3" oninput="buildCard()">
+            </div>
+          </div>
+          <div class="field">
+            <label>Icon color</label>
+            <div class="swatch-row">
+              <div class="swatch active" style="background:#c8a951" onclick="selectIconColor(this,'')"></div>
+              <div class="swatch" style="background:#4a90d9" onclick="selectIconColor(this,'blue')"></div>
+              <div class="swatch" style="background:#3dba6e" onclick="selectIconColor(this,'green')"></div>
+              <div class="swatch" style="background:#d04040" onclick="selectIconColor(this,'red')"></div>
+              <div class="swatch" style="background:#e09030" onclick="selectIconColor(this,'amber')"></div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label>Card width</label>
+            <select id="cb-width" onchange="buildCard()">
+              <option value="">Half width (normal)</option>
+              <option value="span-2">Full width (spans both columns)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Bullet points (one per line)</label>
+            <textarea id="cb-items" placeholder="First point&#10;Second point&#10;Third point — use **bold** for bold text" oninput="buildCard()"></textarea>
+          </div>
+          <div class="field">
+            <label>Add a note / alert box (optional)</label>
+            <input type="text" id="cb-note" placeholder="e.g. A/T disengages below 2,500 ft AGL" oninput="buildCard()">
+          </div>
+          <div class="field">
+            <label>Note style</label>
+            <select id="cb-note-type" onchange="buildCard()">
+              <option value="note">Blue — informational</option>
+              <option value="warn">Amber — caution</option>
+              <option value="crit">Red — critical</option>
+              <option value="ok">Green — confirmation</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">👁</span> Preview</div>
+        <div class="panel-body">
+          <div id="card-preview-inner">
+            <div class="empty-state">Fill in the fields above to see a preview</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">📋</span> Generated HTML — paste into GitHub</div>
+        <div class="panel-body">
+          <div class="code-out" id="card-code-out">
+            <button class="copy-code-btn" id="card-copy-btn" onclick="copyCardCode(this)">Copy</button>
+            <span id="card-code-text">Fill in the builder above to generate code</span>
+          </div>
+          <div class="hint" style="margin-top:8px">Paste this code inside a <code style="background:var(--card2);padding:1px 4px;border-radius:3px;font-family:monospace">&lt;div class="grid-2"&gt;</code> block on any page</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FREQUENCIES -->
+    <div id="sec-frequencies" class="section">
+      <div class="section-title">Frequencies & Reference Data</div>
+      <div class="section-sub">Edit the frequency table and aircraft specs shown on the homepage. Generates HTML to paste into GitHub.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">📻</span> KDYS frequencies</div>
+        <div class="panel-body">
+          <div id="freq-list"></div>
+          <button class="add-btn" onclick="addFreqRow()" style="margin-top:8px">+ Add row</button>
+          <hr class="divider">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Generated HTML</div>
+          <div class="code-out" id="freq-code-out">
+            <button class="copy-code-btn" onclick="copyFreqCode(this)">Copy</button>
+            <span id="freq-code-text"></span>
+          </div>
+          <button class="add-btn" style="margin-top:8px" onclick="generateFreqCode()">Generate code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div id="sec-announcements" class="section">
+      <div class="section-title">Announcements</div>
+      <div class="section-sub">Manage the announcement bar shown on the homepage.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">📢</span> Announcement bar</div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Announcement text</label>
+            <textarea id="ann-text" placeholder="KwikFlight B-1B · Microsoft Flight Simulator 2024 · Phases 2 & 3 Syllabus · Base: KDYS"></textarea>
+          </div>
+          <div class="field">
+            <label>Bar style</label>
+            <select id="ann-style">
+              <option value="gold">Gold (default)</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+              <option value="red">Red — urgent</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Show announcement bar?</label>
+            <select id="ann-show">
+              <option value="yes">Yes — show it</option>
+              <option value="no">No — hide it</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div id="sec-export" class="section">
+      <div class="section-title">Export & Backup</div>
+      <div class="section-sub">Download your settings as a backup or export an updated index.html ready to upload to GitHub.</div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">💾</span> Backup settings</div>
+        <div class="panel-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="add-btn" onclick="exportSettings()">⬇ Download settings.json</button>
+            <button class="tb-btn" onclick="document.getElementById('import-file').click()">⬆ Import settings.json</button>
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importSettings(this)">
+          </div>
+          <div class="hint" style="margin-top:8px">Save a backup before making big changes. Import to restore from backup.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="ph-icon">📋</span> How to apply changes to GitHub</div>
+        <div class="panel-body">
+          <div style="font-size:13px;color:var(--text2);line-height:1.8">
+            Most settings here are saved in your browser's local storage so they appear when you visit the site from this computer. To make them permanent for everyone:<br><br>
+            <strong style="color:var(--text)">1.</strong> Use the <strong style="color:var(--gold)">Card Builder</strong> to generate HTML → copy → paste into GitHub<br>
+            <strong style="color:var(--text)">2.</strong> Use the <strong style="color:var(--gold)">Colors</strong> section to generate a CSS snippet → paste into <code style="background:var(--card2);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px">assets/style.css</code> on GitHub<br>
+            <strong style="color:var(--text)">3.</strong> Use the <strong style="color:var(--gold)">Navigation</strong> section to generate nav HTML → paste into all page files on GitHub<br>
+            <strong style="color:var(--text)">4.</strong> Slideshow images and logos save in browser storage automatically when you click Save All
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end layout -->
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  STORAGE
+// ════════════════════════════════════════════════════════════
+const SK = 'b1b_admin_v1';
+const SITE_SK = 'b1b_home_v2'; // same key as index.html
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(SK) || '{}'); } catch(e) { return {}; }
+}
+function save(data) {
+  localStorage.setItem(SK, JSON.stringify(data));
+  // Also sync to site storage
+  const site = JSON.parse(localStorage.getItem(SITE_SK) || '{}');
+  if (data.slides) site.slides = data.slides;
+  if (data.logos)  site.logos  = data.logos;
+  if (data.texts) {
+    site.texts = site.texts || {};
+    Object.assign(site.texts, data.texts);
+  }
+  localStorage.setItem(SITE_SK, JSON.stringify(site));
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+let state = load();
+// Merge site storage
+const siteStore = JSON.parse(localStorage.getItem(SITE_SK) || '{}');
+if (siteStore.slides) state.slides = siteStore.slides;
+if (siteStore.logos)  state.logos  = siteStore.logos;
+if (siteStore.texts)  state.texts  = siteStore.texts;
+
+// defaults
+state.slides     = state.slides     || [];
+state.logos      = state.logos      || [];
+state.navItems   = state.navItems   || defaultNavItems();
+state.freqRows   = state.freqRows   || defaultFreqRows();
+state.texts      = state.texts      || {};
+
+// populate fields
+function populateFields() {
+  const t = state.texts || {};
+  setVal('squad-name',    t['squad-name']    || 'vTAC 7th Bomb Wing');
+  setVal('squad-sub',     t['squad-sub']     || 'KDYS · MSFS 2024');
+  setVal('nav-badge',     t['nav-badge']     || 'B1');
+  setVal('footer-txt',    t['footer-txt']    || 'vTAC 7th Bomb Wing · B-1B Lancer Training · Dyess AFB (KDYS)');
+  setVal('hero-eyebrow',  t['hero-eyebrow']  || 'vTAC 7th Bomb Wing · Dyess AFB · MSFS 2024');
+  setVal('hero-sub',      t['hero-sub']      || '');
+  setVal('announce-txt',  t['announce-txt']  || 'KwikFlight B-1B · MSFS 2024 · Phases 2 & 3 · KDYS');
+  setVal('logo-url',      state.logoUrl      || '');
+  setVal('ann-text',      state.annText      || '');
+  renderSlides();
+  renderLogos();
+  renderNavItems();
+  renderFreqList();
+  generateNavCode();
+  generateFreqCode();
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+// ════════════════════════════════════════════════════════════
+//  SAVE ALL
+// ════════════════════════════════════════════════════════════
+function saveAll() {
+  state.texts = {
+    'squad-name':   gv('squad-name'),
+    'squad-sub':    gv('squad-sub'),
+    'nav-badge':    gv('nav-badge'),
+    'footer-txt':   gv('footer-txt'),
+    'hero-eyebrow': gv('hero-eyebrow'),
+    'hero-sub':     gv('hero-sub'),
+    'announce-txt': gv('announce-txt'),
+  };
+  state.logoUrl = gv('logo-url');
+  state.annText = gv('ann-text');
+  save(state);
+  toast('✓ All changes saved!');
+}
+function gv(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ════════════════════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════════════════════
+function defaultNavItems() {
+  return [
+    {label:'Home',    href:'index.html'},
+    {label:'ILS',     href:'pages/ils.html'},
+    {label:'RNAV',    href:'pages/rnav.html'},
+    {label:'VOR',     href:'pages/vor.html'},
+    {label:'Autopilot',href:'pages/autopilot.html'},
+    {label:'FMS',     href:'pages/fms.html'},
+    {label:'Glossary',href:'pages/glossary.html'},
+    {label:'QRC',     href:'pages/qrc.html'},
+    {label:'Training',href:'pages/training.html'},
+  ];
+}
+function renderNavItems() {
+  const list = document.getElementById('nav-items-list');
+  list.innerHTML = (state.navItems || []).map((item, i) => `
+    <div class="nav-item-row">
+      <span class="nav-grip">⠿</span>
+      <div class="nav-item-inputs">
+        <input class="nav-mini-input" placeholder="Label" value="${item.label||''}" oninput="updateNavItem(${i},'label',this.value)">
+        <input class="nav-mini-input" placeholder="href e.g. pages/ils.html" value="${item.href||''}" oninput="updateNavItem(${i},'href',this.value)" style="flex:2">
+      </div>
+      <button class="nav-del" onclick="removeNavItem(${i})">✕</button>
+    </div>`).join('');
+  generateNavCode();
+}
+function updateNavItem(i, key, val) { state.navItems[i][key] = val; generateNavCode(); }
+function removeNavItem(i) { state.navItems.splice(i,1); renderNavItems(); }
+function addNavItem() { state.navItems.push({label:'New Page',href:'pages/new.html'}); renderNavItems(); }
+function generateNavCode() {
+  const code = (state.navItems||[]).map(item =>
+    `      <a href="${item.href}">${item.label}</a>`).join('\n');
+  const el = document.getElementById('nav-code-text');
+  if (el) el.textContent = code;
+}
+function copyNavCode(btn) {
+  const text = document.getElementById('nav-code-text').textContent;
+  navigator.clipboard.writeText(text).then(() => { btn.textContent='Copied!'; btn.classList.add('ok'); setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000); });
+}
+
+// ════════════════════════════════════════════════════════════
+//  SLIDESHOW
+// ════════════════════════════════════════════════════════════
+function renderSlides() {
+  const list = document.getElementById('slide-list');
+  if (!state.slides.length) { list.innerHTML='<div class="empty-state">No slides yet</div>'; return; }
+  list.innerHTML = state.slides.map((s,i) => `
+    <div class="slide-item">
+      <img class="slide-thumb" src="${s.url}" onerror="this.style.background='#333'">
+      <div class="slide-info">
+        <div class="slide-url">${s.url}</div>
+        <div class="slide-cap">${s.caption||'No caption'}</div>
+      </div>
+      <button class="slide-remove" onclick="removeSlide(${i})">✕</button>
+    </div>`).join('');
+}
+function addSlide() {
+  const url = document.getElementById('new-slide-url').value.trim();
+  const cap = document.getElementById('new-slide-cap').value.trim();
+  if (!url) { toast('Paste an image URL first'); return; }
+  state.slides.push({url, caption:cap});
+  document.getElementById('new-slide-url').value = '';
+  document.getElementById('new-slide-cap').value = '';
+  renderSlides();
+  saveAll();
+  toast('Slide added!');
+}
+function removeSlide(i) { state.slides.splice(i,1); renderSlides(); saveAll(); toast('Slide removed'); }
+
+// ════════════════════════════════════════════════════════════
+//  LOGOS
+// ════════════════════════════════════════════════════════════
+function renderLogos() {
+  const grid = document.getElementById('logo-grid');
+  if (!state.logos.length) { grid.innerHTML='<div class="empty-state" style="width:100%">No logos yet</div>'; return; }
+  grid.innerHTML = state.logos.map((l,i) => `
+    <div class="logo-item">
+      <img class="logo-img" src="${l.url}" onerror="this.style.background='#333'">
+      <div class="logo-label">${l.name||'Server'}</div>
+      <button class="logo-del" onclick="removeLogo(${i})">✕</button>
+    </div>`).join('');
+}
+function previewNewLogo() {
+  const url = document.getElementById('new-logo-url').value.trim();
+  const wrap = document.getElementById('new-logo-preview');
+  const img  = document.getElementById('new-logo-img');
+  if (url) { img.src=url; wrap.style.display='flex'; } else wrap.style.display='none';
+}
+function addLogo() {
+  const url  = document.getElementById('new-logo-url').value.trim();
+  const name = document.getElementById('new-logo-name').value.trim();
+  const link = document.getElementById('new-logo-link').value.trim();
+  if (!url) { toast('Paste a logo URL first'); return; }
+  state.logos.push({url, name, link});
+  document.getElementById('new-logo-url').value  = '';
+  document.getElementById('new-logo-name').value = '';
+  document.getElementById('new-logo-link').value = '';
+  document.getElementById('new-logo-preview').style.display = 'none';
+  renderLogos();
+  saveAll();
+  toast('Logo added!');
+}
+function removeLogo(i) { state.logos.splice(i,1); renderLogos(); saveAll(); toast('Logo removed'); }
+
+// ════════════════════════════════════════════════════════════
+//  CARD BUILDER
+// ════════════════════════════════════════════════════════════
+let cbIconColor = '';
+function selectIconColor(el, c) {
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  cbIconColor = c;
+  buildCard();
+}
+function buildCard() {
+  const title    = gv('cb-title')     || 'Card title';
+  const icon     = gv('cb-icon')      || '1';
+  const itemsRaw = gv('cb-items').split('\n').filter(l=>l.trim());
+  const note     = gv('cb-note').trim();
+  const noteType = gv('cb-note-type') || 'note';
+  const width    = gv('cb-width');
+  const iconCls  = cbIconColor ? ` ${cbIconColor}` : '';
+  const widthCls = width ? ` ${width}` : '';
+
+  // parse **bold** markers
+  const parseBold = t => t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+
+  const bullets = itemsRaw.map(i=>`      <li>${parseBold(i.trim())}</li>`).join('\n') ||
+                  '      <li>Add your bullet points</li>';
+  const noteHtml = note ? `\n    <div class="${noteType}">${note}</div>` : '';
+
+  const code =
+`<div class="card${widthCls}">
+  <div class="card-header">
+    <div class="card-icon${iconCls}">${icon}</div>
+    <div class="card-title">${title}</div>
+  </div>
+  <div class="card-body">
+    <ul class="cl">
+${bullets}
+    </ul>${noteHtml}
+  </div>
+</div>`;
+
+  // preview
+  const colorMap = {'':`background:var(--gold);color:#000`,'blue':'background:var(--blue);color:#000','green':'background:var(--green);color:#000','red':'background:var(--red);color:#fff','amber':'background:var(--amber);color:#000'};
+  const noteColors = {note:'alert-note',warn:'alert-warn',crit:'alert-crit',ok:'alert-ok'};
+  const builtBullets = itemsRaw.map(i=>`<li>${parseBold(i.trim())}</li>`).join('') || '<li>Add your bullet points</li>';
+  const notePreview = note ? `<div class="alert-preview ${noteColors[noteType]}">${note}</div>` : '';
+
+  document.getElementById('card-preview-inner').innerHTML = `
+    <div class="built-card">
+      <div class="built-card-head">
+        <div class="built-card-icon" style="${colorMap[cbIconColor]||colorMap['']}">${icon}</div>
+        <div class="built-card-title">${title}</div>
+      </div>
+      <div class="built-card-body">
+        <ul class="built-cl">${builtBullets}</ul>
+        ${notePreview}
+      </div>
+    </div>`;
+
+  document.getElementById('card-code-text').textContent = code;
+}
+function copyCardCode(btn) {
+  const text = document.getElementById('card-code-text').textContent;
+  navigator.clipboard.writeText(text).then(() => { btn.textContent='Copied!'; btn.classList.add('ok'); setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000); });
+}
+
+// ════════════════════════════════════════════════════════════
+//  FREQUENCIES
+// ════════════════════════════════════════════════════════════
+function defaultFreqRows() {
+  return [
+    {label:'ATIS',val:'134.05'},{label:'Ground',val:'121.65'},
+    {label:'Tower',val:'126.2'},{label:'Approach / Departure',val:'119.3'},
+    {label:'ILS RWY 34L',val:'110.3 / I-DYS'},{label:'ILS Course',val:'359°'},
+    {label:'Field Elevation',val:'1,789 ft MSL'},{label:'Primary Runway',val:'34L / 16R (10,000 ft)'},
+  ];
+}
+function renderFreqList() {
+  const list = document.getElementById('freq-list');
+  list.innerHTML = (state.freqRows||[]).map((r,i) => `
+    <div class="nav-item-row">
+      <div class="nav-item-inputs">
+        <input class="nav-mini-input" placeholder="Label" value="${r.label||''}" oninput="updateFreq(${i},'label',this.value)">
+        <input class="nav-mini-input" placeholder="Value" value="${r.val||''}" oninput="updateFreq(${i},'val',this.value)">
+      </div>
+      <button class="nav-del" onclick="removeFreq(${i})">✕</button>
+    </div>`).join('');
+}
+function updateFreq(i,k,v){state.freqRows[i][k]=v;}
+function removeFreq(i){state.freqRows.splice(i,1);renderFreqList();generateFreqCode();}
+function addFreqRow(){state.freqRows.push({label:'',val:''});renderFreqList();}
+function generateFreqCode() {
+  const code = (state.freqRows||[]).map(r =>
+    `    <div class="freq-row"><span class="freq-name">${r.label}</span><span class="freq-val">${r.val}</span></div>`
+  ).join('\n');
+  const el = document.getElementById('freq-code-text');
+  if (el) el.textContent = code;
+}
+function copyFreqCode(btn) {
+  const text = document.getElementById('freq-code-text').textContent;
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);});
+}
+
+// ════════════════════════════════════════════════════════════
+//  COLORS
+// ════════════════════════════════════════════════════════════
+const THEMES = {
+  'dark-gold': {accent:'#c8a951',bg:'#0d0f14',card:'#1a1e2b',text:'#e8eaf0'},
+  'dark-blue': {accent:'#4a90d9',bg:'#0a0e1a',card:'#141e30',text:'#dce8ff'},
+  'dark-red':  {accent:'#d04040',bg:'#140a0a',card:'#281414',text:'#ffe8e8'},
+  'dark-green':{accent:'#3dba6e',bg:'#0a1408',card:'#121e10',text:'#e8ffe8'},
+  'stealth':   {accent:'#808080',bg:'#080808',card:'#141414',text:'#cccccc'},
+  'light':     {accent:'#1a4a9a',bg:'#f4f6fa',card:'#ffffff',text:'#1a1e2b'},
+};
+function applyTheme(id, el) {
+  document.querySelectorAll('.theme-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const t = THEMES[id];
+  if (!t) return;
+  document.getElementById('color-accent').value = t.accent;
+  document.getElementById('color-bg').value     = t.bg;
+  document.getElementById('color-card').value   = t.card;
+  document.getElementById('color-text').value   = t.text;
+  generateCSSSnippet();
+}
+function updateColorPreview() { generateCSSSnippet(); }
+function generateCSSSnippet() {
+  const accent = document.getElementById('color-accent').value;
+  const bg     = document.getElementById('color-bg').value;
+  const card   = document.getElementById('color-card').value;
+  const text   = document.getElementById('color-text').value;
+  const lighten = hex => { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `#${Math.min(255,r+40).toString(16).padStart(2,'0')}${Math.min(255,g+40).toString(16).padStart(2,'0')}${Math.min(255,b+40).toString(16).padStart(2,'0')}`; };
+  const darken  = hex => { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `#${Math.max(0,r-20).toString(16).padStart(2,'0')}${Math.max(0,g-20).toString(16).padStart(2,'0')}${Math.max(0,b-20).toString(16).padStart(2,'0')}`; };
+  const snippet = `:root {
+  --bg:       ${bg};
+  --surface:  ${darken(bg)};
+  --card:     ${card};
+  --card2:    ${lighten(card)};
+  --border:   #2a3048;
+  --border2:  #3a4460;
+  --gold:     ${accent};
+  --gold2:    ${lighten(accent)};
+  --text:     ${text};
+  --text2:    #9aa0b8;
+  --text3:    #5a6080;
+}`;
+  const el = document.getElementById('css-snippet-out');
+  if (el) { const btn = el.querySelector('button'); el.textContent = snippet; el.insertBefore(btn,el.firstChild); }
+}
+function copyCSSSnippet(btn) {
+  const text = document.getElementById('css-snippet-out').innerText.replace('Copy','').replace('Copied!','').trim();
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);});
+}
+
+// ════════════════════════════════════════════════════════════
+//  LOGO PREVIEW IN BRANDING
+// ════════════════════════════════════════════════════════════
+function previewNavLogo() {
+  const url  = document.getElementById('logo-url').value.trim();
+  const wrap = document.getElementById('logo-preview-wrap');
+  const img  = document.getElementById('logo-preview-img');
+  if (url) { img.src=url; wrap.style.display='flex'; } else wrap.style.display='none';
+}
+
+// ════════════════════════════════════════════════════════════
+//  EXPORT / IMPORT
+// ════════════════════════════════════════════════════════════
+function exportSettings() {
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'b1b-site-settings.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Settings downloaded!');
+}
+function importSettings(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      state = {...state,...d};
+      save(state);
+      populateFields();
+      toast('Settings imported!');
+    } catch(err) { toast('Invalid file'); }
+  };
+  r.readAsText(file);
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESET
+// ════════════════════════════════════════════════════════════
+function confirmReset() {
+  if (confirm('Reset ALL settings to defaults? This cannot be undone.')) {
+    localStorage.removeItem(SK);
+    localStorage.removeItem(SITE_SK);
+    location.reload();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  SECTION SWITCHING
+// ════════════════════════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+populateFields();
+generateCSSSnippet();
+buildCard();
+generateFreqCode();
+</script>
+</body>
+</html>
