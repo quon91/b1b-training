@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNAV / GPS Approach — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a><a href="training.html">Training</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Non-Precision / APV Approach · KwikFlight B-1B</div>
+  <h1 class="hero-title">RNAV / GPS <span>Approach</span> Guide</h1>
+  <p class="hero-sub">GPS-based approaches using the FMS flight plan for lateral guidance. No ILS frequency required. PFD softkey must be set to GPS. Vertical guidance managed manually to MDA.</p>
+</section>
+
+<div class="container page-body">
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('rnav','diff')">1 — Key Differences</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','setup')">2 — Pre-approach</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','fpln')">3 — FMS / FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','ap')">4 — A/P Modes</button>
+    <button class="phase-btn" onclick="switchPhase('rnav','final')">5 — Final & MDA</button>
+  </div>
+
+  <div id="rnav-diff" class="phase-panel active" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 1 — RNAV vs ILS — what is different</div>
+      <div class="grid-2">
+        <div class="card span-2">
+          <div class="card-header"><div class="card-icon blue">▶</div><div class="card-title">Full approach type comparison</div></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table class="dt">
+              <thead><tr><th>Feature</th><th>ILS</th><th>RNAV / GPS</th><th>VOR</th></tr></thead>
+              <tbody>
+                <tr><td><strong>FMS NAV page</strong></td><td>ILS freq + CRS required</td><td>Not needed</td><td>VOR freq + CRS required</td></tr>
+                <tr><td><strong>PFD softkey</strong></td><td>ILS</td><td>GPS</td><td>NAV1</td></tr>
+                <tr><td><strong>Lateral A/P mode</strong></td><td>APR captures LOC</td><td>NAV HOLD tracks FMS</td><td>NAV HOLD tracks VOR</td></tr>
+                <tr><td><strong>Vertical guidance</strong></td><td>Automatic glideslope</td><td>Manual V/S to MDA</td><td>Manual step-downs</td></tr>
+                <tr><td><strong>Minimums</strong></td><td>DH — Decision Height</td><td>MDA or DA</td><td>MDA</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">!</div><div class="card-title">Most important difference from ILS</div></div>
+          <div class="card-body">
+            <div class="note">RNAV uses GPS position — NOT a ground navaid. No frequency to tune in NAV page. The FMS FPLN flight plan drives lateral guidance.</div>
+            <ul class="cl" style="margin-top:10px">
+              <li>No ILS frequency in FMS NAV page</li>
+              <li>PFD softkey set to <strong>GPS</strong> not ILS</li>
+              <li>Use <strong>NAV HOLD</strong> — never APR for RNAV</li>
+              <li>No automatic glideslope — manage descent manually</li>
+              <li>Level off at MDA — do not descend through it</li>
+            </ul>
+            <div class="crit">Pressing APR mode for RNAV does nothing useful. APR needs an ILS signal. Use NAV HOLD instead.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">?</div><div class="card-title">Descent rate calculation</div></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">No glideslope needle exists for RNAV. Calculate required fpm before the FAF:</p>
+            <table class="dt">
+              <thead><tr><th>Groundspeed</th><th>fpm for 3° descent</th></tr></thead>
+              <tbody>
+                <tr><td>140 kt</td><td>~700 fpm</td></tr>
+                <tr><td>160 kt</td><td>~800 fpm</td></tr>
+                <tr><td>180 kt</td><td>~900 fpm</td></tr>
+                <tr><td>200 kt</td><td>~1,000 fpm</td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top:8px"><strong>Rule:</strong> Groundspeed × 5 = approximate fpm for 3° descent path.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rnav-setup" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 2 — Pre-approach setup</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">FMS APPR PAGE — MDA and VREF</div></div>
+          <div class="card-body">
+            <div class="plabel">FMS — PERF → CRZ PG → APPR PG</div>
+            <div class="fms">APPR PAGE
+<span class="hi">FLAPS --&gt; 17°</span>
+<span class="hi">VREF --&gt; □□□ Kt</span>    ← auto-compute
+DH <span class="hi">□□□□</span> RADIO              ← enter MDA (not DH)
+LAND QNH --&gt; <span class="hi">29.92</span> inHg
+&lt;--CRZ PG</div>
+            <ul class="cl">
+              <li>Enter <strong>MDA from approach plate</strong> in the DH field</li>
+              <li>Click VREF to auto-compute landing speed</li>
+              <li>Update QNH from ATIS</li>
+              <li>Flaps set to 17°</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">PFD — set nav mode to GPS</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">VSD | <span class="dim">ADF</span> | <span class="dim">ILS</span> | <span class="dim">NAV1</span> | <span class="hi">[GPS]</span>
+                                              ↑ press this</div>
+            <div class="pfd">AP  ALT  HDG  <span class="grn">NAV</span>  ATH  <span class="dim">APR</span>
+GPS TRACK
+Active WPT: <span class="grn">MUCHO</span>   DIST 6.4NM</div>
+            <div class="note" style="margin-top:8px">Compass rose shows FMS track deviation needle. NAV HOLD tracks this needle along the loaded flight plan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rnav-fpln" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 3 — FMS FPLN loading</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Load RNAV approach in FPLN</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">KDYS STARS
+AVAILABLE RUNWAYS
+<span class="hi">←34L  3048M</span>
+←16R  3048M
+&lt;RETURN</div>
+            <ul class="cl">
+              <li>Press <strong>FPLN</strong> → destination KDYS → left key</li>
+              <li>Select STAR or NONE for vectors</li>
+              <li>Select <strong>RWY 34L</strong></li>
+              <li>Select approach: <strong>RNAV 34L</strong> or <strong>GPS 34L</strong></li>
+              <li>Press <strong>INSERT</strong> right key to activate</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">DIR — Direct To a fix when vectored</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">DIRECT TO
+FPLN WPTS
+→IAF fix
+→IF fix
+<span class="hi">→FAF fix</span>   &lt;-- select
+→RWY34L</div>
+            <ul class="cl">
+              <li>Press <strong>DIR</strong> key → select fix → Direct Now</li>
+              <li>Use when ATC says "Cleared direct [fix]"</li>
+              <li>FMS draws direct path — NAV HOLD follows it</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rnav-ap" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 4 — Autopilot mode sequence</div>
+      <div class="grid-2">
+        <div class="card span-2">
+          <div class="card-header"><div class="card-icon blue">▶</div><div class="card-title">Complete A/P sequence — vectors to MDA</div></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table class="dt">
+              <thead><tr><th>Phase</th><th>AP</th><th>HDG</th><th>NAV</th><th>ALT</th><th>APR</th><th>A/T</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Vectors</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td>HDG holds ATC heading</td></tr>
+                <tr><td><strong>Intercept FMS track</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">drops</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td>Press NAV — HDG drops</td></tr>
+                <tr><td><strong>FAF — begin descent</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">V/S</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td>Disengage ALT, set V/S</td></tr>
+                <tr><td><strong>At MDA — level off</strong></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-on">ON</span></td><td><span class="badge b-off">—</span></td><td><span class="badge b-on">ON</span></td><td>Re-engage ALT at MDA</td></tr>
+                <tr><td><strong>MAP — no visual</strong></td><td colspan="7"><span class="badge b-danger">DISENGAGE AP — go-around immediately</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Switch to NAV HOLD at track intercept</div></div>
+          <div class="card-body">
+            <div class="ap-panel">
+              <div class="ap-row">
+                <div class="ap-btn on">AP<div class="dot"></div></div>
+                <div class="ap-btn on">ALT<div class="dot"></div></div>
+                <div class="ap-btn off">HDG</div>
+                <div class="ap-btn on">NAV<div class="dot"></div></div>
+                <div class="ap-btn on">ATH<div class="dot"></div></div>
+                <div class="ap-btn off">APR</div>
+              </div>
+              <div class="ap-lbl">NAV HOLD tracks FMS GPS path — APR stays OFF</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Descent from FAF — no glideslope needle</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Cross FAF → press ALT to disengage altitude hold</li>
+              <li>Set target vertical speed (GS × 5 fpm)</li>
+              <li>Monitor altitude vs distance continuously</li>
+              <li>At MDA: press ALT to re-engage — hold that altitude</li>
+            </ul>
+            <div class="warn">No glideslope needle exists. You must actively monitor and manage your descent rate the entire time from FAF to MDA.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rnav-final" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Phase 5 — Final and MDA</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">MDA procedure — level off and look</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Level off at MDA — re-engage ALT HOLD</li>
+              <li>Continue inbound looking for runway environment</li>
+              <li>Runway in sight before MAP → land</li>
+              <li>At MAP no visual → immediate go-around</li>
+            </ul>
+            <div class="crit">MDA is a hard floor. Do not descend below until over the runway threshold with landing assured.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon red">!</div><div class="card-title">Common student errors</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li><strong>APR instead of NAV</strong> → "Press NAV not APR for RNAV"</li>
+              <li><strong>ILS PFD mode</strong> → "Check softkey — needs GPS not ILS"</li>
+              <li><strong>MDA bust</strong> → "Re-engage ALT HOLD at MDA now"</li>
+              <li><strong>Late descent</strong> → "You passed FAF — start descending"</li>
+              <li><strong>No DIR used</strong> → "Use the DIR page for direct to final"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · MSFS 2024</p>
+  <p style="margin-top:6px"><a href="../index.html">Home</a> · <a href="ils.html">ILS</a> · <a href="vor.html">VOR</a> · <a href="glossary.html">Glossary</a></p>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>
