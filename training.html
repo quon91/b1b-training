@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 & 3 Training Syllabus — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.grade-table{width:100%;border-collapse:collapse;font-size:12px}
+.grade-table th{background:var(--card2);color:var(--text-secondary);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.grade-table td{padding:7px 10px;color:var(--text-secondary);border-bottom:0.5px solid var(--border);vertical-align:top;line-height:1.55}
+.grade-table td strong{color:var(--text-primary)}
+.grade-table tr:last-child td{border-bottom:none}
+.grade-box{width:50px;text-align:center;color:var(--text-muted);font-size:11px}
+.event-header{background:linear-gradient(90deg,rgba(200,169,81,.12),transparent);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 8px 8px 0;margin-bottom:16px}
+.event-num{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.event-title{font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.event-obj{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.phase-banner{background:var(--card2);border:0.5px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.phase-num{width:48px;height:48px;border-radius:10px;background:var(--gold);color:#000;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phase-text{flex:1}
+.phase-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.phase-desc{font-size:14px;color:var(--text-secondary);line-height:1.55}
+.step-table{width:100%;border-collapse:collapse;font-size:12px}
+.step-table th{background:var(--card2);color:var(--text-secondary);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.step-table td{padding:7px 10px;color:var(--text-secondary);border-bottom:0.5px solid var(--border);vertical-align:top;line-height:1.55}
+.step-table td strong{color:var(--text-primary)}
+.step-table tr:last-child td{border-bottom:none}
+.step-num-cell{width:36px;text-align:center;font-weight:700;color:var(--gold);font-size:13px}
+</style>
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a><a href="training.html">Training</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Instructor Syllabus · KwikFlight B-1B · KDYS</div>
+  <h1 class="hero-title">Phase 2 &amp; 3 <span>Training Syllabus</span></h1>
+  <p class="hero-sub">Complete instructor guide covering all graded events for Phases 2 and 3. Each event includes graded items with standards, step-by-step training sequences, and evaluation criteria.</p>
+</section>
+
+<div class="container page-body">
+
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('tr','overview')">Overview</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e1')">2-1 T&amp;L</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e2')">2-2 ILS</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e3')">2-3 AR</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e4')">2-4 XC</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e5')">2-5 Low-Level</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p2e6')">2-6 Weapons</button>
+    <button class="phase-btn" onclick="switchPhase('tr','p3')">Phase 3</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="tr-overview" class="phase-panel active" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">Syllabus overview</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Phase 2 — Dual instruction events</div></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Phase 2 is conducted with the instructor in the seat providing active coaching and correction. Students are evaluated but receive immediate feedback on every graded item.</p>
+            <table class="dt">
+              <thead><tr><th>#</th><th>Event</th><th>Key Skills</th></tr></thead>
+              <tbody>
+                <tr><td><strong>2-1</strong></td><td>Takeoff, climb, pattern, approach, landing</td><td>VR, pattern alt, VREF, touchdown zone, go-around</td></tr>
+                <tr><td><strong>2-2</strong></td><td>ILS / instrument approach</td><td>LOC intercept, G/S tracking, DH, missed approach, hold</td></tr>
+                <tr><td><strong>2-3</strong></td><td>Aerial refueling</td><td>Rendezvous, pre-contact, contact, position hold, breakaway</td></tr>
+                <tr><td><strong>2-4</strong></td><td>Cross-country IFR with T&amp;Gs</td><td>SimBrief plan, IFR route, ATC comms, T&amp;G at KTIK</td></tr>
+                <tr><td><strong>2-5</strong></td><td>Low-level / time-on-target</td><td>Altitude, speed, TOT accuracy, turns, abort criteria</td></tr>
+                <tr><td><strong>2-6</strong></td><td>Weapons employment</td><td>Coordinates, delivery parameters, safe escape, impact</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">3</div><div class="card-title">Phase 3 — Evaluation sortie (no coaching)</div></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Phase 3 is a complete combat mission profile flown as a single integrated sortie. The instructor observes only. Intervention is limited to safety of flight situations.</p>
+            <table class="dt">
+              <thead><tr><th>#</th><th>Event</th></tr></thead>
+              <tbody>
+                <tr><td><strong>3-1</strong></td><td>Independent SimBrief plan filed and briefed</td></tr>
+                <tr><td><strong>3-2</strong></td><td>Departure and en route climb — IFR procedures</td></tr>
+                <tr><td><strong>3-3</strong></td><td>Aerial refueling — tanker rendezvous and contact</td></tr>
+                <tr><td><strong>3-4</strong></td><td>Descent to low-level with TOT requirement</td></tr>
+                <tr><td><strong>3-5</strong></td><td>Weapons employment on assigned target (2 deliveries)</td></tr>
+                <tr><td><strong>3-6</strong></td><td>IFR recovery and full-stop landing at KDYS</td></tr>
+              </tbody>
+            </table>
+            <div class="note" style="margin-top:10px">Grading: Q = Qualified (standard met), U = Unqualified (standard not met). A U grade on any Phase 3 item requires re-accomplishment of the corresponding Phase 2 event before a re-check.</div>
+          </div>
+        </div>
+        <div class="card span-2">
+          <div class="card-header"><div class="card-icon blue">▶</div><div class="card-title">Grading standards quick reference</div></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table class="dt">
+              <thead><tr><th>Parameter</th><th>Q Standard</th><th>U Condition</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Takeoff rotation (VR)</strong></td><td>±5 KIAS</td><td>±10 KIAS or wrong speed</td></tr>
+                <tr><td><strong>Climb heading</strong></td><td>±5°</td><td>Greater than ±10°</td></tr>
+                <tr><td><strong>Pattern altitude</strong></td><td>2,500 ft MSL ±100 ft</td><td>Greater than ±200 ft</td></tr>
+                <tr><td><strong>Approach speed (VREF)</strong></td><td>VREF ±5 KIAS stable by 500 ft AGL</td><td>Not stable or greater than ±10 KIAS</td></tr>
+                <tr><td><strong>Touchdown zone</strong></td><td>First 2,000 ft</td><td>Beyond 2,000 ft or short of threshold</td></tr>
+                <tr><td><strong>ILS localizer tracking</strong></td><td>±½ dot FAF to DH</td><td>Full-scale deflection at any point</td></tr>
+                <tr><td><strong>ILS glideslope tracking</strong></td><td>±½ dot FAF to DH</td><td>Full-scale deflection below 500 ft AGL</td></tr>
+                <tr><td><strong>TOT accuracy</strong></td><td>±30 seconds</td><td>Greater than ±60 seconds</td></tr>
+                <tr><td><strong>Low-level altitude</strong></td><td>500 ft AGL ±100 ft</td><td>Below 400 ft or above 700 ft sustained</td></tr>
+                <tr><td><strong>AR contact (IDs)</strong></td><td>≤2 inadvertent disconnects</td><td>More than 3 IDs or unable to establish contact</td></tr>
+                <tr><td><strong>Weapons coordinates</strong></td><td>Exact match to assigned coordinates</td><td>Any digit error uncorrected</td></tr>
+                <tr><td><strong>Safe escape</strong></td><td>Immediate climbing turn after release</td><td>No climbing maneuver executed after release</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-1 -->
+  <div id="tr-p2e1" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-1</div>
+        <div class="event-title">Takeoff, Climb, Pattern, Approach, and Landing</div>
+        <div class="event-obj">The student demonstrates safe takeoff technique, correct climb profile, traffic pattern procedures, approach speed control, accurate touchdown, and go-around capability.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon">!</div><div class="card-title">Preflight brief checklist — instructor</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Weather: VMC — ceiling ≥ 3,000 ft, visibility ≥ 5 SM</li>
+            <li>Runway in use: <strong>RWY 34L</strong> preferred. Brief departure and return routing</li>
+            <li>Fuel load: 50,000–60,000 lb (lighter weight for pattern work)</li>
+            <li>Brief go-around criteria: engine issues, unstable approach, ATC instruction</li>
+            <li>Confirm student knows pattern altitude (<strong>2,500 ft MSL</strong>) and circuit direction</li>
+            <li>Quiz student on VR and VREF from FMS PERF page before engine start</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Takeoff technique</strong></td><td>Rotate at computed VR (approx 145–155 KIAS light weight). Smooth rotation to ~10° pitch. No runway excursions. Centerline ±10 ft.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>Climb profile</strong></td><td>Gear up by 300 ft AGL. Climb 250 KIAS on departure heading ±5°. Above 10,000 ft: accelerate to 300 KIAS. Altitude capture ±100 ft.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>Pattern altitude</strong></td><td>Downwind at 2,500 ft MSL ±100 ft. Speed 250 KIAS on downwind, decelerating on base.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>Approach speed</strong></td><td>Final at VREF ±5 KIAS. Speed stable by 500 ft AGL.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>5</td><td><strong>Landing touchdown zone</strong></td><td>Touchdown within first 2,000 ft of runway. Centerline ±15 ft. No porpoising or bouncing.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>6</td><td><strong>Go-around execution</strong></td><td>Immediate power advance to MIL. Positive climb established. Gear up at positive rate. Correct missed approach heading and altitude.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon green">S</div><div class="card-title">Step-by-step training sequence</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="step-table">
+            <thead><tr><th class="step-num-cell">#</th><th>Instructor action / cue</th><th>Expected student response</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num-cell">1</td><td><strong>BRIEF:</strong> Review V-speeds, runway length, and weight. Quiz student on VR and VREF from FMS PERF page.</td><td>Student recites correct speeds from KwikFlight performance page without prompting.</td></tr>
+              <tr><td class="step-num-cell">2</td><td><strong>PRE-TAKEOFF:</strong> Confirm throttle detents understood. Instruct student to advance to MIL and hold brakes until engines stable.</td><td>Student holds brakes, confirms engines stable, then releases brakes smoothly.</td></tr>
+              <tr><td class="step-num-cell">3</td><td><strong>TAKEOFF ROLL:</strong> Monitor centerline tracking. Call "Rotate" at correct VR speed.</td><td>Student rotates smoothly to ~10° pitch attitude. No over-rotation.</td></tr>
+              <tr><td class="step-num-cell">4</td><td><strong>INITIAL CLIMB:</strong> At positive rate of climb call "Gear Up." Monitor pitch and heading.</td><td>Student selects gear up, maintains climb heading ±5°, targets 250 KIAS.</td></tr>
+              <tr><td class="step-num-cell">5</td><td><strong>PATTERN:</strong> Call turning crosswind at 500 ft AGL, downwind at pattern altitude. Prompt speed reduction.</td><td>Student rolls out on downwind heading, levels at 2,500 ft MSL, decelerates.</td></tr>
+              <tr><td class="step-num-cell">6</td><td><strong>BASE / FINAL:</strong> Call "Gear Down, Flaps 17" at correct gate. Monitor speed on final.</td><td>Student configures aircraft, achieves VREF on glide path, calls "Stable."</td></tr>
+              <tr><td class="step-num-cell">7</td><td><strong>FLARE:</strong> Coach flare callout "Flare — hold it." Monitor sink rate and aim point.</td><td>Student arrests sink rate, touches down in zone, applies aero-braking.</td></tr>
+              <tr><td class="step-num-cell">8</td><td><strong>GO-AROUND (surprise):</strong> Call "Go Around" without warning at any point on approach.</td><td>Student applies power immediately, pitches positive, calls "Go Around," climbs safely.</td></tr>
+              <tr><td class="step-num-cell">9</td><td><strong>DEBRIEF:</strong> Grade each item. Annotate deviations. Assign follow-on training if U grades.</td><td>Student participates in critique, acknowledges corrections, notes improvement areas.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-2 -->
+  <div id="tr-p2e2" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-2</div>
+        <div class="event-title">ILS / Instrument Approach, Missed Approach, and Hold</div>
+        <div class="event-obj">The student demonstrates precision instrument approaches to DH, executes the missed approach and hold entry as published for KDYS ILS RWY 34L.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon">!</div><div class="card-title">Preflight brief checklist</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Set weather: ceiling 300–800 ft OVC, visibility 1–2 SM (IMC conditions)</li>
+            <li>Load KDYS ILS 34L plate. Brief all fixes, DH (200 ft HAT), missed approach heading and altitude</li>
+            <li>Confirm ILS tuned in FMS NAV page VOR1 (freq 110.3) and identifier I-DYS shows</li>
+            <li>Brief hold entry geometry using published hold at KDYS missed approach fix</li>
+            <li>Confirm student knows PFD softkey must be <strong>ILS</strong> — not GPS</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Intercept geometry</strong></td><td>Localizer captured from intercept angle ≤30°. No S-turns or overshoots beyond full-scale deflection.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>Glide slope / course tracking</strong></td><td>Within ±½ dot localizer AND ±½ dot glideslope from FAF to DH. Corrections smooth and timely.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>Decision height execution</strong></td><td>At DH: if runway NOT in sight, immediate go-around initiated. No descent below DH without visual. Call "Minimums" at DH.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>Missed approach procedure</strong></td><td>Published missed approach executed precisely: correct heading, climb to published altitude, fly to published fix. No delay in power application.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>5</td><td><strong>Hold entry</strong></td><td>Correct entry type (direct / parallel / teardrop) determined accurately. Abeam timing correct (1 min standard). Inbound rollout on course ±5°.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon green">S</div><div class="card-title">Step-by-step training sequence</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="step-table">
+            <thead><tr><th class="step-num-cell">#</th><th>Instructor action / cue</th><th>Expected student response</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num-cell">1</td><td><strong>BRIEF:</strong> Quiz student on DH, missed approach heading, and hold entry type before vectors.</td><td>Student correctly identifies DH (200 ft HAT), MA heading, and hold parameters.</td></tr>
+              <tr><td class="step-num-cell">2</td><td><strong>SETUP:</strong> Position aircraft on vectors for ILS. Instruct student to configure FMS NAV page (110.3 / I-DYS / CRS 359) and set PFD to ILS mode.</td><td>Student tunes ILS, confirms identifier I-DYS, sets CRS 359, switches PFD to ILS softkey.</td></tr>
+              <tr><td class="step-num-cell">3</td><td><strong>VECTORS:</strong> Clear student to intercept localizer. Confirm APR is armed (orange on PFD). Monitor approach track.</td><td>Student arms APR mode, intercepts within ±30° track angle, localizer captures cleanly.</td></tr>
+              <tr><td class="step-num-cell">4</td><td><strong>GLIDESLOPE ALIVE:</strong> Call "Glideslope alive." Aircraft in APR mode should capture automatically.</td><td>ALT HOLD changes to G/S on PFD. Aircraft follows 3° descent path.</td></tr>
+              <tr><td class="step-num-cell">5</td><td><strong>FAF TO DH:</strong> Monitor deviations. Call out any deviation exceeding ½ dot.</td><td>Student corrects inside ½ dot. Calls altitudes at FAF, 1,000, 500, and 100 ft.</td></tr>
+              <tr><td class="step-num-cell">6</td><td><strong>MINIMUMS:</strong> Call "Runway in sight" or "Not in sight" as appropriate for the scenario.</td><td>If not in sight: immediate go-around. If in sight: student calls "Landing" and continues.</td></tr>
+              <tr><td class="step-num-cell">7</td><td><strong>MISSED APPROACH:</strong> Issue "Execute missed approach" at any point during approach without warning.</td><td>Student immediately applies power, pitches for climb, calls "Go Around" on radio.</td></tr>
+              <tr><td class="step-num-cell">8</td><td><strong>HOLD:</strong> Vector student to published hold. Quiz hold entry type before arriving at fix.</td><td>Student correctly identifies entry type, flies hold within timing standards, ±5° inbound.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-3 -->
+  <div id="tr-p2e3" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-3</div>
+        <div class="event-title">Aerial Refueling (AR)</div>
+        <div class="event-obj">The student rendezvous with the AI tanker, establishes pre-contact position, makes receptacle contact, holds position during fuel transfer, and executes a safe breakaway.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon">!</div><div class="card-title">Preflight brief checklist</div></div>
+        <div class="card-body">
+          <ul class="cl">
+            <li>Spawn AI tanker (KC-135 or KC-10) ahead of student at AR track altitude and speed</li>
+            <li>Brief AR track: altitude FL200–FL230, airspeed 270–290 KIAS</li>
+            <li>Confirm receptacle door is open on overhead panel (AERIAL REFUEL LT switch)</li>
+            <li>Brief pre-contact position: 50 ft directly behind boom, slightly below</li>
+            <li>Brief breakaway procedure: pilot signal or emergency — immediate descent / right turn</li>
+          </ul>
+          <div class="warn" style="margin-top:10px">BOOM LIMITS: Do not exceed ±10 ft lateral or 6 ft vertical in contact. Excessive movement risks boom disconnect. Brief student on micro-correction technique before flying the event.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Tanker rendezvous</strong></td><td>Visual contact established. Closes at correct overtake speed (max 5 kt) from 1 NM to observation position. No unsafe closure rates.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>Pre-contact position</strong></td><td>Stable 50 ft aft, slightly below boom tip, within ±10 ft of centerline for ≥15 seconds before contact attempt.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>Boom / receptacle contact technique</strong></td><td>Smooth power application to drive into contact. Receptacle engages on first or second attempt. No abrupt pitch or roll inputs.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>Position hold stability</strong></td><td>Maintains contact for 60 seconds with ≤2 inadvertent disconnects. Lateral drift ≤±5 ft, vertical ≤±3 ft during sustained contact.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>5</td><td><strong>Breakaway procedure</strong></td><td>On "Breakaway" call: immediate power reduction, descend 500 ft, turn right 30°. No hesitation. Clear of tanker wake within 10 seconds.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon green">S</div><div class="card-title">Step-by-step training sequence</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="step-table">
+            <thead><tr><th class="step-num-cell">#</th><th>Instructor action / cue</th><th>Expected student response</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num-cell">1</td><td><strong>SETUP:</strong> Position aircraft 5 NM directly behind tanker at same altitude. Brief tanker parameters.</td><td>Student visually acquires tanker, confirms tanker lights and markings.</td></tr>
+              <tr><td class="step-num-cell">2</td><td><strong>RENDEZVOUS:</strong> Instruct closure to observation position (2 o'clock, 1,000 ft, same altitude).</td><td>Student controls overtake, arrives at observation with no excessive speed.</td></tr>
+              <tr><td class="step-num-cell">3</td><td><strong>OBSERVATION:</strong> Student checks tanker ready (green pre-contact light). Move to pre-contact.</td><td>Student transitions smoothly to 50 ft aft, centers on boom.</td></tr>
+              <tr><td class="step-num-cell">4</td><td><strong>PRE-CONTACT HOLD:</strong> Call "Stabilize pre-contact." Time 15-second stable hold.</td><td>Student maintains position. Minor corrections only. No hunting or oscillating.</td></tr>
+              <tr><td class="step-num-cell">5</td><td><strong>CONTACT:</strong> Instruct student to "Drive forward to contact."</td><td>Student applies small power increase, receptacle engages boom. Calls "Contact."</td></tr>
+              <tr><td class="step-num-cell">6</td><td><strong>FUEL TRANSFER:</strong> Monitor position for 60 seconds. Call out drifts over ±5 ft.</td><td>Student maintains contact, makes micro-corrections with throttle and stick inputs.</td></tr>
+              <tr><td class="step-num-cell">7</td><td><strong>BREAKAWAY:</strong> Issue "Breakaway, breakaway, breakaway" call without warning.</td><td>Student reduces power, descends 500 ft, turns right 30°, clears tanker zone.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-4 -->
+  <div id="tr-p2e4" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-4</div>
+        <div class="event-title">Cross-Country IFR — KDYS → KTIK → KDYS</div>
+        <div class="event-obj">Student plans and flies a complete IFR cross-country from KDYS to KTIK (Tinker AFB, OK), executes touch-and-go landings at KTIK, and recovers IFR to KDYS.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>SimBrief plan quality</strong></td><td>Filed route is realistic with SID/STAR where applicable. Fuel adequate with reserves. Alternate filed if required. OFP reviewed verbally in brief.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>IFR route compliance</strong></td><td>Flies filed route without deviation except with ATC clearance. All altitude crossing restrictions met within ±200 ft.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>ATC communication</strong></td><td>Readbacks correct and complete. Position reports on time. Requests phrased professionally. No unanswered ATC calls.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>T&amp;G technique at KTIK</strong></td><td>Approach stabilized at VREF ±5 kt. Touchdown in zone. Immediate go-around execution on rollout. Pattern maintained at KTIK altitude.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>5</td><td><strong>Final IFR approach at KDYS</strong></td><td>ILS 34L tracked within ±½ dot to DH. Landing touchdown in zone. Full stop. Taxi to parking without errors.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-5 -->
+  <div id="tr-p2e5" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-5</div>
+        <div class="event-title">Low-Level / Time-On-Target (TOT)</div>
+        <div class="event-obj">Student flies a briefed low-level route at 500 ft AGL, maintaining speed and altitude, hitting a designated TOT within ±30 seconds, executing planned turns, and correctly recognizing abort criteria.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Altitude maintenance</strong></td><td>Maintains 500 ft AGL ±100 ft throughout route. No sustained deviation below 400 ft or above 700 ft AGL.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>Speed discipline</strong></td><td>Maintains planned low-level airspeed ±10 KIAS. Speed stable between turn points.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>TOT accuracy</strong></td><td>Arrives at target within ±30 seconds of planned TOT. Speed adjustments smooth — no large corrections inside 1 NM of target.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>Turn technique</strong></td><td>Bank angle ≤60° at low level. Roll-in at planned turn point ±0.3 NM. Rollout on exit heading ±5°.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>5</td><td><strong>Abort criteria recognition</strong></td><td>Correctly identifies and calls abort when instructor announces a simulated abort condition. Immediate climb to safe altitude initiated without hesitation.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon green">S</div><div class="card-title">Step-by-step training sequence</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="step-table">
+            <thead><tr><th class="step-num-cell">#</th><th>Instructor action / cue</th><th>Expected student response</th></tr></thead>
+            <tbody>
+              <tr><td class="step-num-cell">1</td><td><strong>BRIEF:</strong> Review route card, TOT, and abort criteria. Student recites all TPs from memory.</td><td>Student briefs route: entry, all TPs with headings, TOT time, exit.</td></tr>
+              <tr><td class="step-num-cell">2</td><td><strong>ENTRY:</strong> Confirm aircraft on course at entry point at correct altitude and speed.</td><td>Student rolls out on course, descends to 500 ft AGL, stabilizes speed.</td></tr>
+              <tr><td class="step-num-cell">3</td><td><strong>TP 1:</strong> Count down "TP 1 in 5, 4, 3…" to aid timing. Monitor bank angle.</td><td>Student initiates bank ≤60°, rollout on new heading ±5°.</td></tr>
+              <tr><td class="step-num-cell">4</td><td><strong>SPEED CHECK:</strong> Midpoint — ask "TOT check — are you early or late?"</td><td>Student computes timing, adjusts speed to hit TOT (±10 KIAS correction).</td></tr>
+              <tr><td class="step-num-cell">5</td><td><strong>ABORT:</strong> Announce surprise abort condition (e.g. "Weather below minimums at target").</td><td>Student immediately calls "Abort, Abort," climbs to 2,000 ft AGL.</td></tr>
+              <tr><td class="step-num-cell">6</td><td><strong>TARGET:</strong> Call "TOT — Time now" at planned TOT time.</td><td>Student announces TOT arrival. Instructor records actual vs planned time delta.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT 2-6 -->
+  <div id="tr-p2e6" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="event-header">
+        <div class="event-num">Phase 2 — Event 2-6</div>
+        <div class="event-title">Weapons Employment</div>
+        <div class="event-obj">Student loads correct target coordinates into the KwikFlight weapons system, meets all delivery parameters, executes safe escape maneuver, and assesses weapon impact.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Graded items and standards</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Graded Item</th><th>Standard</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Target coordinates loaded correctly</strong></td><td>Student enters target lat/long exactly as assigned. Verified on MFD before IP. No digit transpositions. Weapon type correct.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>2</td><td><strong>Delivery parameters met</strong></td><td>Airspeed within ±10 KIAS of planned release speed. Altitude within ±200 ft. Heading within ±3° at release.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3</td><td><strong>Safe escape</strong></td><td>Post-release: immediate climbing turn to safe escape altitude. Exit heading maintained. No extended level flight after release.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>4</td><td><strong>Weapon impact assessment</strong></td><td>Student calls "Weapons away" at release, "Splash" at impact, reports estimated CEP. Demonstrates understanding of on-target vs off-target result.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div id="tr-p3" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="phase-banner">
+        <div class="phase-num">3</div>
+        <div class="phase-text">
+          <div class="phase-label">Evaluation sortie — no coaching</div>
+          <div class="phase-desc">Phase 3 is a complete combat mission profile flown as a single integrated sortie. The instructor observes and grades without routine coaching. Intervention is limited to safety-of-flight situations only. A U grade on any item requires re-accomplishment of the associated Phase 2 event before re-check.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-icon blue">G</div><div class="card-title">Phase 3 — All graded events</div></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="grade-table">
+            <thead><tr><th>#</th><th>Event</th><th>Key standards (instructor observes — no coaching)</th><th class="grade-box">Grade</th></tr></thead>
+            <tbody>
+              <tr><td>3-1</td><td><strong>Mission Planning (SimBrief)</strong></td><td>Student submits OFP 30 min before brief. Route, fuel, alternates, weather addressed. Student briefs full sortie: route, TOTs, weapons plan, abort criteria, IFR procedures.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3-2</td><td><strong>Departure &amp; En Route Climb</strong></td><td>Clearance readback correct. SID flown exactly. Altitude restrictions met ±200 ft. ATC calls made without prompting. No busts.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3-3</td><td><strong>Aerial Refueling</strong></td><td>Student navigates to AR track independently (TACAN or FMS). Rendezvous, contact, 60-second fuel transfer (≤2 IDs), clean breakaway — all without instructor input.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3-4</td><td><strong>Low-Level / TOT</strong></td><td>Student manages descent to arrive at low-level entry on time and configured. All TPs hit ±0.3 NM. Altitude 500 ft AGL ±100 ft. TOT ±30 seconds.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3-5</td><td><strong>Weapons Employment (×2)</strong></td><td>Both deliveries: correct coordinates pre-loaded, parameters met, safe escape executed, "Splash" called. Consistent quality across both deliveries.</td><td class="grade-box">Q / U</td></tr>
+              <tr><td>3-6</td><td><strong>IFR Recovery &amp; Landing</strong></td><td>Student self-initiates ATC contact after weapons exit. ILS 34L tracked ±½ dot to DH. Landing touchdown in zone full stop. Taxi to parking without direction.</td><td class="grade-box">Q / U</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon">▶</div><div class="card-title">Phase 3 overall grade summary — sign-off sheet</div></div>
+        <div class="card-body">
+          <table class="grade-table">
+            <thead><tr><th>Item</th><th>Event</th><th class="grade-box">Grade</th><th>Comments</th></tr></thead>
+            <tbody>
+              <tr><td>3-1</td><td>Mission Planning and Brief</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr><td>3-2</td><td>Departure and En Route Climb</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr><td>3-3</td><td>Aerial Refueling</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr><td>3-4</td><td>Low-Level / TOT</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr><td>3-5</td><td>Weapons Employment (×2)</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr><td>3-6</td><td>IFR Recovery and Landing</td><td class="grade-box">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+              <tr style="background:var(--card2)"><td colspan="2" style="font-weight:700;color:var(--text-primary)">OVERALL PHASE 3 RESULT</td><td class="grade-box" style="font-weight:700;color:var(--text-primary)">Q / U</td><td style="color:var(--text-muted);font-size:11px">_________________________</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:16px;font-size:12px;color:var(--text-secondary);line-height:2">
+            Instructor: _________________________________ &nbsp;&nbsp; Date: _______________<br>
+            Student callsign: ___________________________ &nbsp;&nbsp; Flight hours (MSFS): ___________
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · MSFS 2024</p>
+  <p style="margin-top:6px"><a href="../index.html">Home</a> · <a href="ils.html">ILS Guide</a> · <a href="qrc.html">QRC Checklist</a> · <a href="glossary.html">Glossary</a></p>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>
