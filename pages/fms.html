@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FMS Setup Guide — B-1B Training</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a class="nav-logo" href="../index.html"><div class="badge">B1</div><div><div class="name">Bone Squadron</div><div class="sub">KDYS · MSFS 2024</div></div></a><div class="nav-links"><a href="../index.html">Home</a><a href="ils.html">ILS</a><a href="rnav.html">RNAV</a><a href="vor.html">VOR</a><a href="autopilot.html">Autopilot</a><a href="fms.html">FMS</a><a href="glossary.html">Glossary</a><a href="qrc.html">QRC</a><a href="training.html">Training</a></div><button class="nav-mobile-btn" onclick="toggleMobileNav()">☰</button></div></nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Flight Management System · KwikFlight B-1B</div>
+  <h1 class="hero-title">FMS <span>Setup Guide</span></h1>
+  <p class="hero-sub">Complete reference for every FMS page — from IDEN startup through FPLN route building, PERF V-speeds, APPR setup, COM/NAV tuning, and the DIR and PSN pages. The CDU is on the center pedestal (item 4 in cockpit layout).</p>
+</section>
+
+<div class="container page-body">
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="switchPhase('fms','iden')">IDEN / INIT</button>
+    <button class="phase-btn" onclick="switchPhase('fms','fpln')">FPLN</button>
+    <button class="phase-btn" onclick="switchPhase('fms','perf')">PERF</button>
+    <button class="phase-btn" onclick="switchPhase('fms','com')">COM / NAV</button>
+    <button class="phase-btn" onclick="switchPhase('fms','dir')">DIR / PSN</button>
+    <button class="phase-btn" onclick="switchPhase('fms','mfd')">MFD Pages</button>
+  </div>
+
+  <div id="fms-iden" class="phase-panel active" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">IDEN page and INIT page — startup sequence</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">IDEN page — first thing you see on startup</div></div>
+          <div class="card-body">
+            <div class="plabel">Press IDEN shortcut key — or it shows automatically</div>
+            <div class="fms">           BONE-1B
+ENGINES
+G-E F101
+
+ACTIVE DATA BASE
+SEP050CT02/24          DB
+
+<span class="hi">→ INIT PAGE</span>
+
+                  BLOCK D
+               GNSS/JAMM3.4</div>
+            <ul class="cl">
+              <li>Confirms aircraft type: <strong>BONE-1B</strong></li>
+              <li>Engine type: <strong>G-E F101</strong></li>
+              <li>Shows active navigation database date — verify it is current</li>
+              <li>Press <strong>L4 key</strong> (left key next to → INIT PAGE) to proceed</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">INIT page — set departure, destination, cruise FL</div></div>
+          <div class="card-body">
+            <div class="plabel">Press INIT shortcut key — or press L4 from IDEN</div>
+            <div class="fms">      ROUTE INIT
+FROM                   TO
+<span class="hi">KDYS</span>               <span class="hi">KTIK</span>
+
+                FLT IDENT
+                   B1 Jet
+
+FINAL FL            FL PLN --&gt;
+FL<span class="hi">360</span></div>
+            <ul class="cl">
+              <li>Type departure ICAO (e.g. <strong>KDYS</strong>) → press left key → goes into FROM box</li>
+              <li>Type destination ICAO (e.g. <strong>KTIK</strong>) → press right key → goes into TO box</li>
+              <li>Type cruise flight level (e.g. <strong>360</strong> for FL360) → left key → FINAL FL</li>
+              <li>Press right key or the <strong>FPLN</strong> shortcut key to continue to the flight plan page</li>
+            </ul>
+            <div class="note">FINAL FL = cruise altitude in hundreds of feet. FL360 = 36,000 ft. Enter 360, not 36000.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fms-fpln" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">FPLN page — building and managing the route</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">Select SID from the origin airport</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">    LNAV FOR KDYS
+N32°25.2 W099°51.1
+<span class="hi">←SID</span>
+
+                  NEXT WPT →→
+
+                  AIRWAYS →
+
+<span class="hi">←FPLN PAGE</span></div>
+            <ul class="cl">
+              <li>Press <strong>FPLN</strong> key to open the flight plan page</li>
+              <li>Press the left key next to the origin airport (KDYS)</li>
+              <li>Press <strong>←SID</strong> left key to open SID selection</li>
+              <li>Select the runway (e.g. 34L) from the available runways list</li>
+              <li>Select the SID procedure name</li>
+              <li>Press <strong>INSERT</strong> right key to confirm and add to route</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Add en route waypoints and airways</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">FROM KDYS RWY 34L
+  KDYS34L   DIST  11NM
+  D196J      13    1127Z
+  D196F      17    1132Z
+  BAPAG      21    1135Z
+  BPK        23    1137Z
+<span class="hi">TO</span>
+  KTIK       DIST  2980</div>
+            <ul class="cl">
+              <li>Type waypoint ICAO ID using the keyboard → press the left key next to where you want to insert it</li>
+              <li>Use <strong>up/down arrow keys</strong> to scroll through the full flight plan</li>
+              <li>Press <strong>AIRWAYS →</strong> right key to add airway segments between fixes</li>
+              <li>Click the destination airport to add a STAR and approach</li>
+              <li>Press the <strong>right accept key</strong> to activate the full route</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">3</div><div class="card-title">Load STAR and approach at destination</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">KDYS STARS
+RWY   SID      TRANS
+---   ------   ------
+AVAILABLE RUNWAYS
+<span class="hi">←34L  3048M</span>
+←16R  3048M
+&lt;RETURN</div>
+            <ul class="cl">
+              <li>Press left key next to destination airport in FPLN</li>
+              <li>Select STAR from the list (or NONE for vectors-to-final)</li>
+              <li>Select the landing runway</li>
+              <li>Select approach type: <strong>ILS</strong>, <strong>RNAV</strong>, or <strong>VOR</strong></li>
+              <li>Press <strong>INSERT</strong> right key to add to route</li>
+              <li>Verify approach fixes appear at the bottom of the FPLN</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon green">4</div><div class="card-title">Activate the route</div></div>
+          <div class="card-body">
+            <ul class="cl">
+              <li>Once all fixes are loaded, press the <strong>right accept key</strong> to activate</li>
+              <li>The FMS FPLN page shows the route as the active flight plan</li>
+              <li>The MFD MAP view updates to show the route line</li>
+              <li>NAV HOLD / LNAV will now follow this route</li>
+            </ul>
+            <div class="note">If you edit the route after activation, you must re-activate with the accept key each time a change is made.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fms-perf" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">PERF pages — V-speeds, cruise, and approach data</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">PERF → TKOF PAGE — takeoff V-speeds</div></div>
+          <div class="card-body">
+            <div class="plabel">Press PERF key → shows takeoff page</div>
+            <div class="fms">      TAKE OFF
+<span class="hi">V1 --&gt; □□□</span>        FLAPS
+<span class="hi">VR --&gt; □□□</span>          <span class="hi">--&gt; 0°</span>
+<span class="hi">V2 --&gt; □□□</span>           17°
+
+DENS ALT            AUTO
+-304 ft       <span class="hi">V SPEEDS --&gt;</span>
+
+              <span class="hi">CRZ PG--&gt;</span></div>
+            <ul class="cl">
+              <li>Right keys toggle flap setting → select <strong>0° or 17°</strong></li>
+              <li>Press <strong>V SPEEDS →</strong> right key for automatic computation based on current weight and flap config</li>
+              <li>Or type V1, VR, V2 manually into the left boxes</li>
+              <li>Density altitude shown for reference</li>
+              <li>Press <strong>CRZ PG →</strong> to continue to cruise page</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">PERF → CRZ PAGE — cruise altitude check</div></div>
+          <div class="card-body">
+            <div class="fms">      CRZ PAGE
+CRZ FL
+FL 360
+
+CURRENT FL
+FL 002
+
+&lt;--TKOF PG        <span class="hi">APPR PG--&gt;</span></div>
+            <ul class="cl">
+              <li>Shows your planned cruise FL vs current FL</li>
+              <li>Verify before top of descent that cruise FL matches your clearance</li>
+              <li>Press <strong>APPR PG →</strong> right key before descent to set approach data</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card span-2">
+          <div class="card-header"><div class="card-icon">3</div><div class="card-title">PERF → APPR PAGE — must fill before every approach</div></div>
+          <div class="card-body">
+            <div class="grid-2">
+              <div>
+                <div class="fms">      APPR PAGE
+<span class="hi">FLAPS --&gt; 17°</span>
+<span class="hi">VREF --&gt; □□□ Kt</span>    ← click to auto-compute
+DH <span class="hi">□□□□</span> RADIO              ← DH or MDA from plate
+LAND QNH --&gt; <span class="hi">29.92</span> inHg  ← from ATIS
+&lt;--CRZ PG</div>
+              </div>
+              <div>
+                <ul class="cl">
+                  <li>Toggle flaps to <strong>17°</strong> with left key</li>
+                  <li>Click the VREF field — auto-computes for current weight and flap config</li>
+                  <li>Enter <strong>DH</strong> (for ILS) or <strong>MDA</strong> (for RNAV/VOR) from the approach plate</li>
+                  <li>Enter <strong>QNH</strong> from current ATIS broadcast</li>
+                  <li>Complete this page before you receive approach vectors</li>
+                </ul>
+                <div class="note">This is one of the most commonly forgotten pre-approach steps. Brief it in your descent checklist every time.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fms-com" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">COM page and NAV page — radio management</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">COM</div><div class="card-title">COM page — communication radios and transponder</div></div>
+          <div class="card-body">
+            <div class="plabel">Press COM shortcut key on CDU</div>
+            <div class="fms">      RADIO COM
+ACTIVE              STBY
+COM 1               COM 1
+<span class="hi">118.705</span> &lt;-------&gt; 124.850
+
+COM 2               COM 2
+124.850 &lt;-------&gt; 124.850
+
+XPDR MODE           XPDR CODE
+<span class="hi">ALT</span>                  <span class="hi">2000</span></div>
+            <ul class="cl">
+              <li>Type frequency using dot notation (e.g. <strong>118.10</strong> or <strong>119.3</strong>)</li>
+              <li>Left key → sets as <strong>ACTIVE</strong> immediately</li>
+              <li>Right key → sets as <strong>STANDBY</strong></li>
+              <li>To swap active and standby: press <strong>CLR</strong> to empty scratchpad, then click the active frequency</li>
+              <li>Bottom left key cycles <strong>XPDR MODE</strong> (STBY / ON / ALT) — use ALT for normal flight</li>
+              <li>Type squawk code assigned by ATC → left key → XPDR CODE</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">NAV</div><div class="card-title">NAV page — ILS, VOR, ADF, and TACAN tuning</div></div>
+          <div class="card-body">
+            <div class="plabel">Press NAV shortcut key on CDU</div>
+            <div class="fms">      RADIO NAV
+VOR1/FREQ           CRS
+[<span class="hi">I-DYS</span>]/<span class="hi">110.3</span>        <span class="hi">359</span>
+VOR2/FREQ           CRS
+[  ]/[  ]           ---
+ADF1/FREQ           BRG
+[  ]/<span class="hi">890</span>            ---
+TAC1/FREQ           CRS
+[  ]/[  ]           ---</div>
+            <ul class="cl">
+              <li>Type VOR or ILS frequency → left key → assigns to <strong>VOR1</strong> or VOR2</li>
+              <li>Station identifier auto-fills when the station is in range</li>
+              <li>Type OBS inbound course → right key → <strong>CRS</strong></li>
+              <li>ADF: type frequency → left key → ADF1 (no course required)</li>
+              <li>TAC: TACAN for military approaches and aerial refueling rendezvous</li>
+            </ul>
+            <div class="note">For ILS: tune frequency in VOR1, set inbound course in CRS field. The same page is used for VOR — just a different frequency and identifier.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fms-dir" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">DIR page and PSN page</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">DIR</div><div class="card-title">DIR page — fly direct to any waypoint instantly</div></div>
+          <div class="card-body">
+            <div class="fms">DIRECT TO
+WAYPOINT
+→←
+FPLN WPTS
+<span class="hi">→D196J</span>
+→D196F
+→BAPAG
+→BPK
+→DATOB</div>
+            <ul class="cl">
+              <li>Press the <strong>DIR</strong> shortcut key on the CDU</li>
+              <li>Use up/down arrows to scroll to the desired waypoint</li>
+              <li>Press the left key next to the waypoint you want</li>
+              <li>Press <strong>Direct Now</strong> at the bottom right key</li>
+              <li>FMS immediately draws a direct path — NAV HOLD follows it</li>
+            </ul>
+            <div class="note">Use DIR whenever ATC says "Cleared direct [fix]" or "Fly direct [waypoint]." It overrides the current route segment and goes straight to the selected fix, then resumes the flight plan from there.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">PSN</div><div class="card-title">PSN page — current GPS position</div></div>
+          <div class="card-body">
+            <div class="fms">   CURRENT POSITION
+32.4648° -99.4841°
+--&gt; CHANGE NOTATION
+
+--&gt; STORE PRESENT POS
+NO POS° NO POS°</div>
+            <ul class="cl">
+              <li>Shows the aircraft's real-time GPS coordinates</li>
+              <li>Press left key → changes coordinate notation format (decimal / degrees-minutes)</li>
+              <li>Press <strong>STORE PRESENT POS</strong> → saves current coordinates as a stored position</li>
+              <li>Stored positions can be used as waypoints in the flight plan or as weapon target coordinates</li>
+            </ul>
+            <div class="note">Useful for Phase 3 weapons events — fly over the target area, store the position on the PSN page, then enter those coordinates on the weapons MFD page.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fms-mfd" class="phase-panel" style="padding:28px 0">
+    <div class="section">
+      <div class="section-label">MFD pages — right-hand display system pages</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-icon">1</div><div class="card-title">MFD softkey tabs — top of right-hand display</div></div>
+          <div class="card-body">
+            <div class="fms" style="font-size:10px">     FLT    ELEC    FMS    ENV
+       ↑       ↑       ↑      ↑
+  Flight  Electrical  FMS  Environment
+ Surfaces  System   System  (Pressurization)</div>
+            <ul class="cl">
+              <li>Right-hand MFD softkeys at the top cycle through system pages</li>
+              <li>Left-side softkeys on the MFD cycle between: <strong>MAP/WX, TCAS, TFR, ENG, FLT, ELEC, FMS, ENV</strong></li>
+              <li>Each page shows a different system status</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-icon">2</div><div class="card-title">Key MFD pages to know</div></div>
+          <div class="card-body">
+            <table class="dt">
+              <thead><tr><th>Page</th><th>What it shows</th><th>When to use</th></tr></thead>
+              <tbody>
+                <tr><td><strong>MAP/WX</strong></td><td>Moving map, weather radar, fuel tanks, gear status</td><td>Normal navigation, always useful</td></tr>
+                <tr><td><strong>TCAS</strong></td><td>Traffic advisory display, own position, surrounding aircraft</td><td>IMC, high traffic areas</td></tr>
+                <tr><td><strong>TFR</strong></td><td>Forward-looking terrain camera</td><td>Low level, weapons runs</td></tr>
+                <tr><td><strong>ENG</strong></td><td>N1, N2, EGT, fuel flow, oil pressure for all 4 engines</td><td>Engine start, any abnormal indication</td></tr>
+                <tr><td><strong>FLT</strong></td><td>Flight surfaces position, flap setting, wing sweep</td><td>Configuration checks</td></tr>
+                <tr><td><strong>ELEC</strong></td><td>Generator status, bus ties, external power, battery</td><td>Electrical system checks</td></tr>
+                <tr><td><strong>FMS</strong></td><td>Active flight plan map and route summary</td><td>Navigation monitoring</td></tr>
+                <tr><td><strong>ENV</strong></td><td>Cabin pressure, cabin altitude, bleed air packs</td><td>Pressurization monitoring at altitude</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>Virtual Flying Squadron · B-1B Lancer Training · Dyess AFB (KDYS) · MSFS 2024</p>
+  <p style="margin-top:6px"><a href="../index.html">Home</a> · <a href="autopilot.html">Autopilot</a> · <a href="ils.html">ILS</a> · <a href="glossary.html">Glossary</a></p>
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>
